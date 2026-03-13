@@ -18,7 +18,6 @@ $line_break\
 $character"""
 
 
-
 add_newline = true
 fill.symbol = " "
 
@@ -82,9 +81,9 @@ style = 'blue'
 
 [docker_context]
 symbol = '🐳 '
-# style = 'fg:#06969A'
+style = 'fg:#06969A'
 format = '[$symbol]($style) $path'
-# detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile']
+detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile']
 detect_extensions = ['Dockerfile']
 
 [jobs]
@@ -96,4 +95,3 @@ format = '[$symbol]($style)'
 [cmd_duration]
 min_time = 0
 format = '⌛️ [$duration]($style)'
-

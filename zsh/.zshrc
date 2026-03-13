@@ -1,13 +1,15 @@
 # My Favorite Shell
 eval "$(starship init zsh)"
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(fnm env --use-on-cd --shell zsh)"
+# mise (polyglot runtime manager - node, pnpm, etc.)
+eval "$(mise activate zsh)"
+
+export EDITOR='cursor'
+export VISUAL='cursor'
+
 
 # Shell Plugins
-export ZPLUG_HOME=/opt/homebrew/opt/zplug
+export ZPLUG_HOME=$HOME/.zplug
 source $ZPLUG_HOME/init.zsh
 zplug "tcnksm/docker-alias", use:zshrc
 zplug "plugins/git", from:oh-my-zsh
@@ -58,16 +60,6 @@ alias nr="npm run"
 alias pn="pnpm"
 alias pnr="pnpm run"
 
-alias b="brew"
-alias bi="brew install"
-alias bu="brew update"
-alias "??"=plz 
-
-# Plz-CLI
-if ! command -v plz > /dev/null 2>&1; then
-  echo 'Installing plz...'
-  brew install plz-cli
-fi
 
 # My functions
 function f()    { find . -iname "*$1*" ${@:2} }
@@ -75,19 +67,11 @@ function r()    { grep "$1" ${@:2} -R . }
 function size() { du -sh "$1" | awk '{print $1}' }
 function cleanGit() { git clean -Xdf }
 
-# Android ENV
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # Extra
 export PATH="$PATH:$HOME/.bin"
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/eduardo/.lmstudio/bin"
+# End of LM Studio CLI section
 
-# My Keys
-export OPENAI_TOKEN="--"
-export GH_TOKEN="--"
-
-# Keys Alias
-export OPENAI_API_KEY=$OPENAI_TOKEN
+export PATH="$HOME/.local/bin:$PATH"
