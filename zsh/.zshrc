@@ -60,13 +60,44 @@ alias nr="npm run"
 alias pn="pnpm"
 alias pnr="pnpm run"
 
+# Rede: função que retorna todos os IPs da máquina (um por linha)
+# (usa "function name {" para não conflitar com alias "ips" do docker-alias)
+function ips {
+  if command -v ip &>/dev/null; then
+    ip -o addr show | awk '/inet / {gsub(/\/[0-9]+/, "", $4); print $4}'
+  else
+    hostname -I 2>/dev/null | tr ' ' '\n' | grep -v '^$'
+  fi
+}
 
 # My functions
 function f()    { find . -iname "*$1*" ${@:2} }
 function r()    { grep "$1" ${@:2} -R . }
 function size() { du -sh "$1" | awk '{print $1}' }
 function cleanGit() { git clean -Xdf }
+function killatport() {
+  if [ -z "$1" ]; then
+    echo "Usage: killatport <port>"
+    return 1
+  fi
+  pids=$(lsof -t -i:"$1" 2>/dev/null)
+  if [ -z "$pids" ]; then
+    echo "No process found on port $1"
+    return 1
+  fi
+  echo "$pids" | xargs kill -9
+  echo "Killed process(es) on port $1: $pids"
+}
 
+
+# Android SDK
+export ANDROID_HOME=$HOME/Android/Sdk
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+# AVDs are in ~/.config/.android/avd (e.g. Android Studio on some setups)
+export ANDROID_AVD_HOME=$HOME/.config/.android/avd
+export PATH="$PATH:$ANDROID_HOME/emulator"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+# If you install cmdline-tools: export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
 
 # Extra
 export PATH="$PATH:$HOME/.bin"
