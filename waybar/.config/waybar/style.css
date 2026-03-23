@@ -26,11 +26,11 @@ window#waybar {
 }
 
 .modules-left {
-  margin-left: 8px;
+  /* margin-left: 8px; */
 }
 
 .modules-right {
-  margin-right: 8px;
+  /* margin-right: 8px; */
 }
 
 #workspaces button {
@@ -125,4 +125,23 @@ tooltip {
 
 #custom-voxtype.recording {
   color: #a55555;
+}
+
+/* Context menu (right click) should stay opaque. */
+menu {
+  background-color: @background;
+  border: 1px solid alpha(@foreground, 0.15);
+  border-radius: 8px;
+  padding: 0px;
+}
+
+menuitem {
+  background-color: @background;
+  color: @foreground;
+  border-radius: 6px;
+  padding: 5px 0px;
+}
+
+menuitem:hover {
+  background-color: alpha(@foreground, 0.12);
 }

@@ -99,6 +99,10 @@ export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 # If you install cmdline-tools: export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
 
+export ANTHROPIC_BASE_URL="https://api.minimax.io/anthropic"
+export ANTHROPIC_AUTH_TOKEN="-----TOKEN-----"
+export ANTHROPIC_MODEL="MiniMax-M2.7"
+
 # Extra
 export PATH="$PATH:$HOME/.bin"
 # Added by LM Studio CLI (lms)
@@ -106,3 +110,4 @@ export PATH="$PATH:/home/eduardo/.lmstudio/bin"
 # End of LM Studio CLI section
 
 export PATH="$HOME/.local/bin:$PATH"
+export PATH=$PATH:$HOME/.maestro/bin
