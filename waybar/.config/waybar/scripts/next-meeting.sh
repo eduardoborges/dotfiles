@@ -3,6 +3,17 @@
 
 set -e
 
+# Escape for JSON (used by early exits and main output)
+escape_json() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  s="${s//$'\n'/\\n}"
+  printf '%s' "$s"
+}
+
 json=$(meetfy next --json 2>/dev/null) || true
 
 if [[ -z "$json" ]]; then
@@ -20,7 +31,12 @@ fi
 
 meeting=$(echo "$json" | jq -r '.meeting')
 if [[ "$meeting" == "null" ]] || [[ -z "$meeting" ]]; then
-  echo '{"text": "", "tooltip": "No upcoming meeting"}'
+  : > /tmp/waybar-next-meeting-link
+  empty_msg="No events today"
+  empty_tip="No upcoming events in the period meetfy searches"
+  text_escaped=$(escape_json "$empty_msg")
+  tooltip_escaped=$(escape_json "$empty_tip")
+  echo "{\"text\": \"$text_escaped\", \"tooltip\": \"$tooltip_escaped\"}"
   exit 0
 fi
 
@@ -116,16 +132,6 @@ tooltip="$title"
 [[ -n "$hangout" ]] && tooltip+=$'\r'"󰗋 $hangout"
 [[ -n "$location" ]] && tooltip+=$'\r'"󰍎 $location"
 
-# Escape for JSON
-escape_json() {
-  local s="$1"
-  s="${s//\\/\\\\}"
-  s="${s//\"/\\\"}"
-  s="${s//$'\r'/\\r}"
-  s="${s//$'\t'/\\t}"
-  s="${s//$'\n'/\\n}"
-  printf '%s' "$s"
-}
 text_escaped=$(escape_json "$short")
 tooltip_escaped=$(escape_json "$tooltip")
 
