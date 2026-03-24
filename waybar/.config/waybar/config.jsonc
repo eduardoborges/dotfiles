@@ -64,7 +64,7 @@
   "custom/next-meeting": {
     "exec": "$HOME/.config/waybar/scripts/next-meeting.sh",
     "return-type": "json",
-    "interval": 300,
+    "interval": 60,
     "on-click": "xdg-open \"$(cat /tmp/waybar-next-meeting-link 2>/dev/null || echo https://calendar.google.com)\"",
     "on-click-right": "$HOME/.config/waybar/scripts/next-meeting-menu.sh",
     "tooltip": true,
