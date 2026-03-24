@@ -67,7 +67,8 @@
     "interval": 300,
     "on-click": "xdg-open \"$(cat /tmp/waybar-next-meeting-link 2>/dev/null || echo https://calendar.google.com)\"",
     "on-click-right": "$HOME/.config/waybar/scripts/next-meeting-menu.sh",
-    "tooltip": true
+    "tooltip": true,
+    "format": "· {text}"
   },
   "custom/update": {
     "format": "",
