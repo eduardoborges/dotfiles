@@ -93,15 +93,10 @@ function killatport() {
 # Android SDK
 export ANDROID_HOME=$HOME/Android/Sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
-# AVDs are in ~/.config/.android/avd (e.g. Android Studio on some setups)
 export ANDROID_AVD_HOME=$HOME/.config/.android/avd
 export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
-# If you install cmdline-tools: export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
-
-export ANTHROPIC_BASE_URL="https://api.minimax.io/anthropic"
-export ANTHROPIC_AUTH_TOKEN="-----TOKEN-----"
-export ANTHROPIC_MODEL="MiniMax-M2.7"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
 
 # Extra
 export PATH="$PATH:$HOME/.bin"
