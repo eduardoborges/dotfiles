@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkMenu" id="menu">
+    <child>
+      <object class="GtkMenuItem" id="meeting_join">
+        <property name="label">Join meeting</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="meeting_copy">
+        <property name="label">Copy link</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="meeting_sep"/>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="meeting_calendar">
+        <property name="label">Open Google Calendar</property>
+      </object>
+    </child>
+  </object>
+</interface>

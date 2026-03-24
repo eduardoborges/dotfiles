@@ -66,7 +66,13 @@
     "return-type": "json",
     "interval": 60,
     "on-click": "xdg-open \"$(cat /tmp/waybar-next-meeting-link 2>/dev/null || echo https://calendar.google.com)\"",
-    "on-click-right": "$HOME/.config/waybar/scripts/next-meeting-menu.sh",
+    "menu": "on-click-right",
+    "menu-file": "~/.config/waybar/menus/next-meeting-menu.xml",
+    "menu-actions": {
+      "meeting_join": "xdg-open \"$(cat /tmp/waybar-next-meeting-link 2>/dev/null || echo https://calendar.google.com)\"",
+      "meeting_copy": "sh -c 'cat /tmp/waybar-next-meeting-link 2>/dev/null | wl-copy'",
+      "meeting_calendar": "xdg-open https://calendar.google.com"
+    },
     "tooltip": true,
     "format": "· {text}"
   },
