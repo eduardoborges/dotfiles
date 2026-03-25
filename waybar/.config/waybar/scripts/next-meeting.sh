@@ -99,7 +99,7 @@ fmt_in_time() {
     if [[ $m -eq 0 ]]; then
       echo "in ${h} h"
     else
-      echo "in ${h} h ${m} min"
+      echo "in ${h}h ${m}min"
     fi
     return
   fi
@@ -107,7 +107,7 @@ fmt_in_time() {
   if [[ $mins_ceiling -le 1 ]]; then
     echo "soon"
   else
-    echo "in ${mins_ceiling} min"
+    echo "in ${mins_ceiling}min"
   fi
 }
 
