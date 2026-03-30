@@ -14,7 +14,12 @@ escape_json() {
   printf '%s' "$s"
 }
 
-json=$(meetfy next --json 2>/dev/null) || true
+MEETFY_BIN="${PNPM_HOME:-$HOME/.local/share/pnpm}/meetfy"
+if [[ ! -x "$MEETFY_BIN" ]]; then
+  MEETFY_BIN="meetfy"
+fi
+
+json=$("$MEETFY_BIN" next --json 2>/dev/null) || true
 
 if [[ -z "$json" ]]; then
   echo '{"text": "", "tooltip": "meetfy: no response (run meetfy auth?)"}'
@@ -25,7 +30,16 @@ fi
 success=$(echo "$json" | jq -r '.success // false')
 if [[ "$success" != "true" ]]; then
   err=$(echo "$json" | jq -r '.error // "unknown error"')
-  echo "{\"text\": \"\", \"tooltip\": \"meetfy: $err\"}"
+  if [[ "$err" == "auth_required" ]]; then
+    msg="meetfy: reauth"
+    tip="Session expired or refresh failed. Run: meetfy auth"
+    text_escaped=$(escape_json "$msg")
+    tooltip_escaped=$(escape_json "$tip")
+    echo "{\"text\": \"$text_escaped\", \"tooltip\": \"$tooltip_escaped\"}"
+  else
+    err_esc=$(escape_json "$err")
+    echo "{\"text\": \"\", \"tooltip\": \"meetfy: $err_esc\"}"
+  fi
   exit 0
 fi
 
