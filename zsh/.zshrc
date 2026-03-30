@@ -101,8 +101,16 @@ export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
 # Extra
 export PATH="$PATH:$HOME/.bin"
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/home/eduardo/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
 export PATH="$HOME/.local/bin:$PATH"
 export PATH=$PATH:$HOME/.maestro/bin
+
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
