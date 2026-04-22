@@ -127,6 +127,7 @@ function killatport() {
   echo "Killed process(es) on port $1: $pids"
 }
 
+copy() { wl-copy; }
 
 # Android SDK
 export ANDROID_HOME=$HOME/Android/Sdk
@@ -152,3 +153,4 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
