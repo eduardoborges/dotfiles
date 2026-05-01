@@ -4,14 +4,14 @@ eval "$(starship init zsh)"
 # mise (polyglot runtime manager - node, pnpm, etc.)
 eval "$(mise activate zsh)"
 
-export EDITOR='cursor'
-export VISUAL='cursor'
+export EDITOR=cursor
+export VISUAL=cursor
 
+source $HOME/.envrc
 
 # Shell Plugins
 export ZPLUG_HOME=$HOME/.zplug
 source $ZPLUG_HOME/init.zsh
-zplug "tcnksm/docker-alias", use:zshrc
 zplug "plugins/git", from:oh-my-zsh
 zplug "zdharma-continuum/fast-syntax-highlighting"
 zplug "zsh-users/zsh-autosuggestions"
@@ -49,8 +49,7 @@ alias v="nvim"
 alias k="kubectl"
 alias kx="kubectl exec -it"
 
-alias d="docker"
-alias dc="docker-compose"
+alias d="dk"
 
 alias h="http-server"
 
@@ -154,3 +153,6 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+
+. "$HOME/.local/share/../bin/env"
+source /home/edu/.config/op/plugins.sh

@@ -19,7 +19,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 
 # Packages we're going to stow (each becomes a set of symlinks)
-PACKAGES=(zsh starship hypr waybar alacritty ghostty agent-skills)
+PACKAGES=(zsh starship hypr waybar alacritty ghostty zed agent-skills)
 
 # Paths we back up (relative to $HOME); same list used for restore
 BACKUP_PATHS=(
@@ -29,6 +29,7 @@ BACKUP_PATHS=(
   .config/waybar
   .config/alacritty
   .config/ghostty
+  .config/zed/keymap.json
   .agents
 )
 
@@ -113,6 +114,7 @@ remove_targets_for_stow() {
   rm -rf "$HOME/.config/waybar"
   rm -rf "$HOME/.config/alacritty"
   rm -rf "$HOME/.config/ghostty"
+  rm -f "$HOME/.config/zed/keymap.json"
   rm -rf "$HOME/.agents"
 
   # hypr: only remove the dir if it's a symlink; if it's a real dir, remove only the files that are in the repo
