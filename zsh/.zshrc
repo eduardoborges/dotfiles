@@ -4,8 +4,8 @@ eval "$(starship init zsh)"
 # mise (polyglot runtime manager - node, pnpm, etc.)
 eval "$(mise activate zsh)"
 
-export EDITOR=cursor
-export VISUAL=cursor
+export EDITOR=code-insiders
+export VISUAL=code-insiders
 
 source $HOME/.envrc
 
