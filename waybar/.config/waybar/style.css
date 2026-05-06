@@ -20,9 +20,10 @@ window#waybar {
   background-color: @background;
   color: @foreground;
   border: 1px solid alpha(@foreground, 0.15);
-  border-radius: 12px;
+  border-radius: 100px;
   padding: 3px 8px;
-  margin: 4px 0;
+  margin: 3px 0;
+  margin-bottom: 0;
 }
 
 .modules-left {
