@@ -1,0 +1,13 @@
+{
+    "update.mode": "default",
+    "workbench.colorTheme": "Draculinho",
+    "http.systemCertificatesNode": true,
+    "geminicodeassist.project": "ninth-bird-g44cl",
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.formatOnSave": true,
+    "editor.fontFamily": "'Dank Mono', monospace",
+    "kimi.editorContext": "onConversationStart",
+    "kimi.yoloMode": true,
+    "geminicodeassist.inlineSuggestions.enableAuto": true,
+    "claudeCode.preferredLocation": "panel"
+}

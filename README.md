@@ -1,6 +1,6 @@
 # Dotfiles
 
-My daily configs for zsh, starship, Hyprland, waybar, Alacritty, and agent skills.
+My daily configs for zsh, starship, Hyprland, waybar, Alacritty, VSCodium, Cursor, and agent skills.
 
 I tested this on Arch Linux BTW.
 
@@ -14,7 +14,20 @@ You need **stow** (e.g. `sudo pacman -S stow` or `brew install stow`). Then:
 ./install.sh
 ```
 
-The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, and reloads Hyprland and waybar if you’re in a Hyprland session.
+The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, installs editor extensions from `extensions/vscodium.txt` and `extensions/cursor.txt`, and reloads Hyprland and waybar if you’re in a Hyprland session.
+
+## Extensions (VSCodium and Cursor)
+
+Extension lists are tracked in:
+
+- `extensions/vscodium.txt`
+- `extensions/cursor.txt`
+
+To refresh both files with your currently installed extensions:
+
+```bash
+./install.sh --save-extensions
+```
 
 ## Restore
 
@@ -30,3 +43,4 @@ Backups are stored in `~/.dotfiles-backup-YYYYMMDD-HHMMSS`. You pick one from th
 
 - Re-apply everything: `./install.sh` or `stow -t ~ zsh starship hypr waybar alacritty agent-skills`
 - Unstow one package: `stow -t ~ -D <package>`
+- Update editor extension lists: `./install.sh --save-extensions`

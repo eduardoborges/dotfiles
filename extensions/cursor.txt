@@ -1,0 +1,14 @@
+astro-build.astro-vscode
+dbaeumer.vscode-eslint
+dotjoshjohnson.xml
+eamodio.gitlens
+eduardoborges.draculinho
+ms-azuretools.vscode-containers
+ms-azuretools.vscode-docker
+pkief.material-icon-theme
+redhat.vscode-yaml
+tamasfe.even-better-toml
+tomoki1207.pdf
+usernamehw.errorlens
+wix.vscode-import-cost
+yoavbls.pretty-ts-errors

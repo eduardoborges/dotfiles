@@ -17,9 +17,11 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+VSCODIUM_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscodium.txt"
+CURSOR_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/cursor.txt"
 
 # Packages we're going to stow (each becomes a set of symlinks)
-PACKAGES=(zsh starship hypr waybar alacritty ghostty zed agent-skills)
+PACKAGES=(zsh starship hypr waybar alacritty ghostty zed vscodium agent-skills)
 
 # Paths we back up (relative to $HOME); same list used for restore
 BACKUP_PATHS=(
@@ -30,8 +32,24 @@ BACKUP_PATHS=(
   .config/alacritty
   .config/ghostty
   .config/zed/keymap.json
+  .config/VSCodium/User/settings.json
   .agents
 )
+
+backup_extensions() {
+  local cli="$1"
+  local backup_file="$2"
+  local label="$3"
+
+  if ! command -v "$cli" &>/dev/null; then
+    echo "  skipping $label extensions backup ($cli not found)"
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$backup_file")"
+  "$cli" --list-extensions | sort -u >"$backup_file"
+  echo "  saved $label extensions -> $backup_file"
+}
 
 # ------------------------------------------------------------------------------
 # dependency: stow
@@ -72,12 +90,61 @@ do_backup() {
       for path in "${BACKUP_PATHS[@]}"; do
         backup_if_exists "$HOME/$path"
       done
+      backup_extensions codium "$BACKUP_DIR/vscodium-extensions.txt" "VSCodium"
+      backup_extensions cursor "$BACKUP_DIR/cursor-extensions.txt" "Cursor"
       echo "Backup done."
       ;;
     *)
       echo "Skipping backup."
       ;;
   esac
+}
+
+save_editor_extensions() {
+  echo ""
+  echo "Saving extension lists to this repository..."
+  backup_extensions codium "$VSCODIUM_EXTENSIONS_FILE" "VSCodium"
+  backup_extensions cursor "$CURSOR_EXTENSIONS_FILE" "Cursor"
+  echo "Done."
+}
+
+install_extensions_from_file() {
+  local cli="$1"
+  local file="$2"
+  local label="$3"
+  local installed=0
+  local failed=0
+  local extension
+
+  if ! command -v "$cli" &>/dev/null; then
+    echo "  skipping $label extensions install ($cli not found)"
+    return 0
+  fi
+  if [[ ! -f "$file" ]]; then
+    echo "  skipping $label extensions install ($file not found)"
+    return 0
+  fi
+
+  echo "  installing $label extensions from $file"
+  while IFS= read -r extension; do
+    [[ -z "$extension" ]] && continue
+    [[ "$extension" == \#* ]] && continue
+    if "$cli" --install-extension "$extension" --force &>/dev/null; then
+      ((installed += 1))
+    else
+      echo "    failed: $extension"
+      ((failed += 1))
+    fi
+  done <"$file"
+
+  echo "    installed/updated: $installed | failed: $failed"
+}
+
+install_editor_extensions() {
+  echo ""
+  echo "Installing editor extensions from dotfiles..."
+  install_extensions_from_file codium "$VSCODIUM_EXTENSIONS_FILE" "VSCodium"
+  install_extensions_from_file cursor "$CURSOR_EXTENSIONS_FILE" "Cursor"
 }
 
 # ------------------------------------------------------------------------------
@@ -115,6 +182,7 @@ remove_targets_for_stow() {
   rm -rf "$HOME/.config/alacritty"
   rm -rf "$HOME/.config/ghostty"
   rm -f "$HOME/.config/zed/keymap.json"
+  rm -f "$HOME/.config/VSCodium/User/settings.json"
   rm -rf "$HOME/.agents"
 
   # hypr: only remove the dir if it's a symlink; if it's a real dir, remove only the files that are in the repo
@@ -290,6 +358,7 @@ usage() {
   echo "       $0 --restore         - list backups and restore a previous set of configs"
   echo "       $0 --list-backups    - list backup directories (no restore)"
   echo "       $0 --unstow <pkg>   - unstow a single package (e.g. waybar, alacritty)"
+  echo "       $0 --save-extensions - update extension lists for VSCodium and Cursor"
   echo ""
   echo "Packages: ${PACKAGES[*]}"
   echo "Backups are stored in ~/.dotfiles-backup-YYYYMMDD-HHMMSS"
@@ -310,6 +379,10 @@ main() {
       ;;
     --unstow|-u)
       run_unstow "${2:-}"
+      return
+      ;;
+    --save-extensions|save-extensions)
+      save_editor_extensions
       return
       ;;
     install|"")
@@ -347,6 +420,7 @@ main() {
   do_backup
   remove_targets_for_stow
   run_stow
+  install_editor_extensions
   reload_hypr_and_waybar
 }
 
