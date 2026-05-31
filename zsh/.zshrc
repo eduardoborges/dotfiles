@@ -49,7 +49,15 @@ alias v="nvim"
 alias k="kubectl"
 alias kx="kubectl exec -it"
 
-alias d="dk"
+alias d="docker"
+alias dup="docker compose up -d"
+alias ddown="docker compose down"
+alias dbuild="docker compose build"
+alias drebuild="docker compose build --no-cache"
+alias drestart="docker compose down && docker compose up -d"
+alias dlogs="docker compose logs -f"
+alias dexec="docker compose exec"
+alias dssh="docker compose exec /bin/sh"
 
 alias h="http-server"
 
@@ -58,6 +66,10 @@ alias nr="npm run"
 
 alias pn="pnpm"
 alias pnr="pnpm run"
+
+function sshmac(){
+  ssh eduardo@192.168.15.20
+}
 
 # Rede: função que retorna todos os IPs da máquina (um por linha)
 # (usa "function name {" para não conflitar com alias "ips" do docker-alias)
@@ -146,13 +158,29 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH=$PATH:$HOME/.maestro/bin
 
 # pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
+export PNPM_HOME="/home/edu/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
 
 
 . "$HOME/.local/share/../bin/env"
 source /home/edu/.config/op/plugins.sh
+
+# bun completions
+[ -s "/home/edu/.bun/_bun" ] && source "/home/edu/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/home/edu/.opencode/bin:$PATH
+
+alias code='codium-insiders'
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/edu/.local/bin:$PATH"

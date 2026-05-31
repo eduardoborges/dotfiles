@@ -21,7 +21,7 @@ VSCODIUM_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscodium.txt"
 CURSOR_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/cursor.txt"
 
 # Packages we're going to stow (each becomes a set of symlinks)
-PACKAGES=(zsh starship hypr waybar alacritty ghostty zed vscodium agent-skills)
+PACKAGES=(zsh starship hypr waybar alacritty ghostty zed vscodium agent-skills claude)
 
 # Paths we back up (relative to $HOME); same list used for restore
 BACKUP_PATHS=(
@@ -34,6 +34,8 @@ BACKUP_PATHS=(
   .config/zed/keymap.json
   .config/VSCodium/User/settings.json
   .agents
+  .claude/settings.json
+  .claude/statusline-command.sh
 )
 
 backup_extensions() {
@@ -184,6 +186,8 @@ remove_targets_for_stow() {
   rm -f "$HOME/.config/zed/keymap.json"
   rm -f "$HOME/.config/VSCodium/User/settings.json"
   rm -rf "$HOME/.agents"
+  rm -f "$HOME/.claude/settings.json"
+  rm -f "$HOME/.claude/statusline-command.sh"
 
   # hypr: only remove the dir if it's a symlink; if it's a real dir, remove only the files that are in the repo
   if [[ -L "$HOME/.config/hypr" ]]; then

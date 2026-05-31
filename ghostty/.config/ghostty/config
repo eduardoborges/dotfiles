@@ -2,7 +2,7 @@
 config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
 
 # Font
-font-family = "DankMono Nerd Font"
+font-family = "Dank Mono"
 font-style = Regular
 font-size = 10
 theme = dracula

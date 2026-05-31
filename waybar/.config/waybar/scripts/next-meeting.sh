@@ -19,7 +19,40 @@ if [[ ! -x "$MEETFY_BIN" ]]; then
   MEETFY_BIN="meetfy"
 fi
 
-json=$("$MEETFY_BIN" next --json 2>/dev/null) || true
+CACHE_FILE="/tmp/meetfy-next-cache.json"
+LAST_GOOD_FILE="/tmp/meetfy-next-lastgood.json"
+LOCK_FILE="/tmp/meetfy-next.lock"
+CACHE_TTL=45
+
+# Reuse a fresh cached response (avoids duplicate API calls across waybar outputs).
+json=""
+if [[ -f "$CACHE_FILE" ]]; then
+  age=$(( $(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0) ))
+  if [[ $age -lt $CACHE_TTL ]]; then
+    json=$(cat "$CACHE_FILE")
+  fi
+fi
+
+if [[ -z "$json" ]]; then
+  # flock serializes concurrent invocations so only one hits the API.
+  {
+    flock 9
+
+    if [[ -f "$CACHE_FILE" ]]; then
+      age=$(( $(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0) ))
+      if [[ $age -lt $CACHE_TTL ]]; then
+        json=$(cat "$CACHE_FILE")
+      fi
+    fi
+
+    if [[ -z "$json" ]]; then
+      json=$("$MEETFY_BIN" next --json 2>/dev/null) || true
+      if [[ -n "$json" ]]; then
+        echo "$json" > "$CACHE_FILE"
+      fi
+    fi
+  } 9>"$LOCK_FILE"
+fi
 
 if [[ -z "$json" ]]; then
   echo '{"text": "", "tooltip": "meetfy: no response (run meetfy auth?)"}'
@@ -36,6 +69,9 @@ if [[ "$success" != "true" ]]; then
     text_escaped=$(escape_json "$msg")
     tooltip_escaped=$(escape_json "$tip")
     echo "{\"text\": \"$text_escaped\", \"tooltip\": \"$tooltip_escaped\"}"
+  elif [[ "$err" == "api_error" ]] && [[ -f "$LAST_GOOD_FILE" ]]; then
+    # Transient Google API failure — show last known meeting instead of "No events".
+    cat "$LAST_GOOD_FILE"
   else
     err_esc=$(escape_json "$err")
     echo "{\"text\": \"\", \"tooltip\": \"meetfy: $err_esc\"}"
@@ -149,4 +185,6 @@ tooltip="$title"
 text_escaped=$(escape_json "$short")
 tooltip_escaped=$(escape_json "$tooltip")
 
-echo "{\"text\": \"$text_escaped\", \"tooltip\": \"$tooltip_escaped\"}"
+output="{\"text\": \"$text_escaped\", \"tooltip\": \"$tooltip_escaped\"}"
+echo "$output" > "$LAST_GOOD_FILE"
+echo "$output"

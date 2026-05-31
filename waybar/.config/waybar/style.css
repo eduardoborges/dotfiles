@@ -6,7 +6,7 @@
   border: none;
   border-radius: 0;
   min-height: 0;
-  font-family: 'DankMono Nerd Font';
+  font-family: 'Dank Mono';
   font-size: 13px;
 }
 
@@ -40,7 +40,7 @@ window#waybar {
   padding: 0 6px;
   margin: 0 1.5px;
   min-width: 9px;
-  font-family: 'DankMono Nerd Font';
+  font-family: 'Dank Mono';
   font-size: 13px;
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -145,4 +145,14 @@ menuitem {
 
 menuitem:hover {
   background-color: alpha(@foreground, 0.12);
+}
+#custom-weather {
+  margin-left: 7.5px;
+  margin-right: 7.5px;
+}
+
+#custom-weather.unavailable {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
 }
