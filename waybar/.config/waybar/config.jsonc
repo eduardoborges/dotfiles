@@ -23,10 +23,10 @@
   "modules-right": [
     "tray",
     "bluetooth",
-    "network",
+    "custom/network-speed",
     "pulseaudio",
     "custom/gpu",
-    "cpu",
+    "custom/cpu-stats",
     "memory",
     "battery"
   ],
@@ -90,6 +90,15 @@
     "on-click": "omarchy-launch-or-focus-tui btop",
     "on-click-right": "alacritty"
   },
+  "custom/cpu-stats": {
+    "interval": 5,
+    "exec": "$HOME/.config/waybar/scripts/cpu-stats.sh",
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "omarchy-launch-or-focus-tui btop",
+    "on-click-right": "alacritty"
+  },
   "memory": {
     "interval": 5,
     "format": "󰘚 {used:0.1f}/{total:0.1f}Gb",
@@ -98,9 +107,10 @@
   },
   "custom/gpu": {
     "interval": 5,
-    "format": "󰾲 {}%",
-    "exec": "cat /sys/class/drm/card*/device/gpu_busy_percent 2>/dev/null || nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo '--'",
-    "tooltip-format": "GPU usage",
+    "exec": "$HOME/.config/waybar/scripts/gpu-stats.sh",
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
     "on-click": "omarchy-launch-or-focus-tui btop"
   },
   "clock": {
@@ -133,6 +143,14 @@
     "tooltip-format-disconnected": "Disconnected",
     "interval": 3,
     "spacing": 1,
+    "on-click": "omarchy-launch-wifi"
+  },
+  "custom/network-speed": {
+    "interval": 1,
+    "exec": "$HOME/.config/waybar/scripts/network-speed.sh",
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
     "on-click": "omarchy-launch-wifi"
   },
   "battery": {

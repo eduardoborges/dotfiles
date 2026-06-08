@@ -63,6 +63,7 @@ window#waybar {
 }
 
 #cpu,
+#custom-cpu-stats,
 #memory,
 #custom-gpu,
 #battery,
@@ -78,6 +79,10 @@ window#waybar {
 }
 
 #network {
+  margin: 0 6px;
+}
+
+#custom-network-speed {
   margin: 0 6px;
 }
 

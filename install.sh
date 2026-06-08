@@ -21,7 +21,7 @@ VSCODIUM_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscodium.txt"
 CURSOR_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/cursor.txt"
 
 # Packages we're going to stow (each becomes a set of symlinks)
-PACKAGES=(zsh starship hypr waybar alacritty ghostty zed vscodium agent-skills claude)
+PACKAGES=(zsh starship hypr waybar alacritty ghostty zed vscodium agent-skills claude wireplumber)
 
 # Paths we back up (relative to $HOME); same list used for restore
 BACKUP_PATHS=(
@@ -36,6 +36,7 @@ BACKUP_PATHS=(
   .agents
   .claude/settings.json
   .claude/statusline-command.sh
+  .config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf
 )
 
 backup_extensions() {
@@ -149,6 +150,25 @@ install_editor_extensions() {
   install_extensions_from_file cursor "$CURSOR_EXTENSIONS_FILE" "Cursor"
 }
 
+install_modprobe_configs() {
+  local src="$DOTFILES_DIR/system/etc/modprobe.d/snd-hda-intel-disable-power-save.conf"
+  local dest="/etc/modprobe.d/snd-hda-intel-disable-power-save.conf"
+
+  if [[ ! -f "$src" ]]; then
+    return 0
+  fi
+
+  echo ""
+  echo "Installing system audio power-save config..."
+  if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
+    echo "  already installed: $dest"
+    return 0
+  fi
+
+  sudo install -Dm644 "$src" "$dest"
+  echo "  installed: $dest"
+}
+
 # ------------------------------------------------------------------------------
 # hypr: hyprland.conf and hyprlock.conf are NOT in this repo - they come from Omarchy.
 # We need them to exist as regular files before stow, or stow would replace the whole dir.
@@ -188,6 +208,7 @@ remove_targets_for_stow() {
   rm -rf "$HOME/.agents"
   rm -f "$HOME/.claude/settings.json"
   rm -f "$HOME/.claude/statusline-command.sh"
+  rm -f "$HOME/.config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf"
 
   # hypr: only remove the dir if it's a symlink; if it's a real dir, remove only the files that are in the repo
   if [[ -L "$HOME/.config/hypr" ]]; then
@@ -424,6 +445,7 @@ main() {
   do_backup
   remove_targets_for_stow
   run_stow
+  install_modprobe_configs
   install_editor_extensions
   reload_hypr_and_waybar
 }
