@@ -58,12 +58,13 @@ progress_bar() {
   for ((i=filled; i<width; i++)); do printf '░'; done
 }
 
-# Helper to join array with " | " separator
+# Helper to join args with " | " separator
+# (positional args instead of a nameref, so it works on bash 3.2 — macOS default)
 join_parts() {
-  local -n arr=$1
-  [ ${#arr[@]} -eq 0 ] && return
-  printf '%s' "${arr[0]}"
-  for p in "${arr[@]:1}"; do
+  [ "$#" -eq 0 ] && return
+  printf '%s' "$1"
+  shift
+  for p in "$@"; do
     printf ' \033[2m|\033[0m %s' "$p"
   done
 }
@@ -131,7 +132,7 @@ if [ -n "$seven_day_pct" ]; then
   line2+=("$(printf "${color}📅 %s %d%%%s\033[0m" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
-join_parts line1
+join_parts "${line1[@]}"
 printf '\n'
-join_parts line2
+join_parts "${line2[@]}"
 printf '\n'

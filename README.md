@@ -2,19 +2,19 @@
 
 My daily configs for zsh, starship, Hyprland, waybar, Alacritty, VSCodium, Cursor, and agent skills.
 
-I tested this on Arch Linux BTW.
+Works on **Arch Linux** (my main setup) and **macOS**. The installer detects your OS and only stows the packages that make sense there — the Hyprland desktop stack (`hypr`, `waybar`, `wireplumber`) and the system audio tweaks are Linux-only and are skipped on macOS. Shell-level differences (clipboard, Android SDK path) are handled inside `.zshrc` at runtime.
 
 Everything is symlinked into your home via [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Install
 
-You need **stow** (e.g. `sudo pacman -S stow` or `brew install stow`). Then:
+You need **stow** (`brew install stow` on macOS, `sudo pacman -S stow` on Arch). The installer will offer to install it for you via brew/pacman if it's missing. Then:
 
 ```bash
 ./install.sh
 ```
 
-The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, installs editor extensions from `extensions/vscodium.txt` and `extensions/cursor.txt`, and reloads Hyprland and waybar if you’re in a Hyprland session.
+The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, installs editor extensions from `extensions/vscodium.txt` and `extensions/cursor.txt`, and (on Linux) reloads Hyprland and waybar if you’re in a Hyprland session.
 
 ## Extensions (VSCodium and Cursor)
 

@@ -20,12 +20,31 @@ BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 VSCODIUM_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscodium.txt"
 CURSOR_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/cursor.txt"
 
-# Packages we're going to stow (each becomes a set of symlinks)
-PACKAGES=(zsh starship hypr waybar alacritty ghostty zed vscodium agent-skills claude wireplumber)
+# ------------------------------------------------------------------------------
+# OS detection: macOS and Linux share most configs, but some packages
+# (Hyprland, waybar, wireplumber, system modprobe) only make sense on Linux.
+# ------------------------------------------------------------------------------
+case "$(uname -s)" in
+  Darwin) OS=macos ;;
+  Linux)  OS=linux ;;
+  *)      OS=unknown ;;
+esac
+
+# Packages stowed on every OS
+COMMON_PACKAGES=(zsh starship alacritty ghostty zed vscodium agent-skills claude git)
+# Packages stowed only on Linux (Hyprland desktop stack + audio tweaks)
+LINUX_PACKAGES=(hypr waybar wireplumber)
+
+if [[ "$OS" == "linux" ]]; then
+  PACKAGES=("${COMMON_PACKAGES[@]}" "${LINUX_PACKAGES[@]}")
+else
+  PACKAGES=("${COMMON_PACKAGES[@]}")
+fi
 
 # Paths we back up (relative to $HOME); same list used for restore
 BACKUP_PATHS=(
   .zshrc
+  .config/git/config
   .config/starship.toml
   .config/hypr
   .config/waybar
@@ -60,7 +79,10 @@ backup_extensions() {
 need_stow() {
   if ! command -v stow &>/dev/null; then
     echo "GNU Stow is not installed."
-    if command -v pacman &>/dev/null; then
+    if command -v brew &>/dev/null; then
+      echo "Installing with: brew install stow"
+      brew install stow
+    elif command -v pacman &>/dev/null; then
       echo "Installing with: sudo pacman -S stow"
       sudo pacman -S --noconfirm stow
     else
@@ -151,6 +173,11 @@ install_editor_extensions() {
 }
 
 install_modprobe_configs() {
+  # Linux-only: modprobe.d does not exist on macOS.
+  if [[ "$OS" != "linux" ]]; then
+    return 0
+  fi
+
   local src="$DOTFILES_DIR/system/etc/modprobe.d/snd-hda-intel-disable-power-save.conf"
   local dest="/etc/modprobe.d/snd-hda-intel-disable-power-save.conf"
 
@@ -199,6 +226,7 @@ ensure_hypr_base_config() {
 remove_targets_for_stow() {
   echo "Removing files/dirs that will be replaced by symlinks..."
   rm -f "$HOME/.zshrc"
+  rm -f "$HOME/.config/git/config"
   rm -f "$HOME/.config/starship.toml"
   rm -rf "$HOME/.config/waybar"
   rm -rf "$HOME/.config/alacritty"
@@ -209,6 +237,11 @@ remove_targets_for_stow() {
   rm -f "$HOME/.claude/settings.json"
   rm -f "$HOME/.claude/statusline-command.sh"
   rm -f "$HOME/.config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf"
+
+  # hypr base config is Linux/Hyprland-only
+  if [[ "$OS" != "linux" ]]; then
+    return 0
+  fi
 
   # hypr: only remove the dir if it's a symlink; if it's a real dir, remove only the files that are in the repo
   if [[ -L "$HOME/.config/hypr" ]]; then

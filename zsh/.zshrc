@@ -10,7 +10,11 @@ export VISUAL=code-insiders
 source $HOME/.envrc
 
 # Shell Plugins
-export ZPLUG_HOME=$HOME/.zplug
+if [[ "$OSTYPE" == darwin* ]]; then
+  export ZPLUG_HOME=/opt/homebrew/opt/zplug
+else
+  export ZPLUG_HOME=$HOME/.zplug
+fi
 source $ZPLUG_HOME/init.zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "zdharma-continuum/fast-syntax-highlighting"
@@ -138,49 +142,23 @@ function killatport() {
   echo "Killed process(es) on port $1: $pids"
 }
 
-copy() { wl-copy; }
+# Clipboard: pbcopy on macOS, wl-copy on Wayland/Linux
+if [[ "$OSTYPE" == darwin* ]]; then
+  copy() { pbcopy; }
+elif command -v wl-copy &>/dev/null; then
+  copy() { wl-copy; }
+elif command -v xclip &>/dev/null; then
+  copy() { xclip -selection clipboard; }
+fi
 
-# Android SDK
-export ANDROID_HOME=$HOME/Android/Sdk
+# Android SDK (different default locations per OS)
+if [[ "$OSTYPE" == darwin* ]]; then
+  export ANDROID_HOME=$HOME/Library/Android/sdk
+else
+  export ANDROID_HOME=$HOME/Android/Sdk
+fi
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export ANDROID_AVD_HOME=$HOME/.config/.android/avd
 export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
-
-# Extra
-export PATH="$PATH:$HOME/.bin"
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:$HOME/.lmstudio/bin"
-# End of LM Studio CLI section
-
-export PATH="$HOME/.local/bin:$PATH"
-export PATH=$PATH:$HOME/.maestro/bin
-
-# pnpm
-export PNPM_HOME="/home/edu/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
-
-
-. "$HOME/.local/share/../bin/env"
-source /home/edu/.config/op/plugins.sh
-
-# bun completions
-[ -s "/home/edu/.bun/_bun" ] && source "/home/edu/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# opencode
-export PATH=/home/edu/.opencode/bin:$PATH
-
-alias code='codium-insiders'
-
-
-# Added by Antigravity CLI installer
-export PATH="/home/edu/.local/bin:$PATH"
