@@ -1,0 +1,126 @@
+{
+  "version": 3,
+  "skills": {
+    "argent-android-emulator-setup": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-android-emulator-setup/SKILL.md",
+      "skillFolderHash": "da6a44e804d159700fb8e061a440b6fc0275ec70",
+      "installedAt": "2026-06-18T20:07:38.950Z",
+      "updatedAt": "2026-06-18T20:07:38.950Z"
+    },
+    "argent-create-flow": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-create-flow/SKILL.md",
+      "skillFolderHash": "509589091f2319af8bc3f4731668ad61d5625759",
+      "installedAt": "2026-06-18T20:07:38.952Z",
+      "updatedAt": "2026-06-18T20:07:38.952Z"
+    },
+    "argent-device-interact": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-device-interact/SKILL.md",
+      "skillFolderHash": "314ebde304f5e1df0c4bda99d19f5b1962110455",
+      "installedAt": "2026-06-18T20:07:38.953Z",
+      "updatedAt": "2026-06-18T20:07:38.953Z"
+    },
+    "argent-ios-simulator-setup": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-ios-simulator-setup/SKILL.md",
+      "skillFolderHash": "a20f523fb61968b8aca2a97954437131b776067d",
+      "installedAt": "2026-06-18T20:07:38.953Z",
+      "updatedAt": "2026-06-18T20:07:38.953Z"
+    },
+    "argent-lens": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-lens/SKILL.md",
+      "skillFolderHash": "ab0b19f82006cbaa5b68b859c93e35ae53b0f401",
+      "installedAt": "2026-06-18T20:07:38.954Z",
+      "updatedAt": "2026-06-18T20:07:38.954Z"
+    },
+    "argent-metro-debugger": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-metro-debugger/SKILL.md",
+      "skillFolderHash": "9a2c228cc543eff8c6df44c67aad2a7bf9d1ddb1",
+      "installedAt": "2026-06-18T20:07:38.954Z",
+      "updatedAt": "2026-06-18T20:07:38.954Z"
+    },
+    "argent-native-profiler": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-native-profiler/SKILL.md",
+      "skillFolderHash": "7d5d79059406ddd2fb0233880208973a91ec2421",
+      "installedAt": "2026-06-18T20:07:38.955Z",
+      "updatedAt": "2026-06-18T20:07:38.955Z"
+    },
+    "argent-react-native-app-workflow": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-react-native-app-workflow/SKILL.md",
+      "skillFolderHash": "3863f3cda18378cd94ed504d724480d7d5744273",
+      "installedAt": "2026-06-18T20:07:38.955Z",
+      "updatedAt": "2026-06-18T20:07:38.955Z"
+    },
+    "argent-react-native-optimization": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-react-native-optimization/SKILL.md",
+      "skillFolderHash": "7553f554bd82f067f1bfdd7684ed5741d1d051ce",
+      "installedAt": "2026-06-18T20:07:38.956Z",
+      "updatedAt": "2026-06-18T20:07:38.956Z"
+    },
+    "argent-react-native-profiler": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-react-native-profiler/SKILL.md",
+      "skillFolderHash": "8ffb0e0d3361d8d3071041eeba42fc4fdf5a4919",
+      "installedAt": "2026-06-18T20:07:38.956Z",
+      "updatedAt": "2026-06-18T20:07:38.956Z"
+    },
+    "argent-screenshot-diff": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-screenshot-diff/SKILL.md",
+      "skillFolderHash": "065108e0c3dda1b7b48f697304430759d10c7e6c",
+      "installedAt": "2026-06-18T20:07:38.957Z",
+      "updatedAt": "2026-06-18T20:07:38.957Z"
+    },
+    "argent-test-ui-flow": {
+      "source": "software-mansion/argent",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/software-mansion/argent.git",
+      "ref": "v0.12.0",
+      "skillPath": "packages/skills/skills/argent-test-ui-flow/SKILL.md",
+      "skillFolderHash": "a4a6b3570011648f114e66d42a59ef2d5cbf8682",
+      "installedAt": "2026-06-18T20:07:38.958Z",
+      "updatedAt": "2026-06-18T20:07:38.958Z"
+    }
+  },
+  "dismissed": {}
+}
