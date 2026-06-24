@@ -1,0 +1,17 @@
+{
+    "workbench.colorTheme": "Draculinho",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.activityBar.location": "top",
+    "editor.fontFamily": "DankMono Nerd Font",
+    "window.commandCenter": false,
+    "workbench.layoutControl.enabled": false,
+    "workbench.browser.showInTitleBar": false,
+    "explorer.confirmDelete": false,
+    "editor.fontSize": 13,
+    "git.autofetch": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "git.confirmSync": false,
+    "editor.stickyScroll.enabled": false
+}
