@@ -4,15 +4,6 @@
     "defaultMode": "bypassPermissions"
   },
   "model": "opus",
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
-  },
-  "enabledPlugins": {},
-  "effortLevel": "medium",
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "auto",
-  "agentPushNotifEnabled": true,
   "hooks": {
     "PreToolUse": [
       {
@@ -26,5 +17,16 @@
       }
     ]
   },
-  "enableWorkflows": true
+  "enableWorkflows": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {},
+  "effortLevel": "medium",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "tui": "fullscreen"
 }

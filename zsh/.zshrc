@@ -1,11 +1,20 @@
 # My Favorite Shell
+if [[ "$OSTYPE" == darwin* ]]; then
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
+
 eval "$(starship init zsh)"
 
 # mise (polyglot runtime manager - node, pnpm, etc.)
 eval "$(mise activate zsh)"
 
-export EDITOR=code-insiders
-export VISUAL=code-insiders
+export EDITOR="codium-insiders --wait"
+export VISUAL="codium-insiders --wait"
+export GIT_EDITOR="codium-insiders --wait"
 
 source $HOME/.envrc
 
@@ -45,6 +54,8 @@ alias l="ls -la"
 alias ll="ls -l"
 alias la="ls -A"
 
+alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work claude"
+
 alias ..="cd .."
 alias ...="cd ../.."
 
@@ -71,10 +82,6 @@ alias nr="npm run"
 alias pn="pnpm"
 alias pnr="pnpm run"
 
-function sshmac(){
-  ssh eduardo@192.168.15.20
-}
-
 # Rede: função que retorna todos os IPs da máquina (um por linha)
 # (usa "function name {" para não conflitar com alias "ips" do docker-alias)
 function ips {
@@ -90,43 +97,6 @@ function f()    { find . -iname "*$1*" ${@:2} }
 function r()    { grep "$1" ${@:2} -R . }
 function size() { du -sh "$1" | awk '{print $1}' }
 function cleanGit() { git clean -Xdf }
-function avdnext() {
-  local avds running_avds next_avd
-  local -a stopped_avds
-
-  echo "[avdnext] listando AVDs instaladas..."
-  avds=("${(@f)$(emulator -list-avds 2>/dev/null)}")
-  if (( ${#avds[@]} == 0 )); then
-    echo "[avdnext] nenhuma AVD encontrada"
-    return 1
-  fi
-
-  echo "[avdnext] detectando AVDs em execucao..."
-  running_avds=("${(@f)$(ps -eo comm=,args= | awk '$1 ~ /^emulator$/ || $1 ~ /^qemu-system-x86/ { $1=""; sub(/^[[:space:]]+/, ""); print }' | sed -n -e 's/.*-avd[[:space:]]\([^[:space:]]\+\).*/\1/p' -e 's/.*@\([^[:space:]]\+\).*/\1/p' | sort -u)}")
-
-  for avd in "${avds[@]}"; do
-    if (( ${running_avds[(Ie)$avd]} == 0 )); then
-      stopped_avds+=("$avd")
-    fi
-  done
-
-  if (( ${#running_avds[@]} > 0 )); then
-    echo "[avdnext] em execucao: ${running_avds[*]}"
-  else
-    echo "[avdnext] em execucao: nenhuma"
-  fi
-
-  if (( ${#stopped_avds[@]} == 0 )); then
-    echo "[avdnext] todas as AVDs ja estao abertas. nao vou duplicar."
-    return 0
-  fi
-
-  next_avd="${stopped_avds[1]}"
-  echo "[avdnext] proxima AVD disponivel: $next_avd"
-  nohup emulator -avd "$next_avd" >/tmp/avd-"$next_avd".log 2>&1 &
-  disown
-  echo "[avdnext] abrindo AVD: $next_avd"
-}
 
 function killatport() {
   if [ -z "$1" ]; then
@@ -162,3 +132,7 @@ export ANDROID_AVD_HOME=$HOME/.config/.android/avd
 export PATH="$PATH:$ANDROID_HOME/emulator"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/eduardo/.lmstudio/bin"
+# End of LM Studio CLI section
