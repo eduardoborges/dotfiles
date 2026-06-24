@@ -1,0 +1,155 @@
+# macOS shortcuts migrated from:
+# ~/Projects/dotfiles/hypr/.config/hypr/bindings.conf
+#
+# Omarchy SUPER maps to macOS Option (alt).
+# Omarchy ALT maps to macOS Command (cmd) when used with SUPER.
+
+# Applications
+
+# Terminal
+alt - return : open -na /Applications/Ghostty.app
+
+# Tmux terminal. Falls back to a normal Ghostty window when tmux is unavailable.
+alt + cmd - return : command -v tmux >/dev/null && open -na /Applications/Ghostty.app --args -e tmux new || open -na /Applications/Ghostty.app
+
+# Browser
+alt + shift - return : open -a "Google Chrome"
+alt + shift - b : open -a "Google Chrome"
+alt + shift + cmd - b : open -na "Google Chrome" --args --incognito
+
+# Finder
+alt + shift - f : open "$HOME"
+# Hyprland opened the terminal's current directory; macOS falls back to Home.
+alt + cmd + shift - f : open "$HOME"
+
+# Music
+alt + shift - m : open -a "Spotify"
+
+# Editor
+alt + shift - n : open -a "VSCodium - Insiders"
+
+# Docker (lazydocker is not installed on this Mac).
+alt + shift - d : open -a "Docker"
+
+# Passwords
+alt - 0x2C : open -a "1Password"
+alt + shift - 0x2C : open -a "1Password"
+
+# Slack
+alt + shift - s : open -a "Slack"
+
+# Web apps
+alt + shift - c : open -a "Notion Calendar"
+alt + shift - w : open -a "WhatsApp"
+
+# Spaces
+# Focus previous/next Space.
+alt + ctrl - left : yabai -m space --focus prev
+alt + ctrl - right : yabai -m space --focus next
+
+# Window management
+# Focus windows; cross to the adjacent display at horizontal edges.
+alt - h : yabai -m window --focus west || yabai -m display --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east || yabai -m display --focus east
+
+# Arrow-key aliases for the focus shortcuts above.
+alt - left : yabai -m window --focus west || yabai -m display --focus west
+alt - down : yabai -m window --focus south
+alt - up : yabai -m window --focus north
+alt - right : yabai -m window --focus east || yabai -m display --focus east
+
+# Move windows in the BSP tree; cross displays at horizontal edges.
+alt + shift - h : yabai -m window --warp west || (yabai -m window --display west && yabai -m display --focus west)
+alt + shift - j : yabai -m window --warp south
+alt + shift - k : yabai -m window --warp north
+alt + shift - l : yabai -m window --warp east || (yabai -m window --display east && yabai -m display --focus east)
+
+# Arrow-key aliases for moving windows.
+alt + shift - left : yabai -m window --warp west || (yabai -m window --display west && yabai -m display --focus west)
+alt + shift - down : yabai -m window --warp south
+alt + shift - up : yabai -m window --warp north
+alt + shift - right : yabai -m window --warp east || (yabai -m window --display east && yabai -m display --focus east)
+
+# Swap windows without changing the BSP tree.
+alt + cmd - h : yabai -m window --swap west
+alt + cmd - j : yabai -m window --swap south
+alt + cmd - k : yabai -m window --swap north
+alt + cmd - l : yabai -m window --swap east
+
+# Stack adjacent windows, similar to grouped/tabbed containers.
+alt + cmd + shift - h : yabai -m window --stack west
+alt + cmd + shift - j : yabai -m window --stack south
+alt + cmd + shift - k : yabai -m window --stack north
+alt + cmd + shift - l : yabai -m window --stack east
+
+# Choose where the next window is inserted.
+alt + ctrl + shift - h : yabai -m window --insert west
+alt + ctrl + shift - j : yabai -m window --insert south
+alt + ctrl + shift - k : yabai -m window --insert north
+alt + ctrl + shift - l : yabai -m window --insert east
+
+# Resize windows.
+alt + ctrl - h : yabai -m window --resize left:-40:0 || yabai -m window --resize right:-40:0
+alt + ctrl - j : yabai -m window --resize bottom:0:40 || yabai -m window --resize top:0:40
+alt + ctrl - k : yabai -m window --resize top:0:-40 || yabai -m window --resize bottom:0:-40
+alt + ctrl - l : yabai -m window --resize right:40:0 || yabai -m window --resize left:40:0
+
+# Layout controls.
+alt + shift - space : yabai -m window --toggle float
+alt - f : yabai -m window --toggle zoom-fullscreen
+alt - e : yabai -m space --balance
+alt - r : yabai -m space --rotate 90
+alt - t : yabai -m window --toggle split
+alt + cmd - x : yabai -m space --mirror x-axis
+alt + cmd - y : yabai -m space --mirror y-axis
+alt + cmd - b : yabai -m space --layout bsp
+alt + cmd - f : yabai -m space --layout float
+alt - p : yabai -m window --toggle sticky
+alt + shift - p : yabai -m window --toggle pip
+alt + cmd - up : yabai -m window --raise
+alt + cmd - down : yabai -m window --lower
+alt - q : yabai -m window --close
+
+# Scratchpad: assign the focused window once, then toggle it globally.
+alt + shift - 0x32 : yabai -m window --scratchpad terminal
+alt - 0x32 : yabai -m window --toggle terminal
+
+# Create, remove, reorder, and move Spaces.
+alt + cmd - n : "$HOME/.config/yabai/space-manage.sh" create
+alt + cmd - backspace : "$HOME/.config/yabai/space-manage.sh" destroy
+alt + ctrl + cmd - left : "$HOME/.config/yabai/space-manage.sh" move prev
+alt + ctrl + cmd - right : "$HOME/.config/yabai/space-manage.sh" move next
+alt + ctrl + cmd + shift - left : "$HOME/.config/yabai/space-manage.sh" display west
+alt + ctrl + cmd + shift - right : "$HOME/.config/yabai/space-manage.sh" display east
+
+# Explicit display controls.
+alt + cmd - left : yabai -m display --focus west
+alt + cmd - right : yabai -m display --focus east
+alt + cmd + shift - left : yabai -m window --display west && yabai -m display --focus west
+alt + cmd + shift - right : yabai -m window --display east && yabai -m display --focus east
+
+# Focus logical Spaces. The helper ignores native-fullscreen Spaces and works
+# even before the optional ws-N labels have been recreated after login.
+# Physical keycodes keep these shortcuts independent of the keyboard layout.
+alt - 0x12 : "$HOME/.config/yabai/space-action.sh" focus 1
+alt - 0x13 : "$HOME/.config/yabai/space-action.sh" focus 2
+alt - 0x14 : "$HOME/.config/yabai/space-action.sh" focus 3
+alt - 0x15 : "$HOME/.config/yabai/space-action.sh" focus 4
+alt - 0x17 : "$HOME/.config/yabai/space-action.sh" focus 5
+alt - 0x16 : "$HOME/.config/yabai/space-action.sh" focus 6
+alt - 0x1A : "$HOME/.config/yabai/space-action.sh" focus 7
+alt - 0x1C : "$HOME/.config/yabai/space-action.sh" focus 8
+alt - 0x19 : "$HOME/.config/yabai/space-action.sh" focus 9
+
+# Send the focused window to a Space and follow it.
+alt + shift - 0x12 : "$HOME/.config/yabai/space-action.sh" move 1
+alt + shift - 0x13 : "$HOME/.config/yabai/space-action.sh" move 2
+alt + shift - 0x14 : "$HOME/.config/yabai/space-action.sh" move 3
+alt + shift - 0x15 : "$HOME/.config/yabai/space-action.sh" move 4
+alt + shift - 0x17 : "$HOME/.config/yabai/space-action.sh" move 5
+alt + shift - 0x16 : "$HOME/.config/yabai/space-action.sh" move 6
+alt + shift - 0x1A : "$HOME/.config/yabai/space-action.sh" move 7
+alt + shift - 0x1C : "$HOME/.config/yabai/space-action.sh" move 8
+alt + shift - 0x19 : "$HOME/.config/yabai/space-action.sh" move 9

@@ -18,7 +18,7 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 VSCODIUM_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscodium.txt"
-CURSOR_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/cursor.txt"
+BREWFILE="$DOTFILES_DIR/Brewfile"
 
 # ------------------------------------------------------------------------------
 # OS detection: macOS and Linux share most configs, but some packages
@@ -32,11 +32,15 @@ esac
 
 # Packages stowed on every OS
 COMMON_PACKAGES=(zsh starship alacritty ghostty zed vscodium agent-skills claude git)
+# Packages stowed only on macOS
+MACOS_PACKAGES=(skhd yabai borders)
 # Packages stowed only on Linux (Hyprland desktop stack + audio tweaks)
 LINUX_PACKAGES=(hypr waybar wireplumber)
 
 if [[ "$OS" == "linux" ]]; then
   PACKAGES=("${COMMON_PACKAGES[@]}" "${LINUX_PACKAGES[@]}")
+elif [[ "$OS" == "macos" ]]; then
+  PACKAGES=("${COMMON_PACKAGES[@]}" "${MACOS_PACKAGES[@]}")
 else
   PACKAGES=("${COMMON_PACKAGES[@]}")
 fi
@@ -44,6 +48,8 @@ fi
 # Paths we back up (relative to $HOME); same list used for restore
 BACKUP_PATHS=(
   .zshrc
+  .skhdrc
+  .yabairc
   .config/git/config
   .config/starship.toml
   .config/hypr
@@ -52,6 +58,7 @@ BACKUP_PATHS=(
   .config/ghostty
   .config/zed/keymap.json
   .config/VSCodium/User/settings.json
+  Library/Application Support/VSCodium - Insiders/User/settings.json
   .agents
   .claude/settings.json
   .claude/statusline-command.sh
@@ -73,6 +80,93 @@ backup_extensions() {
   echo "  saved $label extensions -> $backup_file"
 }
 
+save_vscodium_extensions() {
+  local output_file="$1"
+  local cli
+  local label
+
+  # Prefer Stable when both editions are installed. Insiders is a fallback and
+  # uses the same tracked extension set.
+  for cli in codium codium-insiders; do
+    if command -v "$cli" &>/dev/null; then
+      if [[ "$cli" == "codium-insiders" ]]; then
+        label="VSCodium Insiders"
+      else
+        label="VSCodium"
+      fi
+      backup_extensions "$cli" "$output_file" "$label"
+      return 0
+    fi
+  done
+
+  echo "  skipping VSCodium extensions backup (codium/codium-insiders not found)"
+}
+
+# ------------------------------------------------------------------------------
+# Homebrew and Brewfile (macOS only)
+# ------------------------------------------------------------------------------
+load_homebrew_environment() {
+  local brew_bin=""
+
+  if command -v brew &>/dev/null; then
+    brew_bin="$(command -v brew)"
+  elif [[ -x /opt/homebrew/bin/brew ]]; then
+    brew_bin="/opt/homebrew/bin/brew"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    brew_bin="/usr/local/bin/brew"
+  fi
+
+  if [[ -n "$brew_bin" ]]; then
+    eval "$("$brew_bin" shellenv)"
+  fi
+}
+
+ensure_homebrew() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  load_homebrew_environment
+  if command -v brew &>/dev/null; then
+    return 0
+  fi
+
+  echo "Installing Homebrew..."
+  NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  load_homebrew_environment
+
+  if ! command -v brew &>/dev/null; then
+    echo "Homebrew installation finished but brew is not available in PATH."
+    exit 1
+  fi
+}
+
+install_homebrew_bundle() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+  if [[ ! -f "$BREWFILE" ]]; then
+    echo "Brewfile not found: $BREWFILE"
+    return 1
+  fi
+
+  echo ""
+  echo "Installing Homebrew packages from $BREWFILE..."
+  brew bundle install --no-upgrade --file="$BREWFILE"
+}
+
+save_homebrew_bundle() {
+  if [[ "$OS" != "macos" ]]; then
+    echo "Brewfile inventory is only supported on macOS."
+    return 1
+  fi
+
+  ensure_homebrew
+  brew bundle dump --force --file="$BREWFILE"
+  echo "Saved Homebrew inventory to $BREWFILE"
+}
+
 # ------------------------------------------------------------------------------
 # dependency: stow
 # ------------------------------------------------------------------------------
@@ -90,6 +184,173 @@ need_stow() {
       exit 1
     fi
   fi
+}
+
+# ------------------------------------------------------------------------------
+# macOS dependency: skhd
+# ------------------------------------------------------------------------------
+ensure_skhd() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  if ! command -v skhd &>/dev/null; then
+    if ! command -v brew &>/dev/null; then
+      echo "skhd is not installed and Homebrew is unavailable."
+      echo "Install Homebrew, then run: brew install asmvik/formulae/skhd"
+      return 1
+    fi
+
+    echo "Installing skhd..."
+    brew install asmvik/formulae/skhd
+  fi
+
+  echo "Starting/restarting skhd..."
+  if ! skhd --restart-service 2>/dev/null; then
+    if ! skhd --start-service 2>/dev/null; then
+      echo "  warning: skhd service did not start; check Accessibility permission."
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# macOS default editor: VSCodium Insiders
+# ------------------------------------------------------------------------------
+ensure_vscodium_insiders() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  if command -v codium-insiders &>/dev/null; then
+    return 0
+  fi
+
+  if ! command -v brew &>/dev/null; then
+    echo "VSCodium Insiders is not installed and Homebrew is unavailable."
+    return 1
+  fi
+
+  echo "Installing VSCodium Insiders..."
+  brew install --cask vscodium@insiders
+}
+
+ensure_borders() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  if ! command -v borders &>/dev/null; then
+    echo "  skipping borders service (borders not installed)"
+    return 0
+  fi
+
+  if brew services list | awk '$1 == "borders" && $2 == "started" { found=1 } END { exit !found }'; then
+    borders >/dev/null 2>&1 || true
+  else
+    brew services start borders
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# macOS dependency: yabai
+# ------------------------------------------------------------------------------
+ensure_yabai() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  if ! command -v yabai &>/dev/null; then
+    if ! command -v brew &>/dev/null; then
+      echo "yabai is not installed and Homebrew is unavailable."
+      echo "Install Homebrew, then run: brew install asmvik/formulae/yabai"
+      return 1
+    fi
+
+    echo "Installing yabai..."
+    brew install asmvik/formulae/yabai
+  fi
+
+  echo "Starting/restarting yabai..."
+  if ! yabai --restart-service 2>/dev/null; then
+    if ! yabai --start-service 2>/dev/null; then
+      echo "  warning: yabai service did not start; check Accessibility permission."
+    fi
+  fi
+}
+
+configure_yabai_scripting_addition() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  local installer="$HOME/.config/yabai/install-scripting-addition.sh"
+  local sip_status
+  sip_status="$(csrutil status 2>/dev/null || true)"
+
+  if [[ "$sip_status" != *"Filesystem Protections: disabled"* ]]; then
+    echo "  scripting addition skipped: required SIP protections are still enabled."
+    return 0
+  fi
+
+  if [[ "$(sysctl -n kern.bootargs 2>/dev/null || true)" != *"-arm64e_preview_abi"* ]]; then
+    echo "  scripting addition pending: reboot to activate -arm64e_preview_abi."
+    return 0
+  fi
+
+  if sudo -n yabai --load-sa 2>/dev/null; then
+    echo "  yabai scripting addition loaded."
+    return 0
+  fi
+
+  if [[ ! -x "$installer" ]]; then
+    echo "  warning: scripting-addition installer is missing."
+    return 1
+  fi
+
+  "$installer"
+}
+
+configure_macos_window_manager_defaults() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  "$DOTFILES_DIR/system/macos/apply-defaults.sh"
+}
+
+# ------------------------------------------------------------------------------
+# macOS login bootstrap: repair startup races after Dock/WindowServer are ready
+# ------------------------------------------------------------------------------
+ensure_yabai_login_bootstrap() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  local label="com.eduardo.yabai-bootstrap"
+  local domain="gui/$(id -u)"
+  local plist="$HOME/Library/LaunchAgents/$label.plist"
+
+  if [[ ! -f "$plist" ]]; then
+    echo "  warning: yabai login bootstrap plist is missing."
+    return 1
+  fi
+
+  if launchctl print "$domain/$label" &>/dev/null; then
+    launchctl bootout "$domain/$label" 2>/dev/null || true
+  fi
+
+  launchctl bootstrap "$domain" "$plist"
+  launchctl kickstart -k "$domain/$label"
+  echo "  yabai login bootstrap installed."
+}
+
+remove_yabai_login_bootstrap() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  launchctl bootout \
+    "gui/$(id -u)/com.eduardo.yabai-bootstrap" 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
@@ -115,8 +376,12 @@ do_backup() {
       for path in "${BACKUP_PATHS[@]}"; do
         backup_if_exists "$HOME/$path"
       done
-      backup_extensions codium "$BACKUP_DIR/vscodium-extensions.txt" "VSCodium"
-      backup_extensions cursor "$BACKUP_DIR/cursor-extensions.txt" "Cursor"
+      if command -v codium &>/dev/null; then
+        backup_extensions codium "$BACKUP_DIR/vscodium-extensions.txt" "VSCodium"
+      fi
+      if command -v codium-insiders &>/dev/null; then
+        backup_extensions codium-insiders "$BACKUP_DIR/vscodium-insiders-extensions.txt" "VSCodium Insiders"
+      fi
       echo "Backup done."
       ;;
     *)
@@ -127,9 +392,8 @@ do_backup() {
 
 save_editor_extensions() {
   echo ""
-  echo "Saving extension lists to this repository..."
-  backup_extensions codium "$VSCODIUM_EXTENSIONS_FILE" "VSCodium"
-  backup_extensions cursor "$CURSOR_EXTENSIONS_FILE" "Cursor"
+  echo "Saving the shared editor extension list from VSCodium..."
+  save_vscodium_extensions "$VSCODIUM_EXTENSIONS_FILE"
   echo "Done."
 }
 
@@ -169,7 +433,61 @@ install_editor_extensions() {
   echo ""
   echo "Installing editor extensions from dotfiles..."
   install_extensions_from_file codium "$VSCODIUM_EXTENSIONS_FILE" "VSCodium"
-  install_extensions_from_file cursor "$CURSOR_EXTENSIONS_FILE" "Cursor"
+  install_extensions_from_file codium-insiders "$VSCODIUM_EXTENSIONS_FILE" "VSCodium Insiders"
+}
+
+configure_macos_default_editor() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  if ! command -v codium-insiders &>/dev/null; then
+    echo "  skipping default editor setup (codium-insiders not found)"
+    return 0
+  fi
+
+  if ! command -v duti &>/dev/null; then
+    if ! command -v brew &>/dev/null; then
+      echo "  skipping macOS file associations (duti/Homebrew not found)"
+      return 0
+    fi
+    echo "Installing duti for macOS file associations..."
+    brew install duti
+  fi
+
+  local bundle_id="com.vscodium.VSCodiumInsiders"
+  local uti
+  for uti in \
+    public.plain-text \
+    public.source-code \
+    public.shell-script \
+    public.json \
+    public.yaml \
+    public.xml \
+    public.comma-separated-values-text; do
+    duti -s "$bundle_id" "$uti" all
+  done
+
+  echo "  VSCodium Insiders configured as the default text/code editor."
+}
+
+configure_macos_vscodium_settings() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+
+  local source="$HOME/.config/VSCodium/User/settings.json"
+  local target="$HOME/Library/Application Support/VSCodium - Insiders/User/settings.json"
+
+  if [[ ! -f "$source" ]]; then
+    echo "  skipping VSCodium Insiders settings link ($source not found)"
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$target")"
+  rm -f "$target"
+  ln -s "$source" "$target"
+  echo "  VSCodium Insiders settings linked from dotfiles."
 }
 
 install_modprobe_configs() {
@@ -260,13 +578,56 @@ remove_targets_for_stow() {
 # ------------------------------------------------------------------------------
 # stow
 # ------------------------------------------------------------------------------
+stow_package_safely() {
+  local pkg="$1"
+  local package_dir="$DOTFILES_DIR/$pkg"
+  local safety_dir="$BACKUP_DIR/pre-stow/$pkg"
+  local src relative dest saved
+  local -a preserved_destinations=()
+  local -a preserved_files=()
+
+  # Preserve only exact file conflicts. Directories are intentionally left in
+  # place because Stow can merge package trees into existing directories.
+  while IFS= read -r src; do
+    relative="${src#"$package_dir"/}"
+    dest="$HOME/$relative"
+
+    if [[ (-e "$dest" || -L "$dest") && ! "$src" -ef "$dest" ]]; then
+      saved="$safety_dir/$relative"
+      mkdir -p "$(dirname "$saved")"
+      mv "$dest" "$saved"
+      preserved_destinations+=("$dest")
+      preserved_files+=("$saved")
+      echo "    preserved conflict: $dest -> $saved"
+    fi
+  done < <(find "$package_dir" -type f)
+
+  if stow -d "$DOTFILES_DIR" -t "$HOME" "$pkg"; then
+    return 0
+  fi
+
+  echo "  stow $pkg failed; restoring preserved files."
+  stow -d "$DOTFILES_DIR" -t "$HOME" -D "$pkg" 2>/dev/null || true
+
+  local i
+  for ((i = 0; i < ${#preserved_files[@]}; i++)); do
+    mkdir -p "$(dirname "${preserved_destinations[$i]}")"
+    mv "${preserved_files[$i]}" "${preserved_destinations[$i]}"
+  done
+  return 1
+}
+
 run_stow() {
   echo ""
   echo "Running stow from $DOTFILES_DIR to $HOME"
   for pkg in "${PACKAGES[@]}"; do
     if [[ -d "$DOTFILES_DIR/$pkg" ]]; then
       echo "  stow $pkg"
-      stow -d "$DOTFILES_DIR" -t "$HOME" "$pkg"
+      if [[ "$pkg" == "skhd" || "$pkg" == "yabai" ]]; then
+        stow_package_safely "$pkg"
+      else
+        stow -d "$DOTFILES_DIR" -t "$HOME" "$pkg"
+      fi
     else
       echo "  (skipping $pkg - directory does not exist)"
     fi
@@ -281,10 +642,10 @@ run_stow() {
 run_restore() {
   local backup_base="$HOME"
   local backups=()
-  for d in "$backup_base"/.dotfiles-backup-*; do
+  local d
+  while IFS= read -r d; do
     [[ -d "$d" ]] && backups+=("$d")
-  done
-  mapfile -t backups < <(printf '%s\n' "${backups[@]}" | sort -r)
+  done < <(find "$backup_base" -maxdepth 1 -type d -name '.dotfiles-backup-*' | sort -r)
 
   if [[ ${#backups[@]} -eq 0 ]]; then
     echo "No backups found in $backup_base (expected .dotfiles-backup-YYYYMMDD-HHMMSS)"
@@ -319,6 +680,7 @@ run_restore() {
   esac
 
   need_stow
+  remove_yabai_login_bootstrap
   echo "Unstowing packages..."
   for pkg in "${PACKAGES[@]}"; do
     if [[ -d "$DOTFILES_DIR/$pkg" ]]; then
@@ -381,6 +743,9 @@ run_unstow() {
   echo "Unstowing $pkg..."
   stow -d "$DOTFILES_DIR" -t "$HOME" -D "$pkg"
   echo "Done. $pkg has been unstowed."
+  if [[ "$pkg" == "yabai" ]]; then
+    remove_yabai_login_bootstrap
+  fi
   if [[ "$pkg" == "hypr" ]] || [[ "$pkg" == "waybar" ]]; then
     reload_hypr_and_waybar
   fi
@@ -392,10 +757,10 @@ run_unstow() {
 run_list_backups() {
   local backup_base="$HOME"
   local backups=()
-  for d in "$backup_base"/.dotfiles-backup-*; do
+  local d
+  while IFS= read -r d; do
     [[ -d "$d" ]] && backups+=("$d")
-  done
-  mapfile -t backups < <(printf '%s\n' "${backups[@]}" | sort -r)
+  done < <(find "$backup_base" -maxdepth 1 -type d -name '.dotfiles-backup-*' | sort -r)
 
   if [[ ${#backups[@]} -eq 0 ]]; then
     echo "No backups found in $backup_base (expected .dotfiles-backup-YYYYMMDD-HHMMSS)"
@@ -409,6 +774,130 @@ run_list_backups() {
 }
 
 # ------------------------------------------------------------------------------
+# macOS yabai/skhd diagnostics
+# ------------------------------------------------------------------------------
+diagnostic_result() {
+  local ok="$1"
+  local success="$2"
+  local failure="$3"
+
+  if [[ "$ok" == "true" ]]; then
+    echo "  ✓ $success"
+  else
+    echo "  ⚠ $failure"
+  fi
+}
+
+run_macos_diagnostics() {
+  if [[ "$OS" != "macos" ]]; then
+    echo "macOS diagnostics are not applicable on this system."
+    return 0
+  fi
+
+  echo ""
+  echo "macOS window manager diagnostics:"
+
+  diagnostic_result \
+    "$([[ -x "$(command -v yabai 2>/dev/null || true)" ]] && echo true || echo false)" \
+    "yabai installed ($(yabai --version 2>/dev/null || true))" \
+    "yabai is not installed"
+
+  diagnostic_result \
+    "$([[ -x "$(command -v skhd 2>/dev/null || true)" ]] && echo true || echo false)" \
+    "skhd installed ($(skhd --version 2>/dev/null || true))" \
+    "skhd is not installed"
+
+  diagnostic_result \
+    "$([[ "$DOTFILES_DIR/yabai/.yabairc" -ef "$HOME/.yabairc" ]] 2>/dev/null && echo true || echo false)" \
+    ".yabairc linked from dotfiles" \
+    ".yabairc is not linked from dotfiles"
+
+  diagnostic_result \
+    "$([[ "$DOTFILES_DIR/skhd/.skhdrc" -ef "$HOME/.skhdrc" ]] 2>/dev/null && echo true || echo false)" \
+    ".skhdrc linked from dotfiles" \
+    ".skhdrc is not linked from dotfiles"
+
+  diagnostic_result \
+    "$(launchctl print "gui/$(id -u)/com.asmvik.yabai" 2>/dev/null | grep -q 'state = running' && echo true || echo false)" \
+    "yabai launchd service running" \
+    "yabai launchd service is not running"
+
+  diagnostic_result \
+    "$(launchctl print "gui/$(id -u)/com.koekeishiya.skhd" 2>/dev/null | grep -q 'state = running' && echo true || echo false)" \
+    "skhd launchd service running" \
+    "skhd launchd service is not running"
+
+  diagnostic_result \
+    "$([[ "$DOTFILES_DIR/yabai/.config/yabai/label-spaces.sh" -ef "$HOME/.config/yabai/label-spaces.sh" ]] 2>/dev/null && echo true || echo false)" \
+    "Space-label helper linked from dotfiles" \
+    "Space-label helper is not linked from dotfiles"
+
+  diagnostic_result \
+    "$([[ "$DOTFILES_DIR/yabai/.config/yabai/space-action.sh" -ef "$HOME/.config/yabai/space-action.sh" ]] 2>/dev/null && echo true || echo false)" \
+    "dynamic Space shortcut helper linked from dotfiles" \
+    "dynamic Space shortcut helper is not linked from dotfiles"
+
+  diagnostic_result \
+    "$(sudo -n yabai --load-sa &>/dev/null && echo true || echo false)" \
+    "yabai scripting addition loaded" \
+    "yabai scripting addition is not configured or could not load"
+
+  diagnostic_result \
+    "$([[ "$(sysctl -n kern.bootargs 2>/dev/null || true)" == *"-arm64e_preview_abi"* ]] && echo true || echo false)" \
+    "arm64e boot argument active in this kernel" \
+    "arm64e boot argument is stored but not active; reboot required"
+
+  diagnostic_result \
+    "$(awk -v value="$(yabai -m config window_animation_duration 2>/dev/null || echo 0)" 'BEGIN { exit !(value > 0) }' && echo true || echo false)" \
+    "window animations enabled" \
+    "window animations unavailable; grant Screen Recording and restart yabai"
+
+  diagnostic_result \
+    "$(pgrep -x borders &>/dev/null && echo true || echo false)" \
+    "window borders running" \
+    "window borders are not running"
+
+  diagnostic_result \
+    "$(launchctl print "gui/$(id -u)/com.eduardo.yabai-bootstrap" &>/dev/null && echo true || echo false)" \
+    "login bootstrap registered" \
+    "login bootstrap is not registered"
+
+  local spaces labels normal_spaces layout attempt
+  spaces=""
+  for attempt in {1..30}; do
+    spaces="$(yabai -m query --spaces 2>/dev/null || true)"
+    [[ -n "$spaces" ]] && break
+    sleep 1
+  done
+  labels="$(jq '[.[] | select(."is-native-fullscreen" == false and (.label | test("^ws-[1-9]$")))] | length' <<<"${spaces:-[]}" 2>/dev/null || echo 0)"
+  normal_spaces="$(jq '[.[] | select(."is-native-fullscreen" == false)] | length' <<<"${spaces:-[]}" 2>/dev/null || echo 0)"
+  layout="$(yabai -m config layout 2>/dev/null || true)"
+
+  diagnostic_result \
+    "$([[ -n "$spaces" ]] && echo true || echo false)" \
+    "yabai can query windows and Spaces (Accessibility granted)" \
+    "yabai cannot query Spaces; grant Accessibility permission"
+
+  diagnostic_result \
+    "$([[ "$layout" == "bsp" ]] && echo true || echo false)" \
+    "BSP layout loaded" \
+    "BSP layout is not active"
+
+  diagnostic_result \
+    "$([[ "${normal_spaces:-0}" -gt 0 && "$labels" -eq "$normal_spaces" ]] 2>/dev/null && echo true || echo false)" \
+    "all $normal_spaces normal Spaces have stable ws-N labels" \
+    "only $labels of $normal_spaces normal Spaces have stable ws-N labels"
+
+  diagnostic_result \
+    "$([[ "${normal_spaces:-0}" -ge 7 ]] 2>/dev/null && echo true || echo false)" \
+    "$normal_spaces normal Spaces available" \
+    "only $normal_spaces normal Spaces available; expected at least 7"
+
+  echo ""
+  echo "Shortcut reference: $DOTFILES_DIR/docs/macos-window-management.md"
+}
+
+# ------------------------------------------------------------------------------
 # usage
 # ------------------------------------------------------------------------------
 usage() {
@@ -416,7 +905,9 @@ usage() {
   echo "       $0 --restore         - list backups and restore a previous set of configs"
   echo "       $0 --list-backups    - list backup directories (no restore)"
   echo "       $0 --unstow <pkg>   - unstow a single package (e.g. waybar, alacritty)"
-  echo "       $0 --save-extensions - update extension lists for VSCodium and Cursor"
+  echo "       $0 --save-extensions - update the shared editor list from VSCodium"
+  echo "       $0 --save-brewfile   - refresh Brewfile from installed Homebrew packages"
+  echo "       $0 --diagnose        - check the macOS yabai/skhd setup"
   echo ""
   echo "Packages: ${PACKAGES[*]}"
   echo "Backups are stored in ~/.dotfiles-backup-YYYYMMDD-HHMMSS"
@@ -441,6 +932,14 @@ main() {
       ;;
     --save-extensions|save-extensions)
       save_editor_extensions
+      return
+      ;;
+    --save-brewfile|save-brewfile)
+      save_homebrew_bundle
+      return
+      ;;
+    --diagnose|diagnose)
+      run_macos_diagnostics
       return
       ;;
     install|"")
@@ -474,13 +973,26 @@ main() {
   echo "  ${dim}directory${reset}  $DOTFILES_DIR"
   echo "  ${dim}home${reset}       $HOME"
   echo ""
+  ensure_homebrew
+  install_homebrew_bundle
   need_stow
   do_backup
   remove_targets_for_stow
   run_stow
+  configure_macos_vscodium_settings
+  configure_macos_window_manager_defaults
+  ensure_vscodium_insiders
+  ensure_yabai
+  configure_yabai_scripting_addition
+  ensure_skhd
+  ensure_borders
+  ensure_yabai_login_bootstrap
   install_modprobe_configs
   install_editor_extensions
+  configure_macos_default_editor
   reload_hypr_and_waybar
+  sleep 1
+  run_macos_diagnostics
 }
 
 main "$@"

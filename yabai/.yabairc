@@ -1,0 +1,67 @@
+#!/usr/bin/env sh
+
+# Hyprland-like BSP tiling with yabai's scripting addition.
+
+yabai -m signal --add event=dock_did_restart action="sudo -n yabai --load-sa"
+sudo -n yabai --load-sa
+
+yabai -m config layout                       bsp
+yabai -m config split_ratio                  0.50
+yabai -m config split_type                   auto
+yabai -m config auto_balance                 off
+yabai -m config window_placement             second_child
+yabai -m config window_insertion_point       focused
+yabai -m config window_zoom_persist          on
+
+# Match the compact gaps used by the Hyprland configuration.
+yabai -m config top_padding                  3
+yabai -m config bottom_padding               3
+yabai -m config left_padding                 3
+yabai -m config right_padding                3
+yabai -m config window_gap                   2
+
+# Focus and mouse behavior.
+yabai -m config mouse_follows_focus          off
+yabai -m config focus_follows_mouse          off
+yabai -m config mouse_modifier               alt
+yabai -m config mouse_action1                move
+yabai -m config mouse_action2                resize
+yabai -m config mouse_drop_action            swap
+
+# Advanced window-server features unlocked by the scripting addition.
+yabai -m config skip_window_focus_animation  off
+yabai -m config window_shadow                off
+yabai -m config window_opacity               off
+yabai -m config window_opacity_duration      0.0
+yabai -m config active_window_opacity        1.00
+yabai -m config normal_window_opacity        1.00
+yabai -m config window_animation_duration    0.12
+yabai -m config window_animation_easing      ease_out_circ
+yabai -m config insert_feedback_color        0xff89b4fa
+
+# Float utility windows that are not useful in a tiled layout.
+yabai -m rule --add subrole="^AXDialog$" manage=off
+yabai -m rule --add subrole="^AXSystemDialog$" manage=off
+yabai -m rule --add title="^(Picture in Picture|Picture-in-Picture)$" manage=off sticky=on sub-layer=above
+yabai -m rule --add app="^(Software Update|Installer|Archive Utility)$" manage=off
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^System Information$" manage=off
+yabai -m rule --add app="^Disk Utility$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^Hex$" manage=off
+yabai -m rule --add app="^Finder$" title="^(Copy|Copying|Move|Moving|Delete|Deleting|Remove|Removing|Preparing|Emptying the Trash|Connect to Server|Info|Preferences|Copiar|Copiando|Mover|Movendo|Apagar|Apagando|Excluir|Excluindo|Remover|Removendo|Preparando|Esvaziando o Lixo|Conectar ao Servidor|Informações|Preferências)" manage=off
+yabai -m rule --add app="^Google Chrome$" title="^(Settings|Downloads)$" manage=off
+yabai -m rule --add app="^Spotify$" title="^(Settings|Preferences)$" manage=off
+yabai -m rule --add app="^1Password$" title="^(Quick Access|Preferences)$" manage=off sub-layer=above
+
+# Keep Android emulator windows in the BSP grid. This rule comes after the
+# generic dialog rule so emulator windows are explicitly managed.
+yabai -m rule --add app="^(Android Emulator|qemu-system-(aarch64|x86_64))$" manage=on
+
+# Stable labels keep numeric shortcuts working when native-fullscreen Spaces
+# change the global Space indexes.
+yabai -m signal --add event=space_created action="$HOME/.config/yabai/label-spaces.sh"
+yabai -m signal --add event=display_added action="$HOME/.config/yabai/label-spaces.sh"
+"$HOME/.config/yabai/ensure-spaces.sh" 7
+
+echo "yabai configuration loaded"
