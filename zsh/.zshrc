@@ -12,9 +12,9 @@ eval "$(starship init zsh)"
 # mise (polyglot runtime manager - node, pnpm, etc.)
 eval "$(mise activate zsh)"
 
-export EDITOR="codium-insiders --wait"
-export VISUAL="codium-insiders --wait"
-export GIT_EDITOR="codium-insiders --wait"
+export EDITOR="code-insiders --wait"
+export VISUAL="code-insiders --wait"
+export GIT_EDITOR="code-insiders --wait"
 
 source $HOME/.envrc
 
@@ -60,6 +60,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 alias v="nvim"
+alias code="code-insiders"
 
 alias k="kubectl"
 alias kx="kubectl exec -it"
@@ -136,3 +137,11 @@ export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/eduardo/.lmstudio/bin"
 # End of LM Studio CLI section
+
+# pnpm
+export PNPM_HOME="/Users/eduardo/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end

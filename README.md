@@ -1,6 +1,6 @@
 # Dotfiles
 
-My daily configs for zsh, starship, Hyprland, waybar, yabai, skhd, JankyBorders, Alacritty, VSCodium Insiders, and agent skills.
+My daily configs for zsh, starship, Hyprland, waybar, yabai, skhd, JankyBorders, Alacritty, VS Code Insiders, and agent skills.
 
 Works on **Arch Linux** (my main setup) and **macOS**. The installer detects your OS and only stows the packages that make sense there — the Hyprland desktop stack (`hypr`, `waybar`, `wireplumber`) and the system audio tweaks are Linux-only, while `yabai` and `skhd` provide tiling and hotkeys on macOS. Shell-level differences (clipboard, Android SDK path) are handled inside `.zshrc` at runtime.
 
@@ -17,12 +17,12 @@ Then:
 ./install.sh
 ```
 
-The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, installs editor extensions from `extensions/vscodium.txt` into VSCodium Stable and Insiders, and (on Linux) reloads Hyprland and waybar if you’re in a Hyprland session.
+The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, installs editor extensions from `extensions/vscode.txt` into VS Code Insiders, and (on Linux) reloads Hyprland and waybar if you’re in a Hyprland session.
 
 On macOS, the Brewfile restores the command-line tools and desktop apps,
-including VSCodium Insiders, Ghostty, Chrome, Docker, yabai, and skhd. The
+including VS Code Insiders, Ghostty, Chrome, Docker, yabai, and skhd. The
 installer then starts the window-manager launchd services and configures
-VSCodium Insiders as the default text/code editor. Grant yabai and skhd access
+VS Code Insiders as the default text/code editor. Grant yabai and skhd access
 in **System Settings → Privacy & Security → Accessibility**.
 
 Imperative macOS defaults live in `system/macos/apply-defaults.sh`. The normal
@@ -54,14 +54,14 @@ The tracked yabai setup provides BSP tiling, directional focus and movement, res
 
 See [docs/macos-window-management.md](docs/macos-window-management.md) for the complete shortcut reference and troubleshooting commands.
 
-## Extensions (VSCodium and VSCodium Insiders)
+## Extensions (VS Code Insiders)
 
 The shared extension list is tracked in:
 
-- `extensions/vscodium.txt`
+- `extensions/vscode.txt`
 
-VSCodium Stable and VSCodium Insiders install from this file. When saving the
-list, Stable is preferred if installed; otherwise the Insiders CLI is used.
+VS Code Insiders installs from this file. When saving the list, the
+`code-insiders` CLI is used.
 To refresh it:
 
 ```bash

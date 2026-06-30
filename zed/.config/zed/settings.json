@@ -1,11 +1,3 @@
 {
-  "context_servers": {
-    "argent": {
-      "source": "custom",
-      "command": "argent",
-      "args": [
-        "mcp"
-      ]
-    }
-  }
+  "context_servers": {}
 }

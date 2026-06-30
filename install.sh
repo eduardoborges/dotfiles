@@ -17,7 +17,7 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
-VSCODIUM_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscodium.txt"
+VSCODE_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscode.txt"
 BREWFILE="$DOTFILES_DIR/Brewfile"
 
 # ------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ case "$(uname -s)" in
 esac
 
 # Packages stowed on every OS
-COMMON_PACKAGES=(zsh starship alacritty ghostty zed vscodium agent-skills claude git)
+COMMON_PACKAGES=(zsh starship alacritty ghostty zed vscode agent-skills agent-instructions claude git)
 # Packages stowed only on macOS
 MACOS_PACKAGES=(skhd yabai borders)
 # Packages stowed only on Linux (Hyprland desktop stack + audio tweaks)
@@ -57,9 +57,10 @@ BACKUP_PATHS=(
   .config/alacritty
   .config/ghostty
   .config/zed/keymap.json
-  .config/VSCodium/User/settings.json
-  Library/Application Support/VSCodium - Insiders/User/settings.json
+  Library/Application Support/Code - Insiders/User/settings.json
   .agents
+  .codex/AGENTS.md
+  .claude/CLAUDE.md
   .claude/settings.json
   .claude/statusline-command.sh
   .config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf
@@ -80,26 +81,15 @@ backup_extensions() {
   echo "  saved $label extensions -> $backup_file"
 }
 
-save_vscodium_extensions() {
+save_vscode_extensions() {
   local output_file="$1"
-  local cli
-  local label
 
-  # Prefer Stable when both editions are installed. Insiders is a fallback and
-  # uses the same tracked extension set.
-  for cli in codium codium-insiders; do
-    if command -v "$cli" &>/dev/null; then
-      if [[ "$cli" == "codium-insiders" ]]; then
-        label="VSCodium Insiders"
-      else
-        label="VSCodium"
-      fi
-      backup_extensions "$cli" "$output_file" "$label"
-      return 0
-    fi
-  done
+  if command -v code-insiders &>/dev/null; then
+    backup_extensions code-insiders "$output_file" "VS Code Insiders"
+    return 0
+  fi
 
-  echo "  skipping VSCodium extensions backup (codium/codium-insiders not found)"
+  echo "  skipping VS Code Insiders extensions backup (code-insiders not found)"
 }
 
 # ------------------------------------------------------------------------------
@@ -214,24 +204,42 @@ ensure_skhd() {
 }
 
 # ------------------------------------------------------------------------------
-# macOS default editor: VSCodium Insiders
+# macOS default editor: VS Code Insiders
 # ------------------------------------------------------------------------------
-ensure_vscodium_insiders() {
+ensure_code_insiders() {
   if [[ "$OS" != "macos" ]]; then
     return 0
   fi
 
-  if command -v codium-insiders &>/dev/null; then
+  if command -v code-insiders &>/dev/null; then
     return 0
   fi
 
   if ! command -v brew &>/dev/null; then
-    echo "VSCodium Insiders is not installed and Homebrew is unavailable."
+    echo "VS Code Insiders is not installed and Homebrew is unavailable."
     return 1
   fi
 
-  echo "Installing VSCodium Insiders..."
-  brew install --cask vscodium@insiders
+  echo "Installing VS Code Insiders..."
+  brew install --cask visual-studio-code@insiders
+}
+
+remove_vscodium() {
+  if [[ "$OS" != "macos" ]]; then
+    return 0
+  fi
+  if ! command -v brew &>/dev/null; then
+    return 0
+  fi
+
+  if brew list --cask vscodium@insiders &>/dev/null; then
+    echo "Removing VSCodium Insiders..."
+    brew uninstall --cask vscodium@insiders
+  fi
+  if brew list --cask vscodium &>/dev/null; then
+    echo "Removing VSCodium..."
+    brew uninstall --cask vscodium
+  fi
 }
 
 ensure_borders() {
@@ -376,11 +384,8 @@ do_backup() {
       for path in "${BACKUP_PATHS[@]}"; do
         backup_if_exists "$HOME/$path"
       done
-      if command -v codium &>/dev/null; then
-        backup_extensions codium "$BACKUP_DIR/vscodium-extensions.txt" "VSCodium"
-      fi
-      if command -v codium-insiders &>/dev/null; then
-        backup_extensions codium-insiders "$BACKUP_DIR/vscodium-insiders-extensions.txt" "VSCodium Insiders"
+      if command -v code-insiders &>/dev/null; then
+        backup_extensions code-insiders "$BACKUP_DIR/vscode-insiders-extensions.txt" "VS Code Insiders"
       fi
       echo "Backup done."
       ;;
@@ -392,8 +397,8 @@ do_backup() {
 
 save_editor_extensions() {
   echo ""
-  echo "Saving the shared editor extension list from VSCodium..."
-  save_vscodium_extensions "$VSCODIUM_EXTENSIONS_FILE"
+  echo "Saving the shared editor extension list from VS Code Insiders..."
+  save_vscode_extensions "$VSCODE_EXTENSIONS_FILE"
   echo "Done."
 }
 
@@ -432,8 +437,7 @@ install_extensions_from_file() {
 install_editor_extensions() {
   echo ""
   echo "Installing editor extensions from dotfiles..."
-  install_extensions_from_file codium "$VSCODIUM_EXTENSIONS_FILE" "VSCodium"
-  install_extensions_from_file codium-insiders "$VSCODIUM_EXTENSIONS_FILE" "VSCodium Insiders"
+  install_extensions_from_file code-insiders "$VSCODE_EXTENSIONS_FILE" "VS Code Insiders"
 }
 
 configure_macos_default_editor() {
@@ -441,8 +445,8 @@ configure_macos_default_editor() {
     return 0
   fi
 
-  if ! command -v codium-insiders &>/dev/null; then
-    echo "  skipping default editor setup (codium-insiders not found)"
+  if ! command -v code-insiders &>/dev/null; then
+    echo "  skipping default editor setup (code-insiders not found)"
     return 0
   fi
 
@@ -455,39 +459,34 @@ configure_macos_default_editor() {
     brew install duti
   fi
 
-  local bundle_id="com.vscodium.VSCodiumInsiders"
-  local uti
-  for uti in \
-    public.plain-text \
-    public.source-code \
-    public.shell-script \
-    public.json \
-    public.yaml \
-    public.xml \
-    public.comma-separated-values-text; do
-    duti -s "$bundle_id" "$uti" all
+  local bundle_id="com.microsoft.VSCodeInsiders"
+  local failed=0
+  local type
+  for type in \
+    .txt \
+    .md \
+    .json \
+    .js \
+    .jsx \
+    .ts \
+    .tsx \
+    .sh \
+    .zsh \
+    .yaml \
+    .yml \
+    .xml \
+    .csv; do
+    if ! duti -s "$bundle_id" "$type" all; then
+      echo "  warning: could not set VS Code Insiders as handler for $type"
+      ((failed += 1))
+    fi
   done
 
-  echo "  VSCodium Insiders configured as the default text/code editor."
-}
-
-configure_macos_vscodium_settings() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
+  if [[ "$failed" -eq 0 ]]; then
+    echo "  VS Code Insiders configured as the default text/code editor."
+  else
+    echo "  VS Code Insiders file association setup finished with $failed warning(s)."
   fi
-
-  local source="$HOME/.config/VSCodium/User/settings.json"
-  local target="$HOME/Library/Application Support/VSCodium - Insiders/User/settings.json"
-
-  if [[ ! -f "$source" ]]; then
-    echo "  skipping VSCodium Insiders settings link ($source not found)"
-    return 0
-  fi
-
-  mkdir -p "$(dirname "$target")"
-  rm -f "$target"
-  ln -s "$source" "$target"
-  echo "  VSCodium Insiders settings linked from dotfiles."
 }
 
 install_modprobe_configs() {
@@ -550,8 +549,12 @@ remove_targets_for_stow() {
   rm -rf "$HOME/.config/alacritty"
   rm -rf "$HOME/.config/ghostty"
   rm -f "$HOME/.config/zed/keymap.json"
+  rm -f "$HOME/Library/Application Support/Code - Insiders/User/settings.json"
   rm -f "$HOME/.config/VSCodium/User/settings.json"
+  rm -f "$HOME/Library/Application Support/VSCodium - Insiders/User/settings.json"
   rm -rf "$HOME/.agents"
+  rm -f "$HOME/.codex/AGENTS.md"
+  rm -f "$HOME/.claude/CLAUDE.md"
   rm -f "$HOME/.claude/settings.json"
   rm -f "$HOME/.claude/statusline-command.sh"
   rm -f "$HOME/.config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf"
@@ -905,7 +908,7 @@ usage() {
   echo "       $0 --restore         - list backups and restore a previous set of configs"
   echo "       $0 --list-backups    - list backup directories (no restore)"
   echo "       $0 --unstow <pkg>   - unstow a single package (e.g. waybar, alacritty)"
-  echo "       $0 --save-extensions - update the shared editor list from VSCodium"
+  echo "       $0 --save-extensions - update the shared editor list from VS Code Insiders"
   echo "       $0 --save-brewfile   - refresh Brewfile from installed Homebrew packages"
   echo "       $0 --diagnose        - check the macOS yabai/skhd setup"
   echo ""
@@ -979,9 +982,9 @@ main() {
   do_backup
   remove_targets_for_stow
   run_stow
-  configure_macos_vscodium_settings
   configure_macos_window_manager_defaults
-  ensure_vscodium_insiders
+  ensure_code_insiders
+  remove_vscodium
   ensure_yabai
   configure_yabai_scripting_addition
   ensure_skhd
