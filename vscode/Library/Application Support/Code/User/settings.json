@@ -81,5 +81,8 @@
   "editor.linkedEditing": true,
   "editor.smoothScrolling": false,
   "workbench.list.smoothScrolling": false,
-  "terminal.integrated.smoothScrolling": false
+  "terminal.integrated.smoothScrolling": false,
+  "[vue]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
