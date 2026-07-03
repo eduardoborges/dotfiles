@@ -38,6 +38,9 @@ alt + shift - 0x2C : open -a "1Password"
 # Slack
 alt + shift - s : open -a "Slack"
 
+# AI
+alt + shift - g : open -a "ChatGPT"
+
 # Web apps
 alt + shift - c : open -a "Notion Calendar"
 alt + shift - w : open -a "WhatsApp"

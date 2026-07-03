@@ -25,6 +25,7 @@ configuration.
 | `Option + /` | Open or focus 1Password |
 | `Option + Shift + /` | Open or focus 1Password |
 | `Option + Shift + S` | Open or focus Slack |
+| `Option + Shift + G` | Open ChatGPT |
 | `Option + Shift + C` | Open Notion Calendar |
 | `Option + Shift + W` | Open WhatsApp |
 
