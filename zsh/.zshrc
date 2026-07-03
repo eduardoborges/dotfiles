@@ -12,9 +12,9 @@ eval "$(starship init zsh)"
 # mise (polyglot runtime manager - node, pnpm, etc.)
 eval "$(mise activate zsh)"
 
-export EDITOR="code-insiders --wait"
-export VISUAL="code-insiders --wait"
-export GIT_EDITOR="code-insiders --wait"
+export EDITOR="code --wait"
+export VISUAL="code --wait"
+export GIT_EDITOR="code --wait"
 
 source $HOME/.envrc
 
@@ -60,7 +60,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 alias v="nvim"
-alias code="code-insiders"
 
 alias k="kubectl"
 alias kx="kubectl exec -it"

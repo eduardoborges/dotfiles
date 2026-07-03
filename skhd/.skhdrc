@@ -26,7 +26,7 @@ alt + cmd + shift - f : open "$HOME"
 alt + shift - m : open -a "Spotify"
 
 # Editor
-alt + shift - n : open "/Applications/Visual Studio Code - Insiders.app"
+alt + shift - n : open "/Applications/Visual Studio Code.app"
 
 # Docker (lazydocker is not installed on this Mac).
 alt + shift - d : open -a "Docker"
