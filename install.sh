@@ -57,7 +57,7 @@ BACKUP_PATHS=(
   .config/alacritty
   .config/ghostty
   .config/zed/keymap.json
-  Library/Application Support/Code - Insiders/User/settings.json
+  Library/Application Support/Code/User/settings.json
   .agents
   .codex/AGENTS.md
   .claude/CLAUDE.md
@@ -84,12 +84,12 @@ backup_extensions() {
 save_vscode_extensions() {
   local output_file="$1"
 
-  if command -v code-insiders &>/dev/null; then
-    backup_extensions code-insiders "$output_file" "VS Code Insiders"
+  if command -v code &>/dev/null; then
+    backup_extensions code "$output_file" "VS Code"
     return 0
   fi
 
-  echo "  skipping VS Code Insiders extensions backup (code-insiders not found)"
+  echo "  skipping VS Code extensions backup (code not found)"
 }
 
 # ------------------------------------------------------------------------------
@@ -204,24 +204,33 @@ ensure_skhd() {
 }
 
 # ------------------------------------------------------------------------------
-# macOS default editor: VS Code Insiders
+# macOS default editor: VS Code
 # ------------------------------------------------------------------------------
-ensure_code_insiders() {
+ensure_claude_code() {
+  if command -v claude &>/dev/null; then
+    return 0
+  fi
+
+  echo "Installing Claude Code..."
+  curl -fsSL https://claude.ai/install.sh | bash
+}
+
+ensure_code() {
   if [[ "$OS" != "macos" ]]; then
     return 0
   fi
 
-  if command -v code-insiders &>/dev/null; then
+  if command -v code &>/dev/null; then
     return 0
   fi
 
   if ! command -v brew &>/dev/null; then
-    echo "VS Code Insiders is not installed and Homebrew is unavailable."
+    echo "VS Code is not installed and Homebrew is unavailable."
     return 1
   fi
 
-  echo "Installing VS Code Insiders..."
-  brew install --cask visual-studio-code@insiders
+  echo "Installing VS Code..."
+  brew install --cask visual-studio-code
 }
 
 remove_vscodium() {
@@ -239,6 +248,10 @@ remove_vscodium() {
   if brew list --cask vscodium &>/dev/null; then
     echo "Removing VSCodium..."
     brew uninstall --cask vscodium
+  fi
+  if brew list --cask visual-studio-code@insiders &>/dev/null; then
+    echo "Removing VS Code Insiders..."
+    brew uninstall --cask visual-studio-code@insiders
   fi
 }
 
@@ -384,8 +397,8 @@ do_backup() {
       for path in "${BACKUP_PATHS[@]}"; do
         backup_if_exists "$HOME/$path"
       done
-      if command -v code-insiders &>/dev/null; then
-        backup_extensions code-insiders "$BACKUP_DIR/vscode-insiders-extensions.txt" "VS Code Insiders"
+      if command -v code &>/dev/null; then
+        backup_extensions code "$BACKUP_DIR/vscode-extensions.txt" "VS Code"
       fi
       echo "Backup done."
       ;;
@@ -397,7 +410,7 @@ do_backup() {
 
 save_editor_extensions() {
   echo ""
-  echo "Saving the shared editor extension list from VS Code Insiders..."
+  echo "Saving the shared editor extension list from VS Code..."
   save_vscode_extensions "$VSCODE_EXTENSIONS_FILE"
   echo "Done."
 }
@@ -437,7 +450,7 @@ install_extensions_from_file() {
 install_editor_extensions() {
   echo ""
   echo "Installing editor extensions from dotfiles..."
-  install_extensions_from_file code-insiders "$VSCODE_EXTENSIONS_FILE" "VS Code Insiders"
+  install_extensions_from_file code "$VSCODE_EXTENSIONS_FILE" "VS Code"
 }
 
 configure_macos_default_editor() {
@@ -445,8 +458,8 @@ configure_macos_default_editor() {
     return 0
   fi
 
-  if ! command -v code-insiders &>/dev/null; then
-    echo "  skipping default editor setup (code-insiders not found)"
+  if ! command -v code &>/dev/null; then
+    echo "  skipping default editor setup (code not found)"
     return 0
   fi
 
@@ -459,7 +472,7 @@ configure_macos_default_editor() {
     brew install duti
   fi
 
-  local bundle_id="com.microsoft.VSCodeInsiders"
+  local bundle_id="com.microsoft.VSCode"
   local failed=0
   local type
   for type in \
@@ -477,15 +490,15 @@ configure_macos_default_editor() {
     .xml \
     .csv; do
     if ! duti -s "$bundle_id" "$type" all; then
-      echo "  warning: could not set VS Code Insiders as handler for $type"
+      echo "  warning: could not set VS Code as handler for $type"
       ((failed += 1))
     fi
   done
 
   if [[ "$failed" -eq 0 ]]; then
-    echo "  VS Code Insiders configured as the default text/code editor."
+    echo "  VS Code configured as the default text/code editor."
   else
-    echo "  VS Code Insiders file association setup finished with $failed warning(s)."
+    echo "  VS Code file association setup finished with $failed warning(s)."
   fi
 }
 
@@ -549,6 +562,7 @@ remove_targets_for_stow() {
   rm -rf "$HOME/.config/alacritty"
   rm -rf "$HOME/.config/ghostty"
   rm -f "$HOME/.config/zed/keymap.json"
+  rm -f "$HOME/Library/Application Support/Code/User/settings.json"
   rm -f "$HOME/Library/Application Support/Code - Insiders/User/settings.json"
   rm -f "$HOME/.config/VSCodium/User/settings.json"
   rm -f "$HOME/Library/Application Support/VSCodium - Insiders/User/settings.json"
@@ -908,7 +922,7 @@ usage() {
   echo "       $0 --restore         - list backups and restore a previous set of configs"
   echo "       $0 --list-backups    - list backup directories (no restore)"
   echo "       $0 --unstow <pkg>   - unstow a single package (e.g. waybar, alacritty)"
-  echo "       $0 --save-extensions - update the shared editor list from VS Code Insiders"
+  echo "       $0 --save-extensions - update the shared editor list from VS Code"
   echo "       $0 --save-brewfile   - refresh Brewfile from installed Homebrew packages"
   echo "       $0 --diagnose        - check the macOS yabai/skhd setup"
   echo ""
@@ -978,12 +992,13 @@ main() {
   echo ""
   ensure_homebrew
   install_homebrew_bundle
+  ensure_claude_code
   need_stow
   do_backup
   remove_targets_for_stow
   run_stow
   configure_macos_window_manager_defaults
-  ensure_code_insiders
+  ensure_code
   remove_vscodium
   ensure_yabai
   configure_yabai_scripting_addition
