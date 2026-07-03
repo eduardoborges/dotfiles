@@ -58,8 +58,6 @@ cask "android-studio"
 cask "chatgpt"
 # Anthropic's official Claude AI desktop app
 cask "claude"
-# Terminal-based AI coding assistant
-cask "claude-code"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
 # OpenAI's coding agent that runs in your terminal
@@ -91,7 +89,7 @@ cask "spotify"
 # System monitor for the menu bar
 cask "stats"
 # Open-source code editor
-cask "visual-studio-code@insiders"
+cask "visual-studio-code"
 # Native desktop client for WhatsApp
 cask "whatsapp"
 # Video communication and virtual meeting platform
