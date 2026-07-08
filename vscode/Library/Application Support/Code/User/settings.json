@@ -84,5 +84,13 @@
   "terminal.integrated.smoothScrolling": false,
   "[vue]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  },
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ]
 }
