@@ -49,6 +49,7 @@ yabai -m rule --add app="^System Information$" manage=off
 yabai -m rule --add app="^Disk Utility$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Hex$" manage=off
+yabai -m rule --add app="^OrbStack$" title="^(Settings|Preferences)$" manage=off
 yabai -m rule --add app="^Finder$" title="^(Copy|Copying|Move|Moving|Delete|Deleting|Remove|Removing|Preparing|Emptying the Trash|Connect to Server|Info|Preferences|Copiar|Copiando|Mover|Movendo|Apagar|Apagando|Excluir|Excluindo|Remover|Removendo|Preparando|Esvaziando o Lixo|Conectar ao Servidor|Informações|Preferências)" manage=off
 yabai -m rule --add app="^Google Chrome$" title="^(Settings|Downloads)$" manage=off
 yabai -m rule --add app="^Spotify$" title="^(Settings|Preferences)$" manage=off
