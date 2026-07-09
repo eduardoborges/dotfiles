@@ -72,13 +72,13 @@ join_parts() {
 
 # Line 1 — project info
 line1=()
-line1+=("$(printf '\033[34m📁 %s\033[0m' "$display_cwd")")
-[ -n "$branch" ] && line1+=("$(printf "\033[35m %s\033[0m${git_status}" "$branch")")
-[ -n "$node_version" ] && line1+=("$(printf '\033[32m⬢ %s\033[0m' "$node_version")")
+line1+=("$(printf '\033[34m%s\033[0m' "$display_cwd")")
+[ -n "$branch" ] && line1+=("$(printf "\033[35m(%s)\033[0m${git_status}" "$branch")")
+[ -n "$node_version" ] && line1+=("$(printf '\033[32mnode %s\033[0m' "$node_version")")
 
 # Line 2 — AI info
 line2=()
-[ -n "$model" ] && line2+=("$(printf '\033[36m🤖 %s\033[0m' "$model")")
+[ -n "$model" ] && line2+=("$(printf '\033[36m%s\033[0m' "$model")")
 if [ -n "$effort" ]; then
   case "$effort" in
     high) ecolor='\033[31m' ;;
@@ -86,7 +86,7 @@ if [ -n "$effort" ]; then
     low) ecolor='\033[32m' ;;
     *) ecolor='\033[37m' ;;
   esac
-  line2+=("$(printf "${ecolor}⚡ %s\033[0m" "$effort")")
+  line2+=("$(printf "${ecolor}%s\033[0m" "$effort")")
 fi
 
 if [ -n "$used_pct" ]; then
@@ -94,7 +94,7 @@ if [ -n "$used_pct" ]; then
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
   elif [ "$used_int" -ge 50 ]; then color='\033[33m'
   else color='\033[32m'; fi
-  line2+=("$(printf "${color}🧠 %s %d%%\033[0m" "$(progress_bar "$used_int")" "$used_int")")
+  line2+=("$(printf "${color}ctx %s %d%%\033[0m" "$(progress_bar "$used_int")" "$used_int")")
 fi
 
 if [ -n "$five_hour_pct" ]; then
@@ -112,7 +112,7 @@ if [ -n "$five_hour_pct" ]; then
       reset_suffix=$(printf " (%dh%02d)" "$h" "$m")
     fi
   fi
-  line2+=("$(printf "${color}⏰ %s %d%%%s\033[0m" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
+  line2+=("$(printf "${color}5h %s %d%%%s\033[0m" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
 fi
 
 if [ -n "$seven_day_pct" ]; then
@@ -130,7 +130,7 @@ if [ -n "$seven_day_pct" ]; then
       reset_suffix=$(printf " (%dd %dh)" "$d" "$h")
     fi
   fi
-  line2+=("$(printf "${color}📅 %s %d%%%s\033[0m" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
+  line2+=("$(printf "${color}7d %s %d%%%s\033[0m" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
 # Todos for this session (~/.claude/tasks/$session_id/*.json) — one item per line
@@ -143,15 +143,15 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
     [ -e "$f" ] || continue
     st=$(jq -r '.status // empty' "$f" 2>/dev/null)
     case "$st" in
-      completed)   done=$((done+1)); icon='\033[32m✅'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
-      in_progress) prog=$((prog+1)); icon='\033[33m🔄'; text=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
-      *)           pend=$((pend+1)); icon='\033[2m⬜'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
+      completed)   done=$((done+1)); icon='\033[32m[x]'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
+      in_progress) prog=$((prog+1)); icon='\033[33m[~]'; text=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
+      *)           pend=$((pend+1)); icon='\033[2m[ ]'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
     esac
     [ -z "$st" ] && continue
-    todo_items+=("$(printf '\033[2m│\033[0m %s %s\033[0m' "$icon" "$text")")
+    todo_items+=("$(printf '\033[2m|\033[0m %s %s\033[0m' "$icon" "$text")")
   done < <(find "$taskdir" -maxdepth 1 -name '*.json' 2>/dev/null | sort -V)
   total=$((done+prog+pend))
-  [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m╭─\033[0m \033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
+  [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m+-\033[0m \033[36mtodo %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
 join_parts "${line1[@]}"
@@ -162,6 +162,6 @@ if [ -n "$todo_header" ]; then
   for item in "${todo_items[@]}"; do
     printf '\n%b' "$item"
   done
-  printf '\n\033[2m╰─\033[0m'
+  printf '\n\033[2m+-\033[0m'
 fi
 printf '\n'
