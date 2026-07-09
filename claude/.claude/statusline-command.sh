@@ -10,6 +10,7 @@ seven_day_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage //
 seven_day_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 effort=$(echo "$input" | jq -r '.effort_level // .effortLevel // empty')
 [ -z "$effort" ] && effort=$(jq -r '.effortLevel // empty' "$HOME/.claude/settings.json" 2>/dev/null)
+session_id=$(echo "$input" | jq -r '.session_id // empty')
 
 # Path relative to home
 home="${HOME:-/home/$(id -un)}"
@@ -132,7 +133,33 @@ if [ -n "$seven_day_pct" ]; then
   line2+=("$(printf "${color}📅 %s %d%%%s\033[0m" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
+# Line 3 — todos for this session (~/.claude/tasks/$session_id/*.json)
+line3=()
+taskdir="$HOME/.claude/tasks/$session_id"
+if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
+  done=0; prog=0; pend=0; active=""
+  for f in "$taskdir"/*.json; do
+    [ -e "$f" ] || continue
+    st=$(jq -r '.status // empty' "$f" 2>/dev/null)
+    case "$st" in
+      completed)   done=$((done+1)) ;;
+      in_progress) prog=$((prog+1)); [ -z "$active" ] && active=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
+      *)           pend=$((pend+1)) ;;
+    esac
+  done
+  total=$((done+prog+pend))
+  if [ "$total" -gt 0 ]; then
+    line3+=("$(printf '\033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")")
+    [ "$prog" -gt 0 ] && line3+=("$(printf '\033[33m🔄 %s\033[0m' "$active")")
+    [ "$pend" -gt 0 ] && line3+=("$(printf '\033[2m⬜ %d left\033[0m' "$pend")")
+  fi
+fi
+
 join_parts "${line1[@]}"
 printf '\n'
 join_parts "${line2[@]}"
+if [ "${#line3[@]}" -gt 0 ]; then
+  printf '\n'
+  join_parts "${line3[@]}"
+fi
 printf '\n'
