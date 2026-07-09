@@ -133,33 +133,34 @@ if [ -n "$seven_day_pct" ]; then
   line2+=("$(printf "${color}📅 %s %d%%%s\033[0m" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
-# Line 3 — todos for this session (~/.claude/tasks/$session_id/*.json)
-line3=()
+# Todos for this session (~/.claude/tasks/$session_id/*.json) — one item per line
+todo_header=""
+todo_items=()
 taskdir="$HOME/.claude/tasks/$session_id"
 if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
-  done=0; prog=0; pend=0; active=""
-  for f in "$taskdir"/*.json; do
+  done=0; prog=0; pend=0
+  while IFS= read -r f; do
     [ -e "$f" ] || continue
     st=$(jq -r '.status // empty' "$f" 2>/dev/null)
     case "$st" in
-      completed)   done=$((done+1)) ;;
-      in_progress) prog=$((prog+1)); [ -z "$active" ] && active=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
-      *)           pend=$((pend+1)) ;;
+      completed)   done=$((done+1)); icon='\033[32m✅'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
+      in_progress) prog=$((prog+1)); icon='\033[33m🔄'; text=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
+      *)           pend=$((pend+1)); icon='\033[2m⬜'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
     esac
-  done
+    [ -z "$st" ] && continue
+    todo_items+=("$(printf '\t%s %s\033[0m' "$icon" "$text")")
+  done < <(find "$taskdir" -maxdepth 1 -name '*.json' 2>/dev/null | sort -V)
   total=$((done+prog+pend))
-  if [ "$total" -gt 0 ]; then
-    line3+=("$(printf '\033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")")
-    [ "$prog" -gt 0 ] && line3+=("$(printf '\033[33m🔄 %s\033[0m' "$active")")
-    [ "$pend" -gt 0 ] && line3+=("$(printf '\033[2m⬜ %d left\033[0m' "$pend")")
-  fi
+  [ "$total" -gt 0 ] && todo_header="$(printf '\033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
 join_parts "${line1[@]}"
 printf '\n'
 join_parts "${line2[@]}"
-if [ "${#line3[@]}" -gt 0 ]; then
-  printf '\n'
-  join_parts "${line3[@]}"
+if [ -n "$todo_header" ]; then
+  printf '\n%b' "$todo_header"
+  for item in "${todo_items[@]}"; do
+    printf '\n%b' "$item"
+  done
 fi
 printf '\n'
