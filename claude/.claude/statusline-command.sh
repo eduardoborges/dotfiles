@@ -148,10 +148,10 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
       *)           pend=$((pend+1)); icon='\033[2m⬜'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
     esac
     [ -z "$st" ] && continue
-    todo_items+=("$(printf '\t%s %s\033[0m' "$icon" "$text")")
+    todo_items+=("$(printf '\033[2m│\033[0m %s %s\033[0m' "$icon" "$text")")
   done < <(find "$taskdir" -maxdepth 1 -name '*.json' 2>/dev/null | sort -V)
   total=$((done+prog+pend))
-  [ "$total" -gt 0 ] && todo_header="$(printf '\033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
+  [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m╭─\033[0m \033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
 join_parts "${line1[@]}"
@@ -162,5 +162,6 @@ if [ -n "$todo_header" ]; then
   for item in "${todo_items[@]}"; do
     printf '\n%b' "$item"
   done
+  printf '\n\033[2m╰─\033[0m'
 fi
 printf '\n'
