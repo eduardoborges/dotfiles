@@ -11,7 +11,6 @@ seven_day_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // emp
 effort=$(echo "$input" | jq -r '.effort_level // .effortLevel // empty')
 [ -z "$effort" ] && effort=$(jq -r '.effortLevel // empty' "$HOME/.claude/settings.json" 2>/dev/null)
 session_id=$(echo "$input" | jq -r '.session_id // empty')
-transcript_path=$(echo "$input" | jq -r '.transcript_path // empty')
 
 # Path relative to home
 home="${HOME:-/home/$(id -un)}"
@@ -155,37 +154,10 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
   [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m╭─\033[0m \033[36m📋 %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
-# Running subagents — meta.json whose toolUseId has no tool_result yet in the transcript
-agent_header=""
-agent_items=()
-subdir="${transcript_path%.jsonl}/subagents"
-if [ -n "$transcript_path" ] && [ -f "$transcript_path" ] && [ -d "$subdir" ]; then
-  running=0
-  for m in "$subdir"/*.meta.json; do
-    [ -e "$m" ] || continue
-    tid=$(jq -r '.toolUseId // empty' "$m" 2>/dev/null)
-    [ -z "$tid" ] && continue
-    # done if a tool_result references this id
-    grep -q "\"tool_use_id\":\"$tid\"" "$transcript_path" 2>/dev/null && continue
-    running=$((running+1))
-    desc=$(jq -r '.description // .agentType // "agent"' "$m" 2>/dev/null)
-    [ "${#desc}" -gt 50 ] && desc="${desc:0:49}…"
-    agent_items+=("$(printf '\033[2m│\033[0m \033[35m▸\033[0m %s' "$desc")")
-  done
-  [ "$running" -gt 0 ] && agent_header="$(printf '\033[2m╭─\033[0m \033[35m🤖 %d running\033[0m' "$running")"
-fi
-
 join_parts "${line1[@]}"
 printf '\n'
 join_parts "${line2[@]}"
-# Agents running take the todos' slot; fall back to todos otherwise
-if [ -n "$agent_header" ]; then
-  printf '\n%b' "$agent_header"
-  for item in "${agent_items[@]}"; do
-    printf '\n%b' "$item"
-  done
-  printf '\n\033[2m╰─\033[0m'
-elif [ -n "$todo_header" ]; then
+if [ -n "$todo_header" ]; then
   printf '\n%b' "$todo_header"
   for item in "${todo_items[@]}"; do
     printf '\n%b' "$item"
