@@ -178,16 +178,16 @@ fi
 join_parts "${line1[@]}"
 printf '\n'
 join_parts "${line2[@]}"
-if [ -n "$todo_header" ]; then
-  printf '\n%b' "$todo_header"
-  for item in "${todo_items[@]}"; do
-    printf '\n%b' "$item"
-  done
-  printf '\n\033[2m╰─\033[0m'
-fi
+# Agents running take the todos' slot; fall back to todos otherwise
 if [ -n "$agent_header" ]; then
   printf '\n%b' "$agent_header"
   for item in "${agent_items[@]}"; do
+    printf '\n%b' "$item"
+  done
+  printf '\n\033[2m╰─\033[0m'
+elif [ -n "$todo_header" ]; then
+  printf '\n%b' "$todo_header"
+  for item in "${todo_items[@]}"; do
     printf '\n%b' "$item"
   done
   printf '\n\033[2m╰─\033[0m'
