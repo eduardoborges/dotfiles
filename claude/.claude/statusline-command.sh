@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 input=$(cat)
 
+# Nerd Font glyphs (built from UTF-8 hex so the bytes never get mangled on edit)
+I_DIR=$(printf '\xef\x81\xbb')
+I_BRANCH=$(printf '\xee\x82\xa0')
+I_NODE=$(printf '\xee\x9c\x98')
+I_MODEL=$(printf '\xf3\xb0\x9a\xa9')
+I_EFFORT=$(printf '\xef\x83\xa7')
+I_CTX=$(printf '\xef\x8b\x9b')
+I_5H=$(printf '\xef\x80\x97')
+I_7D=$(printf '\xef\x81\xb3')
+I_TODO=$(printf '\xef\x82\xae')
+I_DONE=$(printf '\xef\x81\x98')
+I_PROG=$(printf '\xef\x80\xa1')
+I_PEND=$(printf '\xef\x84\x8c')
+
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 model=$(echo "$input" | jq -r '.model.display_name // empty')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
@@ -72,13 +86,13 @@ join_parts() {
 
 # Line 1 — project info
 line1=()
-line1+=("$(printf '\033[34m%s\033[0m' "$display_cwd")")
-[ -n "$branch" ] && line1+=("$(printf "\033[35m(%s)\033[0m${git_status}" "$branch")")
-[ -n "$node_version" ] && line1+=("$(printf '\033[32mnode %s\033[0m' "$node_version")")
+line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
+[ -n "$branch" ] && line1+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
+[ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
 
 # Line 2 — AI info
 line2=()
-[ -n "$model" ] && line2+=("$(printf '\033[36m%s\033[0m' "$model")")
+[ -n "$model" ] && line2+=("$(printf '\033[36m%s %s\033[0m' "$I_MODEL" "$model")")
 if [ -n "$effort" ]; then
   case "$effort" in
     high) ecolor='\033[31m' ;;
@@ -86,7 +100,7 @@ if [ -n "$effort" ]; then
     low) ecolor='\033[32m' ;;
     *) ecolor='\033[37m' ;;
   esac
-  line2+=("$(printf "${ecolor}%s\033[0m" "$effort")")
+  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
 
 if [ -n "$used_pct" ]; then
@@ -94,7 +108,7 @@ if [ -n "$used_pct" ]; then
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
   elif [ "$used_int" -ge 50 ]; then color='\033[33m'
   else color='\033[32m'; fi
-  line2+=("$(printf "${color}ctx %s %d%%\033[0m" "$(progress_bar "$used_int")" "$used_int")")
+  line2+=("$(printf "${color}%s %s %d%%\033[0m" "$I_CTX" "$(progress_bar "$used_int")" "$used_int")")
 fi
 
 if [ -n "$five_hour_pct" ]; then
@@ -112,7 +126,7 @@ if [ -n "$five_hour_pct" ]; then
       reset_suffix=$(printf " (%dh%02d)" "$h" "$m")
     fi
   fi
-  line2+=("$(printf "${color}5h %s %d%%%s\033[0m" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
+  line2+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_5H" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
 fi
 
 if [ -n "$seven_day_pct" ]; then
@@ -130,7 +144,7 @@ if [ -n "$seven_day_pct" ]; then
       reset_suffix=$(printf " (%dd %dh)" "$d" "$h")
     fi
   fi
-  line2+=("$(printf "${color}7d %s %d%%%s\033[0m" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
+  line2+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
 # Todos for this session (~/.claude/tasks/$session_id/*.json) — one item per line
@@ -143,15 +157,15 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
     [ -e "$f" ] || continue
     st=$(jq -r '.status // empty' "$f" 2>/dev/null)
     case "$st" in
-      completed)   done=$((done+1)); icon='\033[32m[x]'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
-      in_progress) prog=$((prog+1)); icon='\033[33m[~]'; text=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
-      *)           pend=$((pend+1)); icon='\033[2m[ ]'; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
+      completed)   done=$((done+1)); icon="\033[32m$I_DONE"; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
+      in_progress) prog=$((prog+1)); icon="\033[33m$I_PROG"; text=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
+      *)           pend=$((pend+1)); icon="\033[2m$I_PEND"; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
     esac
     [ -z "$st" ] && continue
-    todo_items+=("$(printf '\033[2m|\033[0m %s %s\033[0m' "$icon" "$text")")
+    todo_items+=("$(printf '\033[2m│\033[0m %s %s\033[0m' "$icon" "$text")")
   done < <(find "$taskdir" -maxdepth 1 -name '*.json' 2>/dev/null | sort -V)
   total=$((done+prog+pend))
-  [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m+-\033[0m \033[36mtodo %s %d/%d\033[0m' "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
+  [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m╭─\033[0m \033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
 join_parts "${line1[@]}"
@@ -162,6 +176,6 @@ if [ -n "$todo_header" ]; then
   for item in "${todo_items[@]}"; do
     printf '\n%b' "$item"
   done
-  printf '\n\033[2m+-\033[0m'
+  printf '\n\033[2m╰─\033[0m'
 fi
 printf '\n'
