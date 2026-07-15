@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "Lightpanda": {
+      "source": "lightpanda-io/agent-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "f8204551570a529b2b96ad24f9f29e4e909a1a632e5c76573ae110fd0b597ece"
+    }
+  }
+}
