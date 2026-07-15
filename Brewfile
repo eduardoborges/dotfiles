@@ -54,14 +54,10 @@ brew "tamtom/tap/gplay", trusted: true
 cask "1password@beta"
 # Tools for building Android applications
 cask "android-studio"
-# OpenAI's official ChatGPT desktop app
-cask "chatgpt"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
-# OpenAI's coding agent that runs in your terminal
-cask "codex"
 # OpenAI's Codex desktop app for managing coding agents
 cask "codex-app"
 # App to build and share containerised applications and microservices
@@ -80,6 +76,8 @@ cask "kitlangton-hex"
 cask "lm-studio"
 # Calendar for professionals and teams
 cask "notion-calendar"
+# AI coding agent desktop client
+cask "opencode-desktop"
 # Replacement for Docker Desktop
 cask "orbstack"
 # Team communication and collaboration software
