@@ -137,3 +137,79 @@ yabai -m query --windows --space
 yabai --restart-service
 skhd --restart-service
 ```
+
+## macOS 27 "Golden Gate"
+
+Every Space command silently no-ops on Golden Gate with a stock yabai build.
+`yabai -m space --focus 5` and `space --create` both exit 0 and change nothing,
+which takes down `Option + 1…9` and `Option + Control + Left/Right` at once. The
+cause is the scripting addition: Apple moved the seven patched functions inside
+the Dock binary, so the Tahoe offsets no longer resolve. Upstream v7.1.25 (May
+2026) predates the beta and carries no fix.
+
+The offsets and byte patterns live in [asmvik/yabai#2802][gg-issue]. Confirm
+they still apply to the installed Dock before building anything, using the
+[offset checker][gg-gist] linked from that issue:
+
+```bash
+python3 verify_offsets.py /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock
+```
+
+`OK` and `MOVED` rows are a one-line edit each; a `CHANGED` row needs Ghidra.
+Apple reshuffles these every few betas, so re-run the checker after every
+system update. Verified 7/7 `OK` on build `26A5388g`.
+
+Building from the patched fork replaces the Homebrew binary:
+
+```bash
+git clone https://github.com/AhsanFazal/yabai && cd yabai
+make install-local
+brew pin yabai
+```
+
+`install-local` needs a self-signed `yabai-cert` Code Signing identity in the
+keychain (Keychain Access → Certificate Assistant → Create a Certificate). It
+codesigns with that stable identity so the Accessibility grant survives
+rebuilds, and rewrites `/etc/sudoers.d/yabai` with the new binary's hash. The
+`brew pin` matters: an unpinned `brew upgrade` restores the broken build.
+
+Confirm the addition actually loaded, rather than trusting the exit code:
+
+```bash
+plutil -p /Library/ScriptingAdditions/yabai.osax/Contents/Info.plist \
+  | grep CFBundleShortVersionString
+yabai -m space --focus 5 && yabai -m query --spaces --space
+```
+
+[gg-issue]: https://github.com/asmvik/yabai/issues/2802
+[gg-gist]: https://gist.github.com/AhsanFazal/d18a54b9dc0f259b49e21b8ed70078d2
+
+### Native Space hotkeys are disabled
+
+skhd owns `Option + digit` and `Option + Arrow` outright. The matching native
+shortcuts are switched off in `com.apple.symbolichotkeys`, because macOS
+symbolic hotkeys are handled by the WindowServer and win over skhd's event tap:
+
+| ID | Action |
+| --- | --- |
+| 79-82 | Move left/right a Space |
+| 118-127 | Switch to Desktop 1-10 |
+
+Do not try to rebind these in **System Settings → Keyboard → Keyboard Shortcuts
+→ Mission Control**. The recorder silently refuses `Option + digit`, since that
+combination produces a printable character under the U.S. International layout;
+the field just stays empty. `Control + Option + digit` records fine, which is
+how to tell the refusal apart from a stuck key.
+
+To restore the native shortcuts, flip `enabled` back and log out:
+
+```bash
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 118 \
+  '{enabled=1;value={type=standard;parameters=(49,18,524288);};}'
+```
+
+Two traps when scripting this. Read state back with `defaults read`, not
+`defaults export`, which serves a stale on-disk snapshot. And edit through
+`defaults`, not PlistBuddy: `cfprefsd` holds its own copy and flushes it over
+direct file writes. Either way, the WindowServer only picks up hotkey changes
+at the next login.
