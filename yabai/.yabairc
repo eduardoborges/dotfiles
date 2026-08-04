@@ -66,6 +66,10 @@ GHOSTTY_BSP='[ "$(yabai -m query --spaces --space | jq -r .type)" = bsp ] || yab
 yabai -m signal --add label=ghostty_created app="^Ghostty$" event=window_created action="$GHOSTTY_BSP"
 yabai -m signal --add label=ghostty_destroyed app="^Ghostty$" event=window_destroyed action="$GHOSTTY_BSP"
 
+# macOS leaves the space with no focused window after the focused one is
+# destroyed; fall back to the last focused window, then mouse, then any window.
+yabai -m signal --add label=focus_on_destroy event=window_destroyed action='yabai -m query --windows --window >/dev/null 2>&1 || yabai -m window --focus recent || yabai -m window --focus mouse || yabai -m window --focus "$(yabai -m query --windows --space | jq -r ".[0].id // empty")"'
+
 # Stable labels keep numeric shortcuts working when native-fullscreen Spaces
 # change the global Space indexes.
 yabai -m signal --add event=space_created action="$HOME/.config/yabai/label-spaces.sh"
