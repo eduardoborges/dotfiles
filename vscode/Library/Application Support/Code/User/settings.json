@@ -77,7 +77,7 @@
   "editor.fontSize": 13,
   "window.commandCenter": false,
   "chat.titleBar.openInAgentsWindow.enabled": false,
-  "workbench.browser.showInTitleBar": true,
+  "workbench.browser.showInTitleBar": false,
   "editor.linkedEditing": true,
   "editor.smoothScrolling": false,
   "workbench.list.smoothScrolling": false,
@@ -92,5 +92,16 @@
     "**/.gitea/workflows/*.yaml",
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml"
-  ]
+  ],
+  "json.schemaDownload.trustedDomains": {
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://unpkg.com": true,
+    "https://www.schemastore.org/": true,
+    "*": true
+  }
 }
