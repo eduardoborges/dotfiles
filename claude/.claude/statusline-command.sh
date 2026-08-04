@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 input=$(cat)
 
-# Nerd Font glyphs (built from UTF-8 hex so the bytes never get mangled on edit)
-I_DIR=$(printf '\xef\x81\xbb ')
-I_BRANCH=$(printf '\xee\x82\xa0 ')
-I_NODE=$(printf '\xee\x9c\x98 ')
-I_MODEL=$(printf '\xf3\xb0\x9a\xa9 ')
-I_EFFORT=$(printf '\xef\x83\xa7 ')
-I_CTX=$(printf '\xef\x8b\x9b ')
-I_5H=$(printf '\xef\x80\x97 ')
-I_7D=$(printf '\xef\x81\xb3 ')
-I_TODO=$(printf '\xef\x82\xae ')
-I_DONE=$(printf '\xef\x81\x98 ')
-I_PROG=$(printf '\xef\x80\xa1 ')
-I_PEND=$(printf '\xef\x84\x8c ')
+# Emoji icons
+I_DIR='📁'
+I_BRANCH='🌿'
+I_NODE='⬢'
+I_MODEL='🤖'
+I_CTX='🧠'
+I_5H='⏱️'
+I_7D='📅'
+I_TODO='📋'
+I_DONE='✅'
+I_PROG='🔄'
+I_PEND='⬜'
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 model=$(echo "$input" | jq -r '.model.display_name // empty')
@@ -95,12 +94,12 @@ line2=()
 [ -n "$model" ] && line2+=("$(printf '\033[36m%s %s\033[0m' "$I_MODEL" "$model")")
 if [ -n "$effort" ]; then
   case "$effort" in
-    high) ecolor='\033[31m' ;;
-    medium) ecolor='\033[33m' ;;
-    low) ecolor='\033[32m' ;;
-    *) ecolor='\033[37m' ;;
+    high) ecolor='\033[31m'; eicon='🔴' ;;
+    medium) ecolor='\033[33m'; eicon='🟡' ;;
+    low) ecolor='\033[32m'; eicon='🟢' ;;
+    *) ecolor='\033[37m'; eicon='⚡' ;;
   esac
-  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
+  line2+=("$(printf "${ecolor}%s %s\033[0m" "$eicon" "$effort")")
 fi
 
 if [ -n "$used_pct" ]; then
