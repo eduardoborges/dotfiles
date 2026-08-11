@@ -88,7 +88,7 @@ Keep the ticket status in sync with the work:
   ## Related
   ```
 
-  "Related" lists the ticket, epic, and any linked issues/PRs/docs. For "Screenshots and Evidences", capture real evidence when the change is visible or runnable: web UI via Chrome DevTools MCP (or similar browser tooling), mobile/desktop apps via the `agent-device` skill, CLI/backend via command output or test results. Run the app, exercise the changed flow, and attach the captures. Run the body through the `humanizer` skill, then open as draft (`gh pr create --draft`; Bitbucket: draft via bkt if supported). Link the PR to the ticket (Jira: the issue key is already in the title/branch; GitHub: "Closes #N" in the PR body). Do NOT touch the ticket status yet.
+  "Related" lists the ticket, epic, and any linked issues/PRs/docs. For "Screenshots and Evidences", capture real evidence when the change is visible or runnable: web UI via Chrome DevTools MCP (or similar browser tooling), mobile/desktop apps via the `agent-device` skill, CLI/backend via command output or test results. Run the app, exercise the changed flow, and attach the captures. Run the title and body through the `humanizer` skill, then open as draft (`gh pr create --draft`; Bitbucket: draft via bkt if supported). Link the PR to the ticket (Jira: the issue key is already in the title/branch; GitHub: "Closes #N" in the PR body). Do NOT touch the ticket status yet.
 - **After the user reviews the draft and approves:** mark the PR ready (`gh pr ready`) and move the ticket to "In Review" / "Code Review" or the closest equivalent.
 
 If no matching transition exists, say which transitions were available and ask which to use instead of guessing.
