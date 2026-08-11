@@ -99,4 +99,4 @@ When the user reports new comments on the PR, fetch them and for each one:
 
 1. Judge if it is valid. If not, say why to the user before pushing back on the reviewer.
 2. If valid, apply the fix and push.
-3. Reply to the comment: brief, direct, and warm (e.g. "Good catch, fixed in abc123"). Run replies through the `humanizer` skill. No essays, no over-explaining.
+3. Reply to the comment: brief, direct, and warm (e.g. "Good catch, fixed!"). No commit hashes or references. Run replies through the `humanizer` skill. No essays, no over-explaining.
