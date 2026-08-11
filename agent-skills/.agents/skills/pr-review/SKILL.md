@@ -45,10 +45,39 @@ Look for issues that matter:
 
 ## 4. Propose to the user
 
-Show every candidate comment in a table, in pt-BR, before posting anything:
+Present a structured report in pt-BR before posting anything. Format:
 
-| Arquivo:linha | Problema | Comentário sugerido (EN) |
-|---|---|---|
+```markdown
+# Review: <PR title>
+
+| | |
+|---|---|
+| PR | <link> |
+| Ticket | <key + link> |
+| CI | <status> |
+| Veredito proposto | REQUEST_CHANGES ou COMMENT |
+
+## Resumo
+<2-3 frases: o que o PR faz e o estado geral.>
+
+## Issues
+
+### 1. <título curto do problema>
+**Onde:** `arquivo:linha` · **Severidade:** alta/média/baixa
+
+<explicação do problema e por que importa, 2-4 frases>
+
+**Comentário sugerido (EN):**
+> <o comentário como será postado>
+
+### 2. ...
+
+## Descartados
+| O que | Por que não vale comentário |
+|---|---|
+```
+
+The "Descartados" table shows what you chose NOT to comment on (nits, subjective stuff), so the user sees the filtering happened. Keep it short.
 
 Comments are brief, direct, and friendly. No essays, no lecturing, no commit hashes. Run every comment through the `humanizer` skill before showing it. Ask which to post: all, some (pick), or none.
 
