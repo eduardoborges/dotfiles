@@ -53,4 +53,20 @@ Comments are brief, direct, and friendly. No essays, no lecturing, no commit has
 
 ## 5. Post
 
-Post only what the user approved, as inline comments on the right file/line (`gh pr review --comment` with line comments, or the Bitbucket equivalent via `bkt`). If an overall verdict was approved too, post it as the review summary. Never post anything the user did not approve.
+Post only what the user approved. Never post anything the user did not approve.
+
+Submit everything as ONE review, not N loose comments (one notification for the author, not a flood). On GitHub, `gh pr review --comment` cannot do inline comments; use the reviews API with the comments array:
+
+```bash
+gh api repos/{owner}/{repo}/pulls/{n}/reviews \
+  -f event=REQUEST_CHANGES \
+  -f body="<summary>" \
+  --input - <<< '{"comments":[{"path":"src/x.ts","line":42,"body":"..."}]}'
+```
+
+(Build the full JSON payload with event, body, and comments together. Bitbucket: equivalent via `bkt` or its API.)
+
+Pick the event by severity of the approved findings:
+
+- Any real issue (bug, security, wrong scope, broken pattern) → `REQUEST_CHANGES`.
+- Only minor/unimportant details → `COMMENT`.
