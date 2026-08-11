@@ -76,7 +76,6 @@
   "github.copilot.nextEditSuggestions.eagerness": "high",
   "editor.fontSize": 13,
   "window.commandCenter": false,
-  "chat.titleBar.openInAgentsWindow.enabled": false,
   "workbench.browser.showInTitleBar": false,
   "editor.linkedEditing": true,
   "editor.smoothScrolling": false,
@@ -103,5 +102,6 @@
     "https://unpkg.com": true,
     "https://www.schemastore.org/": true,
     "*": true
-  }
+  },
+  "chat.titleBar.openInAgentsWindow.enabled": false
 }
