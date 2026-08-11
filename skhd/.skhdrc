@@ -39,7 +39,7 @@ alt + shift - 0x2C : open -a "1Password"
 alt + shift - s : open -a "Slack"
 
 # AI
-alt + shift - g : open -a "ChatGPT"
+alt + shift - a : open -a "Claude"
 
 # Web apps
 alt + shift - c : open -a "Notion Calendar"
