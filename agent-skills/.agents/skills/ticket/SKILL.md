@@ -92,3 +92,11 @@ Keep the ticket status in sync with the work:
 - **After the user reviews the draft and approves:** mark the PR ready (`gh pr ready`), add the repo's default reviewers (GitHub: CODEOWNERS or the team's usual reviewers, `gh pr edit --add-reviewer`; Bitbucket: default reviewers are usually auto-added, verify via bkt), and move the ticket to "In Review" / "Code Review" or the closest equivalent. If no default reviewers can be determined, ask who to add.
 
 If no matching transition exists, say which transitions were available and ask which to use instead of guessing.
+
+## 6. Review comments
+
+When the user reports new comments on the PR, fetch them and for each one:
+
+1. Judge if it is valid. If not, say why to the user before pushing back on the reviewer.
+2. If valid, apply the fix and push.
+3. Reply to the comment: brief, direct, and warm (e.g. "Good catch, fixed in abc123"). Run replies through the `humanizer` skill. No essays, no over-explaining.
