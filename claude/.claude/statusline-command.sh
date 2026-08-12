@@ -131,14 +131,18 @@ elif [ -f "$cwd/pyproject.toml" ]; then
   pkg_mgr="python"
 fi
 
-# Progress bar — 10 cells, filled proportional to percentage
+# Progress bar — braille cells, 6 fill steps per cell for a smoother ramp
 progress_bar() {
-  local pct=$1 width=5 filled i
-  filled=$(( (pct * width + 50) / 100 ))
-  [ "$filled" -gt "$width" ] && filled=$width
-  [ "$filled" -lt 0 ] && filled=0
-  for ((i=0; i<filled; i++)); do printf '█'; done
-  for ((i=filled; i<width; i++)); do printf '░'; done
+  local pct=$1 width=5
+  local levels=(⣀ ⣄ ⣤ ⣦ ⣶ ⣷ ⣿)
+  local total=$((width * 6)) filled i lvl
+  filled=$(( (pct * total + 50) / 100 ))
+  for ((i=0; i<width; i++)); do
+    lvl=$(( filled - i*6 ))
+    [ "$lvl" -lt 0 ] && lvl=0
+    [ "$lvl" -gt 6 ] && lvl=6
+    printf '%s' "${levels[$lvl]}"
+  done
 }
 
 # Helper to join args with " | " separator
