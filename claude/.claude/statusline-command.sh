@@ -56,6 +56,14 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
   # Worktrees: collect linked worktrees (skip the main checkout), mark the current one
   wt_items=()
   cur_toplevel=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)
+  common_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+  abs_git_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-dir 2>/dev/null)
+  in_worktree=""
+  repo_name=""
+  if [ -n "$common_dir" ] && [ "$abs_git_dir" != "$common_dir" ]; then
+    in_worktree=1
+    repo_name=$(basename "$(dirname "$common_dir")")
+  fi
   wt_path=""; wt_branch=""; wt_index=0
   while IFS= read -r line; do
     case "$line" in
@@ -85,10 +93,27 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
   fi
 fi
 
-# Node version (only when project looks like Node)
+# Project info: name@version, runtime, package manager
+proj=""
 node_version=""
-if [ -f "$cwd/package.json" ] || [ -f "$cwd/.nvmrc" ] || [ -f "$cwd/.node-version" ]; then
+pkg_mgr=""
+if [ -f "$cwd/package.json" ]; then
+  proj=$(jq -r '[.name // empty, .version // empty] | join("@")' "$cwd/package.json" 2>/dev/null)
   node_version=$(node --version 2>/dev/null)
+  if   [ -f "$cwd/bun.lock" ] || [ -f "$cwd/bun.lockb" ]; then pkg_mgr="bun"
+  elif [ -f "$cwd/pnpm-lock.yaml" ]; then pkg_mgr="pnpm"
+  elif [ -f "$cwd/yarn.lock" ]; then pkg_mgr="yarn"
+  elif [ -f "$cwd/package-lock.json" ]; then pkg_mgr="npm"
+  fi
+elif [ -f "$cwd/Cargo.toml" ]; then
+  proj=$(awk -F'"' '/^name *=/{n=$2} /^version *=/{v=$2} END{if(n)printf "%s@%s",n,v}' "$cwd/Cargo.toml" 2>/dev/null)
+  pkg_mgr="cargo"
+elif [ -f "$cwd/go.mod" ]; then
+  proj=$(awk '/^module /{print $2; exit}' "$cwd/go.mod" 2>/dev/null | awk -F/ '{print $NF}')
+  pkg_mgr="go"
+elif [ -f "$cwd/pyproject.toml" ]; then
+  proj=$(awk -F'"' '/^name *=/{n=$2} /^version *=/{v=$2} END{if(n)printf "%s@%s",n,v}' "$cwd/pyproject.toml" 2>/dev/null)
+  pkg_mgr="python"
 fi
 
 # Progress bar — 10 cells, filled proportional to percentage
@@ -114,8 +139,14 @@ join_parts() {
 
 # Line 1 — project info
 line1=()
-line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
+if [ -n "$in_worktree" ]; then
+  line1+=("$(printf '\033[33m🌳 %s\033[0m \033[2m⇠ %s\033[0m' "$(basename "$cur_toplevel")" "$repo_name")")
+else
+  line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
+fi
+[ -n "$proj" ] && line1+=("$(printf '\033[36m📦 %s\033[0m' "$proj")")
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
+[ -n "$pkg_mgr" ] && line1+=("$(printf '\033[2m%s\033[0m' "$pkg_mgr")")
 
 # Git line — branch, tree counts, ahead/behind
 line_git=()
