@@ -27,7 +27,7 @@ Same approach as the `ticket` skill: go wide, in parallel, with a depth cap.
 - The linked ticket (from branch name, title, or body): full body of ticket, parent, and epic via Atlassian MCP or `gh`. Linked issues title + status only.
 - Linked Confluence/docs pages (cap at 3 most relevant).
 - Local repo, if cwd is the relevant repo: the surrounding code of changed files, repo conventions (CLAUDE.md, CONTRIBUTING, ADRs), recent history of the touched files.
-- If you need the PR's code checked out (to run tests or navigate it), check it out in a git worktree (EnterWorktree if available, else `git worktree add`), never in the user's checkout — other agents may be working there in parallel.
+- If you need the PR's code checked out (to run tests or navigate it), never use the user's checkout — other agents may be working there in parallel. `git fetch origin` first, then check out the PR's head branch in a fresh worktree: `git worktree add <path> origin/<pr-branch>` (or EnterWorktree + `gh pr checkout` inside it). A fresh worktree from the fetched ref is guaranteed clean and in sync with the remote.
 
 The point: judge the diff against what the ticket asked for and how this repo does things, not against generic taste.
 
