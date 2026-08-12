@@ -40,22 +40,41 @@ branch=""
 git_status=""
 if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
   branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
-  # Dirty working tree?
-  if [ -n "$(git -C "$cwd" status --porcelain 2>/dev/null)" ]; then
+  # Working tree counts: staged / modified / untracked
+  porcelain=$(git -C "$cwd" status --porcelain 2>/dev/null)
+  if [ -n "$porcelain" ]; then
+    staged=$(echo "$porcelain" | grep -c '^[MADRC]')
+    modified=$(echo "$porcelain" | grep -c '^.[MD]')
+    untracked=$(echo "$porcelain" | grep -c '^??')
     git_status+=" \033[33m✗\033[0m"
+    [ "$staged" -gt 0 ] && git_status+=" \033[32m●${staged}\033[0m"
+    [ "$modified" -gt 0 ] && git_status+=" \033[33m~${modified}\033[0m"
+    [ "$untracked" -gt 0 ] && git_status+=" \033[2m?${untracked}\033[0m"
   else
     git_status+=" \033[32m✓\033[0m"
   fi
-  # Worktree info: name when inside a linked worktree, count when others exist
-  worktree=""
-  common_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
-  abs_git_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-dir 2>/dev/null)
-  if [ -n "$common_dir" ] && [ "$abs_git_dir" != "$common_dir" ]; then
-    worktree=$(basename "$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)")
-  else
-    wt_count=$(git -C "$cwd" worktree list --porcelain 2>/dev/null | grep -c '^worktree ')
-    [ "$wt_count" -gt 1 ] 2>/dev/null && worktree="x$((wt_count - 1))"
-  fi
+  # Worktrees: collect linked worktrees (skip the main checkout), mark the current one
+  wt_items=()
+  cur_toplevel=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)
+  wt_path=""; wt_branch=""; wt_index=0
+  while IFS= read -r line; do
+    case "$line" in
+      worktree\ *) wt_path="${line#worktree }"; wt_branch=""; wt_index=$((wt_index+1)) ;;
+      branch\ *)   wt_branch="${line#branch refs/heads/}" ;;
+      '')
+        # first entry is the main checkout; skip it
+        if [ "$wt_index" -gt 1 ] && [ -n "$wt_path" ]; then
+          label="$(basename "$wt_path")"
+          [ -n "$wt_branch" ] && label="$label \033[2m($wt_branch)\033[0m"
+          if [ "$wt_path" = "$cur_toplevel" ]; then
+            wt_items+=("\033[33m➤ ${label}\033[0m")
+          else
+            wt_items+=("\033[33m${label}\033[0m")
+          fi
+        fi
+        wt_path="" ;;
+    esac
+  done < <(git -C "$cwd" worktree list --porcelain 2>/dev/null; echo)
   # Ahead/behind upstream
   if upstream=$(git -C "$cwd" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null); then
     counts=$(git -C "$cwd" rev-list --left-right --count "HEAD...$upstream" 2>/dev/null)
@@ -96,9 +115,11 @@ join_parts() {
 # Line 1 — project info
 line1=()
 line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
-[ -n "$branch" ] && line1+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
-[ -n "$worktree" ] && line1+=("$(printf '\033[33m🌳 %s\033[0m' "$worktree")")
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
+
+# Git line — branch, tree counts, ahead/behind
+line_git=()
+[ -n "$branch" ] && line_git+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
 
 # Line 2 — AI info
 line2=()
@@ -179,8 +200,21 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
 fi
 
 join_parts "${line1[@]}"
+if [ "${#line_git[@]}" -gt 0 ]; then
+  printf '\n'
+  join_parts "${line_git[@]}"
+fi
 printf '\n'
 join_parts "${line2[@]}"
+if [ "${#wt_items[@]}" -gt 0 ]; then
+  printf '\n\033[33m🌳\033[0m '
+  first=1
+  for w in "${wt_items[@]}"; do
+    [ "$first" -eq 0 ] && printf ' \033[2m|\033[0m '
+    printf '%b' "$w"
+    first=0
+  done
+fi
 if [ -n "$todo_header" ]; then
   printf '\n%b' "$todo_header"
   for item in "${todo_items[@]}"; do
