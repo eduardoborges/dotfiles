@@ -46,6 +46,16 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
   else
     git_status+=" \033[32m✓\033[0m"
   fi
+  # Worktree info: name when inside a linked worktree, count when others exist
+  worktree=""
+  common_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+  abs_git_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-dir 2>/dev/null)
+  if [ -n "$common_dir" ] && [ "$abs_git_dir" != "$common_dir" ]; then
+    worktree=$(basename "$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)")
+  else
+    wt_count=$(git -C "$cwd" worktree list --porcelain 2>/dev/null | grep -c '^worktree ')
+    [ "$wt_count" -gt 1 ] 2>/dev/null && worktree="x$((wt_count - 1))"
+  fi
   # Ahead/behind upstream
   if upstream=$(git -C "$cwd" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null); then
     counts=$(git -C "$cwd" rev-list --left-right --count "HEAD...$upstream" 2>/dev/null)
@@ -87,6 +97,7 @@ join_parts() {
 line1=()
 line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
 [ -n "$branch" ] && line1+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
+[ -n "$worktree" ] && line1+=("$(printf '\033[33m🌳 %s\033[0m' "$worktree")")
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
 
 # Line 2 — AI info
