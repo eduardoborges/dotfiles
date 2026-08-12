@@ -93,6 +93,21 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
   fi
 fi
 
+# Mise: are the current dir's tools installed and in sync?
+mise_seg=""
+if command -v mise >/dev/null 2>&1; then
+  mise_json=$(mise -C "$cwd" ls --current --json 2>/dev/null)
+  if [ -n "$mise_json" ] && [ "$mise_json" != "{}" ]; then
+    missing=$(echo "$mise_json" | jq '[.[][] | select(.installed == false)] | length' 2>/dev/null)
+    if [ "$missing" = "0" ]; then
+      mise_seg="$(printf '\033[32m🔧 ✓\033[0m')"
+    elif [ -n "$missing" ]; then
+      missing_names=$(echo "$mise_json" | jq -r '[to_entries[] | select(.value[] | .installed == false) | .key] | join(",")' 2>/dev/null)
+      mise_seg="$(printf '\033[31m🔧 ✗ %s\033[0m' "$missing_names")"
+    fi
+  fi
+fi
+
 # Project info: name@version, runtime, package manager
 proj=""
 node_version=""
@@ -147,6 +162,7 @@ fi
 [ -n "$proj" ] && line1+=("$(printf '\033[36m📦 %s\033[0m' "$proj")")
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
 [ -n "$pkg_mgr" ] && line1+=("$(printf '\033[2m%s\033[0m' "$pkg_mgr")")
+[ -n "$mise_seg" ] && line1+=("$mise_seg")
 
 # Git line — branch, tree counts, ahead/behind
 line_git=()
