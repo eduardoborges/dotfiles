@@ -111,6 +111,7 @@ main() {
   do_backup
   remove_targets_for_stow
   run_stow
+  link_skills
   configure_macos_window_manager_defaults
   ensure_code
   remove_vscodium

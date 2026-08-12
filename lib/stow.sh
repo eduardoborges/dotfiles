@@ -170,3 +170,16 @@ run_unstow() {
     reload_hypr_and_waybar
   fi
 }
+
+# skills/ is not a stow package: it is linked wholesale into each agent's skills dir
+link_skills() {
+  for target in "$HOME/.claude/skills" "$HOME/.agents/skills"; do
+    mkdir -p "$(dirname "$target")"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+      echo "  (skipping $target - exists and is not a symlink)"
+      continue
+    fi
+    ln -sfn "$DOTFILES_DIR/skills" "$target"
+    echo "  link $target -> $DOTFILES_DIR/skills"
+  done
+}
