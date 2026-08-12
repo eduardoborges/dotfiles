@@ -31,7 +31,17 @@ Same approach as the `ticket` skill: go wide, in parallel, with a depth cap.
 
 The point: judge the diff against what the ticket asked for and how this repo does things, not against generic taste.
 
-## 3. Review
+## 3. Run it before judging it
+
+Before reviewing the code, verify it works — when possible/applicable:
+
+- Check out the PR branch in the worktree (as above) and run the repo's checks: tests, lint, typecheck, build (whatever the repo defines).
+- If the change is runnable (UI, endpoint, CLI), start the app and exercise the changed flow (Chrome DevTools MCP for web, `agent-device` for apps, direct commands for CLI).
+- Skip what does not apply (docs-only PR, no local env, missing secrets) and say so in the report instead of pretending it ran.
+
+Failures found here are review findings, usually the highest-severity ones.
+
+## 4. Review
 
 Look for issues that matter:
 
@@ -43,7 +53,7 @@ Look for issues that matter:
 
 **Filter hard.** Drop anything irrelevant: style nits a formatter would catch, subjective preferences, "you could also", restating the diff, comments for the sake of commenting. If the PR is fine, say so and post nothing. A short list of real issues beats a wall of noise.
 
-## 4. Propose to the user
+## 5. Propose to the user
 
 Present a structured report in pt-BR before posting anything. Format:
 
@@ -81,7 +91,7 @@ The "Descartados" table shows what you chose NOT to comment on (nits, subjective
 
 Comments are brief, direct, and friendly. No essays, no lecturing, no commit hashes. Run every comment through the `humanizer` skill before showing it. Ask which to post: all, some (pick), or none.
 
-## 5. Post
+## 6. Post
 
 Post only what the user approved. Never post anything the user did not approve.
 
