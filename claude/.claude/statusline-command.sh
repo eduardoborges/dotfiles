@@ -53,8 +53,7 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
   else
     git_status+=" \033[32m✓\033[0m"
   fi
-  # Worktrees: collect linked worktrees (skip the main checkout), mark the current one
-  wt_items=()
+  # Worktrees: current worktree info + count of linked worktrees
   cur_toplevel=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)
   common_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
   abs_git_dir=$(git -C "$cwd" rev-parse --path-format=absolute --git-dir 2>/dev/null)
@@ -64,25 +63,8 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
     in_worktree=1
     repo_name=$(basename "$(dirname "$common_dir")")
   fi
-  wt_path=""; wt_branch=""; wt_index=0
-  while IFS= read -r line; do
-    case "$line" in
-      worktree\ *) wt_path="${line#worktree }"; wt_branch=""; wt_index=$((wt_index+1)) ;;
-      branch\ *)   wt_branch="${line#branch refs/heads/}" ;;
-      '')
-        # first entry is the main checkout; skip it
-        if [ "$wt_index" -gt 1 ] && [ -n "$wt_path" ]; then
-          label="$(basename "$wt_path")"
-          [ -n "$wt_branch" ] && label="$label \033[2m($wt_branch)\033[0m"
-          if [ "$wt_path" = "$cur_toplevel" ]; then
-            wt_items+=("\033[33m➤ ${label}\033[0m")
-          else
-            wt_items+=("\033[33m${label}\033[0m")
-          fi
-        fi
-        wt_path="" ;;
-    esac
-  done < <(git -C "$cwd" worktree list --porcelain 2>/dev/null; echo)
+  wt_count=$(git -C "$cwd" worktree list --porcelain 2>/dev/null | grep -c '^worktree ')
+  wt_count=$((wt_count - 1))
   # Ahead/behind upstream
   if upstream=$(git -C "$cwd" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null); then
     counts=$(git -C "$cwd" rev-list --left-right --count "HEAD...$upstream" 2>/dev/null)
@@ -100,10 +82,10 @@ if command -v mise >/dev/null 2>&1; then
   if [ -n "$mise_json" ] && [ "$mise_json" != "{}" ]; then
     missing=$(echo "$mise_json" | jq '[.[][] | select(.installed == false)] | length' 2>/dev/null)
     if [ "$missing" = "0" ]; then
-      mise_seg="$(printf '\033[32m🔧 ✓\033[0m')"
+      mise_seg="$(printf '\033[32m🧰 mise ✓\033[0m')"
     elif [ -n "$missing" ]; then
       missing_names=$(echo "$mise_json" | jq -r '[to_entries[] | select(.value[] | .installed == false) | .key] | join(",")' 2>/dev/null)
-      mise_seg="$(printf '\033[31m🔧 ✗ %s\033[0m' "$missing_names")"
+      mise_seg="$(printf '\033[31m🧰 mise ✗ %s\033[0m' "$missing_names")"
     fi
   fi
 fi
@@ -113,7 +95,6 @@ proj=""
 node_version=""
 pkg_mgr=""
 if [ -f "$cwd/package.json" ]; then
-  proj=$(jq -r '[.name // empty, .version // empty] | join("@")' "$cwd/package.json" 2>/dev/null)
   node_version=$(node --version 2>/dev/null)
   if   [ -f "$cwd/bun.lock" ] || [ -f "$cwd/bun.lockb" ]; then pkg_mgr="bun"
   elif [ -f "$cwd/pnpm-lock.yaml" ]; then pkg_mgr="pnpm"
@@ -159,9 +140,10 @@ join_parts() {
 # Line 1 — project info
 line1=()
 if [ -n "$in_worktree" ]; then
-  line1+=("$(printf '\033[33m🌳 %s\033[0m \033[2m⇠ %s\033[0m' "$(basename "$cur_toplevel")" "$repo_name")")
+  line1+=("$(printf '\033[33m🌳 %s\033[0m \033[2m⇠ %s · %d wt\033[0m' "$(basename "$cur_toplevel")" "$repo_name" "$wt_count")")
 else
   line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
+  [ "${wt_count:-0}" -gt 0 ] && line1+=("$(printf '\033[33m🌳 %d wt\033[0m' "$wt_count")")
 fi
 [ -n "$proj" ] && line1+=("$(printf '\033[36m📦 %s\033[0m' "$proj")")
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
@@ -257,15 +239,6 @@ if [ "${#line_git[@]}" -gt 0 ]; then
 fi
 printf '\n'
 join_parts "${line2[@]}"
-if [ "${#wt_items[@]}" -gt 0 ]; then
-  printf '\n\033[33m🌳\033[0m '
-  first=1
-  for w in "${wt_items[@]}"; do
-    [ "$first" -eq 0 ] && printf ' \033[2m|\033[0m '
-    printf '%b' "$w"
-    first=0
-  done
-fi
 if [ -n "$todo_header" ]; then
   printf '\n%b' "$todo_header"
   for item in "${todo_items[@]}"; do
