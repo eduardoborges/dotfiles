@@ -12,6 +12,8 @@ Input: a PR URL passed as the argument. If no URL was given, ask for it and stop
 
 **Language:** talk to the user in pt-BR (findings, questions). All posted comments are ALWAYS in English, even when the conversation is in pt-BR.
 
+**Humanizer gate:** every comment and review body MUST pass through the `humanizer` skill before being shown to the user for approval, and therefore before posting. No exceptions — if a comment did not go through humanizer, it does not get posted.
+
 ## 1. Detect the platform
 
 | URL contains | Platform | Tooling |

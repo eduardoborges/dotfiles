@@ -12,6 +12,8 @@ Input: a ticket URL passed as the argument. If no URL was given, ask for it and 
 
 **Language:** talk to the user in pt-BR (reports, questions, plan). All artifacts are in English: branch names, commit messages, PR titles and bodies, ticket comments.
 
+**Humanizer gate:** NOTHING leaves this skill as posted text without passing through the `humanizer` skill first. Commit messages, PR title, PR body, ticket comments, review replies — invoke `humanizer` on the drafted text BEFORE the command that posts it, every time. If you are about to run `git commit`, `gh pr create`, `gh api`, or a bkt/Jira write and the text did not go through humanizer, stop and run it.
+
 ## 1. Detect the platform
 
 | URL contains | Platform | Tooling |
