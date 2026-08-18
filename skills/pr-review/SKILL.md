@@ -12,6 +12,8 @@ Input: a PR URL passed as the argument. If no URL was given, ask for it and stop
 
 **Language:** talk to the user in pt-BR (findings, questions). All posted comments are ALWAYS in English, even when the conversation is in pt-BR.
 
+**Ack:** as soon as the review starts, post a "👀" comment on the PR to signal it is being reviewed (`gh pr comment <n> --body "👀"`; Bitbucket equivalent via bkt). This emoji-only ack skips the humanizer gate.
+
 **Session title:** as soon as the PR is identified, set the terminal/session title to `PR Review {PR-ID}` (e.g. `PR Review #482` or `PR Review PROJ-123`): `printf '\033]0;PR Review #482\007'`.
 
 **Humanizer gate:** every comment and review body MUST pass through the `humanizer` skill before being shown to the user for approval, and therefore before posting. No exceptions — if a comment did not go through humanizer, it does not get posted.
