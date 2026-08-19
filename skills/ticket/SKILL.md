@@ -59,7 +59,7 @@ Present in this order, in the user's language:
 
 1. **TL;DR** — 2 to 4 sentences: what the task is, why it exists, what done looks like.
 2. **Description** — lightly detailed: scope, affected systems, constraints, open questions found in comments/docs. Use visual elements where they clarify:
-   - Mermaid flowchart or sequence diagram for flows/architecture.
+   - Diagrams for flows/architecture in plain ASCII (boxes with `┌─┐│└┘`, arrows with `-->`), inside a code fence. NEVER Mermaid in terminal output — the CLI does not render it, it prints as raw text. Mermaid is allowed only inside a PR body posted to GitHub/Bitbucket, where the web UI renders it.
    - Table for affected components, acceptance criteria, or ticket hierarchy.
    - Only add a diagram when it beats prose; skip decoration.
 3. **Context map** — small table of what was fetched (epic, parent, N linked issues, Confluence pages, repo files) with links, so the user sees what informed the summary and what was missing.

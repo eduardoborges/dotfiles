@@ -95,6 +95,8 @@ Present a structured report in pt-BR before posting anything. Format:
 
 The "Descartados" table shows what you chose NOT to comment on (nits, subjective stuff), so the user sees the filtering happened. Keep it short.
 
+If a diagram helps explain a flow, draw it in plain ASCII (boxes with `┌─┐│└┘`, arrows with `-->`) inside a code fence. NEVER Mermaid in terminal output — the CLI does not render it. Mermaid only inside posted comments/bodies, where GitHub/Bitbucket render it.
+
 Comments are brief, direct, and friendly. No essays, no lecturing, no commit hashes. Run every comment through the `humanizer` skill before showing it. Ask which to post: all, some (pick), or none.
 
 ## 6. Post
