@@ -3,19 +3,7 @@ onboarding = false
 [keys]
 prefix = "ctrl+space"
 
-# acoes de plugin (e, g e r ja sao edit_scrollback, goto e resize_mode)
-[[keys.command]]
-key = "prefix+f"
-type = "plugin_action"
-command = "herdr-sidebar.open-sidebar"
-description = "file explorer"
-
-[[keys.command]]
-key = "prefix+d"
-type = "plugin_action"
-command = "herdr-sidebar.open-git"
-description = "source control"
-
+# acoes de plugin
 [[keys.command]]
 key = "prefix+a"
 type = "plugin_action"
