@@ -211,6 +211,47 @@ if [ -n "$seven_day_pct" ]; then
   line2+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
+# Usage credits (Enterprise work profile) — not in the statusline stdin JSON,
+# so fetch from the OAuth usage API. ponytail: 5 min file cache, statusline runs every ~300ms
+if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
+  cred_cache="$CLAUDE_CONFIG_DIR/cache/credits-seg"
+  cred_age=$(( $(date +%s) - $(stat -f %m "$cred_cache" 2>/dev/null || echo 0) ))
+  if [ "$cred_age" -gt 300 ]; then
+    seg=""
+    # keychain service = "Claude Code-credentials-" + sha256(config dir)[:8]
+    kc_suffix=$(printf '%s' "$CLAUDE_CONFIG_DIR" | shasum -a 256 | cut -c1-8)
+    tok=$(security find-generic-password -s "Claude Code-credentials-$kc_suffix" -w 2>/dev/null)
+    tok=$(printf '%s' "$tok" | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
+    if [ -n "$tok" ]; then
+      usage=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
+        https://api.anthropic.com/api/oauth/usage)
+      read -r enabled limit used <<<"$(printf '%s' "$usage" \
+        | jq -r '.extra_usage // {} | "\(.is_enabled // false) \(.monthly_limit // 0) \(.used_credits // 0)"')"
+      if [ "$enabled" = "true" ] && awk "BEGIN{exit !($limit > 0)}"; then
+        pct=$(awk "BEGIN{printf \"%d\", $used * 100 / $limit}")
+        remain=$(awk "BEGIN{printf \"%.2f\", ($limit - $used) / 100}")
+        if [ "$pct" -ge 75 ]; then color='\033[31m'
+        elif [ "$pct" -ge 50 ]; then color='\033[33m'
+        else color='\033[32m'; fi
+        seg=$(printf "${color}💳 %s %d%% (\$%s left)\033[0m" "$(progress_bar "$pct")" "$pct" "$remain")
+      elif [ "$enabled" = "true" ]; then
+        seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk "BEGIN{printf \"%.2f\", $used / 100}")")
+      else
+        # no per-member allocation exposed: fall back to org prepaid balance if this seat can read it
+        org=$(jq -r '.oauthAccount.organizationUuid // empty' "$CLAUDE_CONFIG_DIR/.claude.json" 2>/dev/null)
+        if [ -n "$org" ]; then
+          amt=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
+            "https://api.anthropic.com/api/oauth/organizations/$org/prepaid/credits" | jq -r '.amount // empty')
+          [ -n "$amt" ] && seg=$(printf '\033[32m💳 $%s org\033[0m' "$(awk "BEGIN{printf \"%.2f\", $amt / 100}")")
+        fi
+      fi
+    fi
+    mkdir -p "${cred_cache%/*}" && printf '%s' "$seg" > "$cred_cache"
+  fi
+  credits_seg=$(cat "$cred_cache" 2>/dev/null)
+  [ -n "$credits_seg" ] && line2+=("$credits_seg")
+fi
+
 # Todos for this session (~/.claude/tasks/$session_id/*.json) — one item per line
 todo_header=""
 todo_items=()
