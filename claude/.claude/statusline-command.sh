@@ -9,6 +9,7 @@ I_MODEL='🤖'
 I_CTX='🧠'
 I_5H='⏱️'
 I_7D='📅'
+I_EFFORT='⚡'
 I_TODO='📋'
 I_DONE='✅'
 I_PROG='🔄'
@@ -159,12 +160,14 @@ line2=()
 [ -n "$model" ] && line2+=("$(printf '\033[36m%s %s\033[0m' "$I_MODEL" "$model")")
 if [ -n "$effort" ]; then
   case "$effort" in
-    high) ecolor='\033[31m'; eicon='🔴' ;;
-    medium) ecolor='\033[33m'; eicon='🟡' ;;
-    low) ecolor='\033[32m'; eicon='🟢' ;;
-    *) ecolor='\033[37m'; eicon='⚡' ;;
+    max) ecolor='\033[35m' ;;
+    xhigh) ecolor='\033[91m' ;;
+    high) ecolor='\033[31m' ;;
+    medium) ecolor='\033[33m' ;;
+    low) ecolor='\033[32m' ;;
+    *) ecolor='\033[37m' ;;
   esac
-  line2+=("$(printf "${ecolor}%s %s\033[0m" "$eicon" "$effort")")
+  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
 
 if [ -n "$used_pct" ]; then
