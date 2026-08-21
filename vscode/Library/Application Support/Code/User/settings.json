@@ -103,5 +103,11 @@
     "https://www.schemastore.org/": true,
     "*": true
   },
-  "chat.titleBar.openInAgentsWindow.enabled": false
+  "chat.titleBar.openInAgentsWindow.enabled": false,
+  "RadonIDE.deviceSettings.location": {
+    "latitude": 50.048653,
+    "longitude": -122.4324,
+    "isDisabled": true
+  },
+  "RadonIDE.userInterface.panelLocation": "side-panel"
 }

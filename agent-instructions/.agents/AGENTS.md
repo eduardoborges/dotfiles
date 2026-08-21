@@ -13,3 +13,5 @@ Always use the /humanizer skill when writing any prose: text, documents, files, 
 Never add "Co-Authored-By: Claude" or any Claude/Anthropic attribution to commit messages.
 
 @/Users/eduardo/.codex/RTK.md
+
+@RTK.md
