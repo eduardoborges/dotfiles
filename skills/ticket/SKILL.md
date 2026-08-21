@@ -79,21 +79,31 @@ Never start implementing without the approval.
 
 Keep the ticket status in sync with the work:
 
-- **On approval (before implementing):** work in a git worktree, never in the user's checkout — other agents may be working there in parallel. `git fetch origin` first, then create the worktree from the base branch (main/master/develop, whatever the repo uses) with the branch named `<ticket>/<title-with-dashes-lowercase>` (e.g. `PROJ-123/add-export-endpoint`, or `123/add-export-endpoint` for GitHub). Use the harness's EnterWorktree tool if available; otherwise `git worktree add <path> -b <branch> origin/<base>`. If the user explicitly asks to work in the current checkout instead, only then apply the old rules: ask before switching branches or touching a dirty workspace. Then move the ticket to "In Progress" or the closest equivalent. Jira: `getTransitionsForJiraIssue` to list available transitions, then `transitionJiraIssue` with the best match. GitHub: assign yourself/the user if unassigned; move the project item to "In Progress" if the issue is on a project board (`gh project item-edit`).
-- **When implementation is done:** ask if you may open the PR as a draft. Title format is `feat|fix|chore(<ticket>): title` (e.g. `feat(PROJ-123): add export endpoint`). The PR body follows this structure (English; omit a section only if truly empty, e.g. no screenshots for backend-only changes):
+- **On approval (before implementing):** work in a git worktree, never in the user's checkout — other agents may be working there in parallel. `git fetch origin` first, then create the worktree from the base branch (main/master/develop, whatever the repo uses) with the branch named `<ticket>/<title-with-dashes-lowercase>` (e.g. `PROJ-123/add-export-endpoint`, or `123/add-export-endpoint` for GitHub). Use the harness's EnterWorktree tool if available; otherwise `git worktree add <path> -b <branch> origin/<base>`. If the user explicitly asks to work in the current checkout instead, only then apply the old rules: ask before switching branches or touching a dirty workspace. Then, without asking:
+  - Assign the ticket to the user. Jira: `atlassianUserInfo` for the accountId, then `editJiraIssue` with that assignee. GitHub: `gh issue edit <N> --add-assignee @me`.
+  - Move it to "In Progress" or the closest equivalent. Jira: `getTransitionsForJiraIssue`, then `transitionJiraIssue` with the best match. GitHub: move the project item with `gh project item-edit` if the issue is on a board.
+- **When implementation is done:** open the PR as a draft right away, never ask permission. Title: `feat|fix|chore(<ticket>): title`. Body in English, sections below. TL;DR is always there; drop any other section that would be empty. Run title and body through `humanizer` first. `gh pr create --draft`, Bitbucket `bkt pr create --draft`. Link it to the ticket (Jira: the key is already in title and branch; GitHub: "Closes #N"). Leave the ticket status alone.
 
   ```markdown
   ## TL;DR
-  ## Description
-  ## Why
-  ## How
+  ## What changed
+  ## Technical notes
   ## Testing
   ## Screenshots and Evidences
   ## Related
   ```
 
-  "Related" lists the ticket, epic, and any linked issues/PRs/docs. For "Screenshots and Evidences", capture real evidence when the change is visible or runnable: web UI via Chrome DevTools MCP (or similar browser tooling), mobile/desktop apps via the `agent-device` skill, CLI/backend via command output or test results. Run the app, exercise the changed flow, and attach the captures. Run the title and body through the `humanizer` skill, then open as draft (`gh pr create --draft`; Bitbucket: draft via bkt if supported). Link the PR to the ticket (Jira: the issue key is already in the title/branch; GitHub: "Closes #N" in the PR body). Do NOT touch the ticket status yet.
-- **After the user reviews the draft and approves:** mark the PR ready (`gh pr ready`), add the repo's default reviewers (GitHub: CODEOWNERS or the team's usual reviewers, `gh pr edit --add-reviewer`; Bitbucket: default reviewers are usually auto-added, verify via bkt), and move the ticket to "In Review" / "Code Review" or the closest equivalent. If no default reviewers can be determined, ask who to add.
+  Write it from the product side: what the user gets, not how the code does it. The diff already shows the code.
+
+  - **TL;DR:** one or two sentences, never omitted.
+  - **What changed:** what is being delivered and what behaviour is different now. Short bullets.
+  - **Technical notes:** only decisions a reviewer could not guess from the diff (a tradeoff, a migration, a dependency, a known limitation). Nothing to say, cut the section.
+  - **Testing:** how it was verified.
+  - **Screenshots and Evidences:** capture real evidence — web UI via Chrome DevTools MCP, mobile/desktop via the `agent-device` skill, CLI/backend via command output or test results. The CLIs cannot upload images, so when the evidence is visual, put `> TODO: upload images` in that section and tell the user to attach the captures in the PR.
+  - **Related:** ticket, epic, linked issues/PRs/docs.
+
+  Never in the body: file lists, function or variable names, code snippets, a walkthrough of the diff, or padding sentences that restate the title.
+- **After the user reviews the draft and approves:** mark the PR ready (`gh pr ready`, Bitbucket `bkt pr publish`), add the repo's default reviewers (GitHub: CODEOWNERS or the team's usual reviewers, `gh pr edit --add-reviewer`; Bitbucket: default reviewers are usually auto-added, verify via bkt), and move the ticket to "In Review" / "Code Review" or the closest equivalent. If no default reviewers can be determined, ask who to add.
 
 If no matching transition exists, say which transitions were available and ask which to use instead of guessing.
 
