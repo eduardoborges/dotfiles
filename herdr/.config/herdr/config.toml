@@ -1,0 +1,38 @@
+onboarding = false
+
+[keys]
+prefix = "ctrl+space"
+
+# acoes de plugin (e, g e r ja sao edit_scrollback, goto e resize_mode)
+[[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "herdr-sidebar.open-sidebar"
+description = "file explorer"
+
+[[keys.command]]
+key = "prefix+d"
+type = "plugin_action"
+command = "herdr-sidebar.open-git"
+description = "source control"
+
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "herdr-automatic-rename.reset"
+description = "nome automatico da aba"
+
+[theme]
+name = "dracula"
+auto_switch = false
+
+[ui]
+prompt_new_tab_name = false
+agent_panel_sort = "spaces"
+show_agent_labels_on_pane_borders = true
+
+[ui.sound]
+enabled = true
+
+[ui.toast]
+delivery = "terminal"
