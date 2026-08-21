@@ -9,7 +9,7 @@ case "$(uname -s)" in
 esac
 
 # Packages stowed on every OS
-COMMON_PACKAGES=(zsh starship alacritty ghostty zed vscode agent-instructions claude git herdr)
+COMMON_PACKAGES=(zsh starship alacritty ghostty zed vscode agent-instructions claude git herdr tmux)
 # Packages stowed only on macOS
 MACOS_PACKAGES=(skhd yabai borders)
 # Packages stowed only on Linux (Hyprland desktop stack + audio tweaks)

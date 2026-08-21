@@ -25,6 +25,9 @@ cursor-style-blink = false
 # (all shell integration options must be passed together)
 shell-integration-features = no-cursor,ssh-env
 
+# Option como Alt: necessario para os binds alt+* do tmux no macOS
+macos-option-as-alt = true
+
 # Keyboard bindings
 keybind = shift+insert=paste_from_clipboard
 keybind = control+insert=copy_to_clipboard
