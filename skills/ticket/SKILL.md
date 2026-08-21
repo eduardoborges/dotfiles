@@ -75,6 +75,8 @@ Draft a step-by-step execution plan (files to touch, order of changes, how to ve
 
 Never start implementing without the approval.
 
+**AWS:** anything that touches AWS (Lambda, S3, SQS, DynamoDB, and friends) is tested locally with the `floci` skill. Load it before writing the verification steps, never against a real account.
+
 ## 5. Status transitions
 
 Keep the ticket status in sync with the work:
@@ -98,7 +100,7 @@ Keep the ticket status in sync with the work:
   - **TL;DR:** one or two sentences, never omitted.
   - **What changed:** what is being delivered and what behaviour is different now. Short bullets.
   - **Technical notes:** only decisions a reviewer could not guess from the diff (a tradeoff, a migration, a dependency, a known limitation). Nothing to say, cut the section.
-  - **Testing:** how it was verified.
+  - **Testing:** how it was verified. AWS pieces run locally through `floci`.
   - **Screenshots and Evidences:** capture real evidence — web UI via Chrome DevTools MCP, mobile/desktop via the `agent-device` skill, CLI/backend via command output or test results. The CLIs cannot upload images, so when the evidence is visual, put `> TODO: upload images` in that section and tell the user to attach the captures in the PR.
   - **Related:** ticket, epic, linked issues/PRs/docs.
 
