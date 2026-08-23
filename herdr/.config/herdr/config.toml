@@ -3,13 +3,6 @@ onboarding = false
 [keys]
 prefix = "ctrl+space"
 
-# acoes de plugin
-[[keys.command]]
-key = "prefix+a"
-type = "plugin_action"
-command = "herdr-automatic-rename.reset"
-description = "nome automatico da aba"
-
 [theme]
 name = "dracula"
 auto_switch = false
