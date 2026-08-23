@@ -11,11 +11,17 @@ theme = dracula
 
 # Window
 window-theme = ghostty
-window-padding-x = 14
-window-padding-y = 14
+window-padding-x = 4
+window-padding-y = 4
 confirm-close-surface=false
 resize-overlay = never
 gtk-toolbar-style = flat
+macos-titlebar-style = hidden
+window-save-state = never
+
+# herdr ja mantem o scrollback, 1MB aqui evita RAM duplicada
+scrollback-limit = 1000000
+mouse-hide-while-typing = true
 
 # Cursor styling
 cursor-style = "block"
