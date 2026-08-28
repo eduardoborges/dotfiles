@@ -22,8 +22,17 @@ five_hour_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage //
 five_hour_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 seven_day_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 seven_day_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
-effort=$(echo "$input" | jq -r '.effort_level // .effortLevel // empty')
-[ -z "$effort" ] && effort=$(jq -r '.effortLevel // empty' "$HOME/.claude/settings.json" 2>/dev/null)
+effort=$(echo "$input" | jq -r '.effort.level // empty')
+effort_label="$effort"
+ultracode_guess=0
+if [ "$effort" = "xhigh" ]; then
+  workflows_on=$(jq -r '.enableWorkflows // false' "$HOME/.claude/settings.json" 2>/dev/null)
+  # ponytail: can't tell plain xhigh from ultracode (session-only flag, not in statusline input) — approximate via config
+  if [ "$workflows_on" = "true" ]; then
+    effort_label="ultracode"
+    ultracode_guess=1
+  fi
+fi
 session_id=$(echo "$input" | jq -r '.session_id // empty')
 
 # Path relative to home
@@ -167,7 +176,8 @@ if [ -n "$effort" ]; then
     low) ecolor='\033[32m' ;;
     *) ecolor='\033[37m' ;;
   esac
-  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
+  [ "$ultracode_guess" = "1" ] && ecolor='\033[5;35m'
+  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort_label")")
 fi
 
 if [ -n "$used_pct" ]; then
