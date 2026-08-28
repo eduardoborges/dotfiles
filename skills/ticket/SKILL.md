@@ -26,32 +26,34 @@ Input: a ticket URL passed as the argument. If no URL was given, ask for it and 
 
 If the Atlassian MCP tools are deferred, load them with ToolSearch first. For Bitbucket, load the `bkt` skill.
 
-## 2. Gather context — go wide, in parallel
+## 2. Gather context, in order, in your own context
 
-Fetch everything the connectors can give. Run independent fetches concurrently (parallel tool calls or subagents).
+Read everything yourself, in the main conversation, one layer at a time. Subagents may locate and filter; they never read for you. "Which Confluence pages mention these terms" or "which files reference this endpoint" is a subagent job: the answer is a shortlist, and you then read the items on it here. "Read the epic and summarize it" is not: the summary keeps what the subagent found interesting, not what the plan will need, and the comment saying "do not touch X" is exactly the kind of thing that gets dropped. Parallel tool calls inside one turn are fine when the fetches do not depend on each other.
 
-**Jira:**
-- The issue itself: description, comments, status, assignee, labels, sprint, fix version.
-- Hierarchy: parent task, epic, subtasks. Fetch the parent and epic bodies too, not just their keys.
-- Linked issues (blocks, relates to, duplicates) and remote links.
-- `getTeamworkGraphContext` on the issue, then `getTeamworkGraphObject` on the key linked entities (goals, projects, docs).
-- Confluence: any page linked from the issue, epic, or graph context. Fetch page content, not just titles. If nothing is linked, search Confluence (CQL) for the issue key and the feature name.
+Every shell read goes through `rtk`: `rtk git log`, `rtk git diff`, `rtk rg`, `rtk grep`, `rtk read`, `rtk find`, `rtk tree`, `rtk gh`. The hook rewrites most calls on its own, but type it explicitly anyway. The tokens it saves are what let you read the whole picture before the context fills up.
 
-**GitHub:**
-- `gh issue view` / `gh pr view` with comments (`--comments`).
-- Milestone, project, labels, linked issues/PRs (cross-references in the timeline: `gh api` on the issue timeline if needed).
-- Referenced commits and PRs; read their diffs if small and relevant.
+Each layer tells you what to look for in the next one, so keep the order.
 
-**Bitbucket:**
-- `bkt` for the PR/repo side; Jira flow above for the linked issue.
+1. **The ticket.** Description, every comment, status, assignee, labels, sprint, fix version. Jira: the issue via MCP. GitHub: `rtk gh issue view --comments` or `rtk gh pr view --comments`. Bitbucket: `bkt` for the PR side, Jira flow for the issue. Write down the nouns the ticket uses (feature names, entities, endpoints); they are your search terms for the layers below.
+2. **Hierarchy.** Parent and epic, full bodies, not just keys. Subtasks by title and status. The parent and epic usually carry the reason the ticket exists.
+3. **Links.** Linked issues (blocks, relates to, duplicates), remote links, referenced PRs and commits. Jira: `getTeamworkGraphContext` on the issue, then `getTeamworkGraphObject` on the entities that matter (goals, projects, docs). GitHub: milestone, project, cross references in the timeline (`rtk gh api` on the timeline if the view does not show them). Read the diff of a referenced PR when it is small and touches the same area.
+4. **Docs.** Confluence pages linked from the ticket, epic, or graph context: fetch the content, not the title. If nothing is linked, search Confluence (CQL) for the issue key and for the nouns from step 1. Same for repo docs: README, `/docs`, ADRs, CLAUDE.md, CONTRIBUTING.
+5. **The code.** With the vocabulary from steps 1 to 4, `rtk rg` the repo for those terms, then read the files that will change. Read them, do not just list them. `rtk git log` on those files to see who touched them recently and why.
+6. **Similar work.** Find the closest thing the repo already does (same layer, same kind of change, same external system) and read it: module layout, naming, error handling, how it is tested. The plan follows that pattern. A plan that invents a new pattern where one already exists is wrong.
 
-**Local repo (always, if cwd is the relevant repo):**
-- Search the codebase for files, modules, and docs (README, /docs, ADRs) touching the ticket's subject.
-- Recent git history on those files.
+Depth cap: full bodies for the ticket, parent, and epic. Title and status only for linked issues and epic siblings, unless one is a blocker or the summary clearly hinges on it. At most 3 Confluence pages.
 
-Do not stop at the first fetch. A ticket body alone is not context; the parent, epic, and linked docs usually carry the real intent.
+### Context gate
 
-**Depth cap:** fetch full bodies only for the ticket, its parent, and its epic. For linked issues and epic siblings, fetch title + status only; go deeper only on blockers or when the summary clearly depends on one. Cap Confluence at the 3 most relevant pages.
+Before writing the report, answer these for yourself:
+
+- Why does this ticket exist? The business reason, not the title.
+- What does "done" look like in terms someone could test?
+- Which files will change, and have I read them (not just found them)?
+- How does the repo already solve something like this?
+- Is there a comment, doc, or linked issue I skimmed instead of reading?
+
+Any answer you cannot give from the sources becomes an open question for the user in the report. It does not become a guess. No code, no branch, no worktree until every answer is in hand or explicitly flagged as unknown.
 
 ## 3. Report
 
@@ -66,9 +68,38 @@ Present in this order, in the user's language:
 
 ## 4. Execution plan and approval
 
-Before drafting the plan, study how the repo already implements similar things: existing modules touching the same area, naming, layering, error handling, test structure, and any conventions in CLAUDE.md/CONTRIBUTING/ADRs. The plan must follow those patterns, not invent new ones.
+The plan is a document the user reads top to bottom, not a list of tool calls. Write it in this shape, in pt-BR:
 
-Draft a step-by-step execution plan (files to touch, order of changes, how to verify). Then STOP and ask for approval before touching any code:
+```markdown
+## Plano: TICKET-123 Título
+
+### Objetivo
+One short paragraph: what changes for the user and why. If step 6 of the context
+gathering found a pattern to follow, name it here ("segue o mesmo desenho de X").
+
+### Hoje vs depois
+ASCII diagram of the flow as it is now, then the flow after the change. Two
+diagrams, or one with the new pieces marked. Boxes with ┌─┐│└┘, arrows with
+-->, every box and arrow labeled. Show the flow of data or calls, never a file
+tree. Inside a code fence, never Mermaid.
+
+### Passos
+| # | Arquivo | Mudança | Por quê |
+|---|---|---|---|
+One row per file, in the order the changes land. "Por quê" ties the row back to
+the ticket or to the pattern being followed.
+
+### Verificação
+How each step is checked: the test to write or run, the command, what output
+means it worked. AWS pieces run through floci.
+
+### Riscos e perguntas abertas
+What could break, what is still unknown, what needs the user's call.
+```
+
+Skip the diagram only when the change does not touch any flow (a copy change, a config flip) and say why. A diagram that only repeats the steps table is decoration; cut it.
+
+Then STOP and ask for approval before touching any code:
 
 - If plan mode is available, use EnterPlanMode / ExitPlanMode so approval is native.
 - Otherwise, present the plan and ask explicitly: approve to execute, or adjust.
