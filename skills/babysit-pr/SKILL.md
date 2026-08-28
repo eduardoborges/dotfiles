@@ -14,7 +14,7 @@ Talk to the user in pt-BR. Everything posted (comments, commits) in English.
 
 **Humanizer gate:** every commit message and comment reply MUST pass through the `humanizer` skill before the command that posts it. No exceptions.
 
-This skill does ONE pass. To keep watching, run it under a loop, e.g. `/loop 10m /babysit-pr <url>`. Suggest that to the user if they invoked it bare and want continuous watching.
+This skill does ONE pass. To keep watching, run it under a loop: `/loop 45m /babysit-pr <url>`. If the user invoked it bare and wants continuous watching, start that loop yourself with the 45m interval instead of only suggesting it.
 
 ## The pass
 
