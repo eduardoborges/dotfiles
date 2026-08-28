@@ -20,6 +20,8 @@ brew "cloudflare-wrangler"
 brew "cloudflared"
 # Dependency manager for Cocoa projects
 brew "cocoapods"
+# Good-lookin' diffs with diff-highlight and more
+brew "diff-so-fancy"
 # Select default apps for documents and URL schemes on macOS
 brew "duti"
 # Like neofetch, but much faster because written mostly in C
