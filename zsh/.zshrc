@@ -217,3 +217,4 @@ esac
 
 # cmux: aponta o wrapper direto pro claude real (fix "claude not found in PATH")
 export CMUX_CUSTOM_CLAUDE_PATH="$HOME/.local/bin/claude"
+export PATH=$PATH:$HOME/.maestro/bin
