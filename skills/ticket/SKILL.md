@@ -140,9 +140,13 @@ Keep the ticket status in sync with the work:
 
 If no matching transition exists, say which transitions were available and ask which to use instead of guessing.
 
-## 6. Review comments
+## 6. Updates and review comments
 
-When the user reports new comments on the PR, fetch them and for each one:
+When the user asks how the ticket or PR is doing, or reports new comments, do both checks below in the same pass and report them together.
+
+**Conflicts with the base branch.** `rtk git fetch origin` first. GitHub: `rtk gh pr view --json mergeable,mergeStateStatus`; `CONFLICTING` means there are conflicts. Anywhere else: `git merge-tree --write-tree origin/<base> HEAD`, a non-zero exit means conflicts. If there are any, rebase the branch onto the base inside the worktree, resolve them (the `resolving-merge-conflicts` skill if available), run the tests, and push with `--force-with-lease`. Tell the user which files conflicted and what you kept from each side.
+
+**Review comments.** Fetch them and for each one:
 
 1. Judge if it is valid. If not, say why to the user before pushing back on the reviewer.
 2. If valid, apply the fix and push.
