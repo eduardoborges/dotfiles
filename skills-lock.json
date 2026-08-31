@@ -12,6 +12,12 @@
       "sourceType": "github",
       "skillPath": "skills/agent-device/SKILL.md",
       "computedHash": "a35262f3c23acafd69417aacbc88970007f343f5bbcfeb9007971f7e7467ec21"
+    },
+    "i-have-adhd": {
+      "source": "ayghri/i-have-adhd",
+      "sourceType": "github",
+      "skillPath": "skills/i-have-adhd/SKILL.md",
+      "computedHash": "938d0e350a0c2b0e2e6c3a9032542e062846d108e0f89dd27c798ba5b436397e"
     }
   }
 }
