@@ -79,9 +79,8 @@ gathering found a pattern to follow, name it here ("segue o mesmo desenho de X")
 
 ### Hoje vs depois
 ASCII diagram of the flow as it is now, then the flow after the change. Two
-diagrams, or one with the new pieces marked. Boxes with ┌─┐│└┘, arrows with
--->, every box and arrow labeled. Show the flow of data or calls, never a file
-tree. Inside a code fence, never Mermaid.
+diagrams, or one with the new pieces marked. Same drawing rules as the report
+(section 3): show the flow of data or calls, never a file tree.
 
 ### Passos
 | # | Arquivo | Mudança | Por quê |
