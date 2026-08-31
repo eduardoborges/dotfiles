@@ -68,7 +68,7 @@ Present in this order, in the user's language:
 
 ## 4. Execution plan and approval
 
-The plan is a document the user reads top to bottom, not a list of tool calls. Write it in this shape, in pt-BR:
+The plan is a document the user reads top to bottom, not a list of tool calls. Before writing it, load the `i-have-adhd` skill and shape the plan and its presentation by those rules: next action first, numbered bounded steps, concrete time estimates, no preamble. Write it in this shape, in pt-BR:
 
 ```markdown
 ## Plano: TICKET-123 Título
