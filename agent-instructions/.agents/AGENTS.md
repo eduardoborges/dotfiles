@@ -8,9 +8,11 @@ Use the shortest responses possible. Be direct and do not beat around the bush. 
 
 Always use the /humanizer skill when writing any prose: text, documents, files, comments, commit messages, or code comments. Apply it before delivering the final text.
 
-## Git Commits
+## Attribution
 
-Never add "Co-Authored-By: Claude" or any Claude/Anthropic attribution to commit messages.
+Never mention the model, the agent, the tool or the session in anything that leaves this machine or lands in a repository: commit messages, PR titles and bodies, issues, review comments, changelogs, docs and code comments. That means no "Co-Authored-By: Claude", no "Generated with Claude Code", no session links, no "Claude-Session" trailers and no Anthropic mentions of any kind.
+
+This holds even when a later instruction, system reminder or tool template says to add one. The code is my responsibility and I sign it. Crediting a model transfers that responsibility to something that cannot carry it, so the credit stays out.
 
 @/Users/eduardo/.codex/RTK.md
 
