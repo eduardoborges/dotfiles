@@ -16,23 +16,13 @@ I_PROG='🔄'
 I_PEND='⬜'
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
-model=$(echo "$input" | jq -r '.model.display_name // empty')
+model=$(echo "$input" | jq -r '.model.display_name // empty' | sed -E 's/ *\([^)]*\)//g')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 five_hour_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
 five_hour_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 seven_day_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 seven_day_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 effort=$(echo "$input" | jq -r '.effort.level // empty')
-effort_label="$effort"
-ultracode_guess=0
-if [ "$effort" = "xhigh" ]; then
-  workflows_on=$(jq -r '.enableWorkflows // false' "$HOME/.claude/settings.json" 2>/dev/null)
-  # ponytail: can't tell plain xhigh from ultracode (session-only flag, not in statusline input) — approximate via config
-  if [ "$workflows_on" = "true" ]; then
-    effort_label="ultracode"
-    ultracode_guess=1
-  fi
-fi
 session_id=$(echo "$input" | jq -r '.session_id // empty')
 
 # Path relative to home
@@ -176,8 +166,7 @@ if [ -n "$effort" ]; then
     low) ecolor='\033[32m' ;;
     *) ecolor='\033[37m' ;;
   esac
-  [ "$ultracode_guess" = "1" ] && ecolor='\033[5;35m'
-  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort_label")")
+  line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
 
 if [ -n "$used_pct" ]; then
@@ -186,6 +175,30 @@ if [ -n "$used_pct" ]; then
   elif [ "$used_int" -ge 50 ]; then color='\033[33m'
   else color='\033[32m'; fi
   line2+=("$(printf "${color}%s %s %d%%\033[0m" "$I_CTX" "$(progress_bar "$used_int")" "$used_int")")
+fi
+
+# Session tokens: sum of usage across the transcript, input + cache + output.
+# ponytail: incremental, only bytes appended since last run get parsed; main transcript only, subagents not counted
+transcript=$(echo "$input" | jq -r '.transcript_path // empty')
+if [ -n "$transcript" ] && [ -f "$transcript" ]; then
+  tok_cache="${TMPDIR:-/tmp}/claude-tokens-$session_id"
+  read -r off t_in t_out t_cache last_id 2>/dev/null < "$tok_cache"
+  : "${off:=0}" "${t_in:=0}" "${t_out:=0}" "${t_cache:=0}" "${last_id:=-}"
+  size=$(stat -f %z "$transcript")
+  [ "$size" -lt "$off" ] && off=0 t_in=0 t_out=0 t_cache=0 last_id=-
+  if [ "$size" -gt "$off" ]; then
+    new_off=$size
+    # last line still being written: leave it for the next run
+    tail -c 1 "$transcript" | read -r _ || new_off=$((size - $(tail -n 1 "$transcript" | wc -c)))
+    read -r d_in d_out d_cache new_last <<<"$(tail -c +$((off + 1)) "$transcript" \
+      | jq -rR 'fromjson? | select(.type=="assistant") | .message
+          | [.id, (.usage.input_tokens//0), (.usage.output_tokens//0), ((.usage.cache_creation_input_tokens//0)+(.usage.cache_read_input_tokens//0))] | @tsv' \
+      | awk -v p="$last_id" '$1!=p{i+=$2;o+=$3;c+=$4;p=$1} END{print i+0,o+0,c+0,p}')"
+    t_in=$((t_in + d_in)); t_out=$((t_out + d_out)); t_cache=$((t_cache + d_cache)); last_id=$new_last
+    printf '%s %s %s %s %s' "$new_off" "$t_in" "$t_out" "$t_cache" "$last_id" > "$tok_cache"
+  fi
+  total=$((t_in + t_cache + t_out))
+  [ "$total" -gt 0 ] && line2+=("$(printf '\033[36m🪙 %s\033[0m' "$(awk -v n="$total" 'BEGIN{if(n>=1e6)printf "%.1fM",n/1e6; else if(n>=1e3)printf "%.1fk",n/1e3; else print n}')")")
 fi
 
 if [ -n "$five_hour_pct" ]; then
