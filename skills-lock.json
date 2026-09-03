@@ -13,6 +13,24 @@
       "skillPath": "skills/agent-device/SKILL.md",
       "computedHash": "a35262f3c23acafd69417aacbc88970007f343f5bbcfeb9007971f7e7467ec21"
     },
+    "figma-build": {
+      "source": "awdr74100/figwright",
+      "sourceType": "github",
+      "skillPath": "skills/figma-build/SKILL.md",
+      "computedHash": "27124bd8f5928d6f41e1272957147d41c416a2222ac37f5a2545395ae024c798"
+    },
+    "figma-codegen": {
+      "source": "awdr74100/figwright",
+      "sourceType": "github",
+      "skillPath": "skills/figma-codegen/SKILL.md",
+      "computedHash": "85f7a8066cc00661c1042dd3c93afabc0c67d778fc8a15272c3f8c8317a04dd9"
+    },
+    "goldie": {
+      "source": "kacperkapusciak/goldie",
+      "sourceType": "github",
+      "skillPath": "skills/goldie/SKILL.md",
+      "computedHash": "34a7c3b851e41b642a17155c56d5b56f19f6fd6678e5c599716262e7af57d2fa"
+    },
     "i-have-adhd": {
       "source": "ayghri/i-have-adhd",
       "sourceType": "github",
