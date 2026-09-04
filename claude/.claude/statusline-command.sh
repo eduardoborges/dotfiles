@@ -198,7 +198,12 @@ if [ -n "$transcript" ] && [ -f "$transcript" ]; then
     printf '%s %s %s %s %s' "$new_off" "$t_in" "$t_out" "$t_cache" "$last_id" > "$tok_cache"
   fi
   total=$((t_in + t_cache + t_out))
-  [ "$total" -gt 0 ] && line2+=("$(printf '\033[36m🪙 %s\033[0m' "$(awk -v n="$total" 'BEGIN{if(n>=1e6)printf "%.1fM",n/1e6; else if(n>=1e3)printf "%.1fk",n/1e3; else print n}')")")
+  cost=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
+  if [ "$total" -gt 0 ]; then
+    seg=$(awk -v n="$total" 'BEGIN{if(n>=1e6)printf "%.1fM",n/1e6; else if(n>=1e3)printf "%.1fk",n/1e3; else print n}')
+    [ -n "$cost" ] && seg+=$(printf ' \033[2m·\033[0m $%.2f' "$cost")
+    line2+=("$(printf '\033[36m🪙 %b\033[0m' "$seg")")
+  fi
 fi
 
 if [ -n "$five_hour_pct" ]; then
