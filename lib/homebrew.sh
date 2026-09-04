@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# Homebrew and Brewfile (macOS only)
+# Homebrew: the bootstrap, and the Brewfile inventory in both directions.
 # ------------------------------------------------------------------------------
 load_homebrew_environment() {
   local brew_bin=""
@@ -12,41 +12,32 @@ load_homebrew_environment() {
     brew_bin="/usr/local/bin/brew"
   fi
 
-  if [[ -n "$brew_bin" ]]; then
-    eval "$("$brew_bin" shellenv)"
-  fi
+  [[ -n "$brew_bin" ]] && eval "$("$brew_bin" shellenv)"
+  return 0
 }
 
 ensure_homebrew() {
   load_homebrew_environment
-  if command -v brew &>/dev/null; then
-    return 0
-  fi
+  command -v brew &>/dev/null && return 0
 
-  echo "Installing Homebrew..."
+  info "installing Homebrew..."
   NONINTERACTIVE=1 /bin/bash -c \
     "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   load_homebrew_environment
 
-  if ! command -v brew &>/dev/null; then
-    echo "Homebrew installation finished but brew is not available in PATH."
-    exit 1
-  fi
+  command -v brew &>/dev/null || die "Homebrew was installed but brew is not in PATH."
 }
 
 install_homebrew_bundle() {
-  if [[ ! -f "$BREWFILE" ]]; then
-    echo "Brewfile not found: $BREWFILE"
-    return 1
-  fi
-
-  echo ""
-  echo "Installing Homebrew packages from $BREWFILE..."
+  section "Installing Homebrew packages"
+  [[ -f "$BREWFILE" ]] || die "Brewfile not found: $BREWFILE"
   brew bundle install --no-upgrade --file="$BREWFILE"
 }
 
+# Descriptions come along by default; VS Code extensions are tracked in
+# extensions/vscode.txt instead, so they stay out of the Brewfile
 save_homebrew_bundle() {
   ensure_homebrew
-  brew bundle dump --force --file="$BREWFILE"
-  echo "Saved Homebrew inventory to $BREWFILE"
+  brew bundle dump --force --no-vscode --file="$BREWFILE"
+  ok "saved the Homebrew inventory to $BREWFILE"
 }

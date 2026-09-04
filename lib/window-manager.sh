@@ -1,33 +1,29 @@
 # ------------------------------------------------------------------------------
-# macOS dependency: skhd
+# yabai, skhd and borders: install the binaries, start the services, and repair
+# the startup race at login.
 # ------------------------------------------------------------------------------
-ensure_skhd() {
-  if ! command -v skhd &>/dev/null; then
-    if ! command -v brew &>/dev/null; then
-      echo "skhd is not installed and Homebrew is unavailable."
-      echo "Install Homebrew, then run: brew install asmvik/formulae/skhd"
-      return 1
-    fi
+ensure_wm_service() {
+  local name="$1" formula="$2"
 
-    echo "Installing skhd..."
-    brew install asmvik/formulae/skhd
+  if ! command -v "$name" &>/dev/null; then
+    command -v brew &>/dev/null || die "$name is missing; install Homebrew, then: brew install $formula"
+    info "installing $name..."
+    brew install "$formula"
   fi
 
-  echo "Starting/restarting skhd..."
-  if ! skhd --restart-service 2>/dev/null; then
-    if ! skhd --start-service 2>/dev/null; then
-      echo "  warning: skhd service did not start; check Accessibility permission."
-    fi
-  fi
+  info "starting $name..."
+  "$name" --restart-service 2>/dev/null \
+    || "$name" --start-service 2>/dev/null \
+    || warn "$name did not start; check its Accessibility permission."
 }
 
 ensure_borders() {
   if ! command -v borders &>/dev/null; then
-    echo "  skipping borders service (borders not installed)"
+    warn "skipping borders (not installed)"
     return 0
   fi
 
-  if brew services list | awk '$1 == "borders" && $2 == "started" { found=1 } END { exit !found }'; then
+  if brew services list | awk '$1 == "borders" && $2 == "started" { found = 1 } END { exit !found }'; then
     borders >/dev/null 2>&1 || true
   else
     brew services start borders
@@ -35,83 +31,65 @@ ensure_borders() {
 }
 
 # ------------------------------------------------------------------------------
-# macOS dependency: yabai
+# The scripting addition needs SIP partially disabled and the arm64e boot arg,
+# so every precondition is reported instead of failing the install.
 # ------------------------------------------------------------------------------
-ensure_yabai() {
-  if ! command -v yabai &>/dev/null; then
-    if ! command -v brew &>/dev/null; then
-      echo "yabai is not installed and Homebrew is unavailable."
-      echo "Install Homebrew, then run: brew install asmvik/formulae/yabai"
-      return 1
-    fi
-
-    echo "Installing yabai..."
-    brew install asmvik/formulae/yabai
-  fi
-
-  echo "Starting/restarting yabai..."
-  if ! yabai --restart-service 2>/dev/null; then
-    if ! yabai --start-service 2>/dev/null; then
-      echo "  warning: yabai service did not start; check Accessibility permission."
-    fi
-  fi
-}
-
 configure_yabai_scripting_addition() {
   local installer="$HOME/.config/yabai/install-scripting-addition.sh"
-  local sip_status
-  sip_status="$(csrutil status 2>/dev/null || true)"
 
-  if [[ "$sip_status" != *"Filesystem Protections: disabled"* ]]; then
-    echo "  scripting addition skipped: required SIP protections are still enabled."
+  if [[ "$(csrutil status 2>/dev/null || true)" != *"Filesystem Protections: disabled"* ]]; then
+    warn "scripting addition skipped: SIP filesystem protections are still enabled."
     return 0
   fi
 
   if [[ "$(sysctl -n kern.bootargs 2>/dev/null || true)" != *"-arm64e_preview_abi"* ]]; then
-    echo "  scripting addition pending: reboot to activate -arm64e_preview_abi."
+    warn "scripting addition pending: reboot to activate -arm64e_preview_abi."
     return 0
   fi
 
   if sudo -n yabai --load-sa 2>/dev/null; then
-    echo "  yabai scripting addition loaded."
+    ok "yabai scripting addition loaded."
     return 0
   fi
 
-  if [[ ! -x "$installer" ]]; then
-    echo "  warning: scripting-addition installer is missing."
-    return 1
-  fi
-
+  [[ -x "$installer" ]] || die "scripting-addition installer is missing: $installer"
   "$installer"
 }
 
-configure_macos_window_manager_defaults() {
+apply_macos_defaults() {
+  section "Applying macOS defaults"
   "$DOTFILES_DIR/system/macos/apply-defaults.sh"
 }
 
 # ------------------------------------------------------------------------------
-# macOS login bootstrap: repair startup races after Dock/WindowServer are ready
+# login bootstrap: reloads yabai once Dock and WindowServer are ready
 # ------------------------------------------------------------------------------
+YABAI_BOOTSTRAP_LABEL="com.eduardo.yabai-bootstrap"
+
 ensure_yabai_login_bootstrap() {
-  local label="com.eduardo.yabai-bootstrap"
   local domain="gui/$(id -u)"
-  local plist="$HOME/Library/LaunchAgents/$label.plist"
+  local plist="$HOME/Library/LaunchAgents/$YABAI_BOOTSTRAP_LABEL.plist"
 
-  if [[ ! -f "$plist" ]]; then
-    echo "  warning: yabai login bootstrap plist is missing."
-    return 1
-  fi
+  [[ -f "$plist" ]] || die "yabai login bootstrap plist is missing: $plist"
 
-  if launchctl print "$domain/$label" &>/dev/null; then
-    launchctl bootout "$domain/$label" 2>/dev/null || true
+  if launchctl print "$domain/$YABAI_BOOTSTRAP_LABEL" &>/dev/null; then
+    launchctl bootout "$domain/$YABAI_BOOTSTRAP_LABEL" 2>/dev/null || true
   fi
 
   launchctl bootstrap "$domain" "$plist"
-  launchctl kickstart -k "$domain/$label"
-  echo "  yabai login bootstrap installed."
+  launchctl kickstart -k "$domain/$YABAI_BOOTSTRAP_LABEL"
+  ok "yabai login bootstrap installed."
 }
 
 remove_yabai_login_bootstrap() {
-  launchctl bootout \
-    "gui/$(id -u)/com.eduardo.yabai-bootstrap" 2>/dev/null || true
+  launchctl bootout "gui/$(id -u)/$YABAI_BOOTSTRAP_LABEL" 2>/dev/null || true
+}
+
+setup_window_manager() {
+  section "Setting up the window manager"
+  ensure_wm_service yabai asmvik/formulae/yabai
+  ensure_wm_service skhd asmvik/formulae/skhd
+  configure_yabai_scripting_addition
+  ensure_borders
+  ensure_yabai_login_bootstrap
 }
