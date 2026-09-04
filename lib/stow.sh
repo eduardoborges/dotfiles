@@ -7,9 +7,6 @@ need_stow() {
     if command -v brew &>/dev/null; then
       echo "Installing with: brew install stow"
       brew install stow
-    elif command -v pacman &>/dev/null; then
-      echo "Installing with: sudo pacman -S stow"
-      sudo pacman -S --noconfirm stow
     else
       echo "Install the 'stow' package and run this script again."
       exit 1
@@ -18,69 +15,24 @@ need_stow() {
 }
 
 # ------------------------------------------------------------------------------
-# hypr: hyprland.conf and hyprlock.conf are NOT in this repo - they come from Omarchy.
-# We need them to exist as regular files before stow, or stow would replace the whole dir.
-# ------------------------------------------------------------------------------
-ensure_hypr_base_config() {
-  local hypr_dir="$HOME/.config/hypr"
-  local omarchy_hypr="${HOME}/.local/share/omarchy/config/hypr"
-
-  if [[ -d "$omarchy_hypr" ]]; then
-    mkdir -p "$hypr_dir"
-    if [[ ! -f "$hypr_dir/hyprland.conf" ]]; then
-      echo "  creating $hypr_dir/hyprland.conf from Omarchy"
-      cp "$omarchy_hypr/hyprland.conf" "$hypr_dir/hyprland.conf"
-    fi
-    if [[ ! -f "$hypr_dir/hyprlock.conf" ]]; then
-      echo "  creating $hypr_dir/hyprlock.conf from Omarchy"
-      cp "$omarchy_hypr/hyprlock.conf" "$hypr_dir/hyprlock.conf"
-    fi
-  else
-    echo "  warning: Omarchy not found at ~/.local/share/omarchy - hyprland.conf/hyprlock.conf were not created."
-    echo "  If you use Hyprland with Omarchy, install Omarchy first or create those files manually."
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# remove only what we're going to replace with symlinks (don't touch hyprland.conf/hyprlock.conf)
+# remove only what we're going to replace with symlinks
 # ------------------------------------------------------------------------------
 remove_targets_for_stow() {
   echo "Removing files/dirs that will be replaced by symlinks..."
   rm -f "$HOME/.zshrc"
   rm -f "$HOME/.config/git/config"
   rm -f "$HOME/.config/starship.toml"
-  rm -rf "$HOME/.config/waybar"
   rm -rf "$HOME/.config/alacritty"
   rm -rf "$HOME/.config/ghostty"
   rm -f "$HOME/.config/zed/keymap.json"
   rm -f "$HOME/Library/Application Support/Code/User/settings.json"
   rm -f "$HOME/Library/Application Support/Code - Insiders/User/settings.json"
-  rm -f "$HOME/.config/VSCodium/User/settings.json"
   rm -f "$HOME/Library/Application Support/VSCodium - Insiders/User/settings.json"
   rm -rf "$HOME/.agents"
   rm -f "$HOME/.codex/AGENTS.md"
   rm -f "$HOME/.claude/CLAUDE.md"
   rm -f "$HOME/.claude/settings.json"
   rm -f "$HOME/.claude/statusline-command.sh"
-  rm -f "$HOME/.config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf"
-
-  # hypr base config is Linux/Hyprland-only
-  if [[ "$OS" != "linux" ]]; then
-    return 0
-  fi
-
-  # hypr: only remove the dir if it's a symlink; if it's a real dir, remove only the files that are in the repo
-  if [[ -L "$HOME/.config/hypr" ]]; then
-    rm -f "$HOME/.config/hypr"
-  elif [[ -d "$HOME/.config/hypr" ]]; then
-    for f in autostart.conf bindings.conf hypridle.conf hyprsunset.conf input.conf looknfeel.conf monitors.conf xdph.conf; do
-      rm -f "$HOME/.config/hypr/$f"
-    done
-  else
-    mkdir -p "$HOME/.config/hypr"
-  fi
-
-  ensure_hypr_base_config
 }
 
 # ------------------------------------------------------------------------------
@@ -165,9 +117,6 @@ run_unstow() {
   echo "Done. $pkg has been unstowed."
   if [[ "$pkg" == "yabai" ]]; then
     remove_yabai_login_bootstrap
-  fi
-  if [[ "$pkg" == "hypr" ]] || [[ "$pkg" == "waybar" ]]; then
-    reload_hypr_and_waybar
   fi
 }
 

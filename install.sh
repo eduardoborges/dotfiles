@@ -3,6 +3,7 @@ set -euo pipefail
 
 # ------------------------------------------------------------------------------
 # eduardo's dotfiles installer using GNU Stow to symlink everything into your $HOME
+# macOS only.
 #
 # Usage:
 #   ./install.sh [install]         - install dotfiles (stow), with optional backup
@@ -14,8 +15,7 @@ set -euo pipefail
 #
 # If something breaks, you can unstow a package with `stow -t ~ -D <package>` and, if you have a backup, copy the files back from the backup folder.
 #
-# Implementation lives in lib/*.sh, sourced below in dependency order (os.sh
-# first, since it sets OS/PACKAGES that later modules rely on).
+# Implementation lives in lib/*.sh, sourced below.
 # ------------------------------------------------------------------------------
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
@@ -23,7 +23,9 @@ BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 VSCODE_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscode.txt"
 BREWFILE="$DOTFILES_DIR/Brewfile"
 
-for lib in os homebrew stow backup editor window-manager linux diagnostics; do
+PACKAGES=(zsh starship alacritty ghostty zed vscode agent-instructions claude git herdr tmux skhd yabai borders)
+
+for lib in homebrew stow backup editor window-manager diagnostics; do
   # shellcheck source=/dev/null
   source "$DOTFILES_DIR/lib/$lib.sh"
 done
@@ -35,7 +37,7 @@ usage() {
   echo "Usage: $0 [install]        - install dotfiles (stow), with optional backup"
   echo "       $0 --restore         - list backups and restore a previous set of configs"
   echo "       $0 --list-backups    - list backup directories (no restore)"
-  echo "       $0 --unstow <pkg>   - unstow a single package (e.g. waybar, alacritty)"
+  echo "       $0 --unstow <pkg>   - unstow a single package (e.g. yabai, alacritty)"
   echo "       $0 --save-extensions - update the shared editor list from VS Code"
   echo "       $0 --save-brewfile   - refresh Brewfile from installed Homebrew packages"
   echo "       $0 --diagnose        - check the macOS yabai/skhd setup"
@@ -120,10 +122,8 @@ main() {
   ensure_skhd
   ensure_borders
   ensure_yabai_login_bootstrap
-  install_modprobe_configs
   install_editor_extensions
   configure_macos_default_editor
-  reload_hypr_and_waybar
   sleep 1
   run_macos_diagnostics
 }

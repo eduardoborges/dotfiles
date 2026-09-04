@@ -7,8 +7,6 @@ BACKUP_PATHS=(
   .yabairc
   .config/git/config
   .config/starship.toml
-  .config/hypr
-  .config/waybar
   .config/alacritty
   .config/ghostty
   .config/zed/keymap.json
@@ -18,7 +16,6 @@ BACKUP_PATHS=(
   .claude/CLAUDE.md
   .claude/settings.json
   .claude/statusline-command.sh
-  .config/wireplumber/wireplumber.conf.d/51-disable-analog-audio-suspend.conf
 )
 
 # ------------------------------------------------------------------------------
@@ -120,7 +117,6 @@ run_restore() {
 
   echo ""
   echo "Restore done. Your previous configs are back; dotfiles are no longer symlinked."
-  reload_hypr_and_waybar
 }
 
 # ------------------------------------------------------------------------------

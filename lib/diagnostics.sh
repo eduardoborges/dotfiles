@@ -14,11 +14,6 @@ diagnostic_result() {
 }
 
 run_macos_diagnostics() {
-  if [[ "$OS" != "macos" ]]; then
-    echo "macOS diagnostics are not applicable on this system."
-    return 0
-  fi
-
   echo ""
   echo "macOS window manager diagnostics:"
 

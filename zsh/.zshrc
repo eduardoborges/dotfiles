@@ -1,10 +1,8 @@
 # My Favorite Shell
-if [[ "$OSTYPE" == darwin* ]]; then
-  if [[ -x /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  elif [[ -x /usr/local/bin/brew ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 eval "$(starship init zsh)"
@@ -22,11 +20,7 @@ export GIT_EDITOR="code --wait"
 source $HOME/.envrc
 
 # Shell Plugins
-if [[ "$OSTYPE" == darwin* ]]; then
-  export ZPLUG_HOME=/opt/homebrew/opt/zplug
-else
-  export ZPLUG_HOME=$HOME/.zplug
-fi
+export ZPLUG_HOME=/opt/homebrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "zdharma-continuum/fast-syntax-highlighting"
@@ -182,21 +176,10 @@ function killatport() {
   echo "Killed process(es) on port $1: $pids"
 }
 
-# Clipboard: pbcopy on macOS, wl-copy on Wayland/Linux
-if [[ "$OSTYPE" == darwin* ]]; then
-  copy() { pbcopy; }
-elif command -v wl-copy &>/dev/null; then
-  copy() { wl-copy; }
-elif command -v xclip &>/dev/null; then
-  copy() { xclip -selection clipboard; }
-fi
+copy() { pbcopy; }
 
-# Android SDK (different default locations per OS)
-if [[ "$OSTYPE" == darwin* ]]; then
-  export ANDROID_HOME=$HOME/Library/Android/sdk
-else
-  export ANDROID_HOME=$HOME/Android/Sdk
-fi
+# Android SDK
+export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export ANDROID_AVD_HOME=$HOME/.config/.android/avd
 export PATH="$PATH:$ANDROID_HOME/emulator"

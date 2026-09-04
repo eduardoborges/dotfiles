@@ -82,10 +82,6 @@ ensure_claude_code() {
 }
 
 ensure_code() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   if command -v code &>/dev/null; then
     return 0
   fi
@@ -100,9 +96,6 @@ ensure_code() {
 }
 
 remove_vscodium() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
   if ! command -v brew &>/dev/null; then
     return 0
   fi
@@ -122,10 +115,6 @@ remove_vscodium() {
 }
 
 configure_macos_default_editor() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   if ! command -v code &>/dev/null; then
     echo "  skipping default editor setup (code not found)"
     return 0

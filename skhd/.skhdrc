@@ -1,8 +1,5 @@
-# macOS shortcuts migrated from:
-# ~/Projects/dotfiles/hypr/.config/hypr/bindings.conf
-#
-# Omarchy SUPER maps to macOS Option (alt).
-# Omarchy ALT maps to macOS Command (cmd) when used with SUPER.
+# Global shortcuts. Option (alt) is the main modifier; Command (cmd) is the
+# secondary one, used together with Option.
 
 # Applications
 
@@ -19,7 +16,6 @@ alt + shift + cmd - b : open -na "Google Chrome" --args --incognito
 
 # Finder
 alt + shift - f : open "$HOME"
-# Hyprland opened the terminal's current directory; macOS falls back to Home.
 alt + cmd + shift - f : open "$HOME"
 
 # Music

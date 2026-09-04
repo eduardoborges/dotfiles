@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Hyprland-like BSP tiling with yabai's scripting addition.
+# BSP tiling with yabai's scripting addition.
 
 yabai -m signal --add event=dock_did_restart action="sudo -n yabai --load-sa"
 sudo -n yabai --load-sa
@@ -13,7 +13,7 @@ yabai -m config window_placement             second_child
 yabai -m config window_insertion_point       focused
 yabai -m config window_zoom_persist          on
 
-# Match the compact gaps used by the Hyprland configuration.
+# Compact gaps.
 yabai -m config top_padding                  3
 yabai -m config bottom_padding               3
 yabai -m config left_padding                 3

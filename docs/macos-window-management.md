@@ -6,9 +6,6 @@ uses yabai's scripting addition with System Integrity Protection partially
 disabled. Window opacity remains at 100%, and JankyBorders highlights the
 focused window.
 
-`Option` (`Alt` in the config) plays the same role as `Super` in the Hyprland
-configuration.
-
 ## Applications
 
 | Shortcut | Action |

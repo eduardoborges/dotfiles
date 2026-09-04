@@ -2,10 +2,6 @@
 # macOS dependency: skhd
 # ------------------------------------------------------------------------------
 ensure_skhd() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   if ! command -v skhd &>/dev/null; then
     if ! command -v brew &>/dev/null; then
       echo "skhd is not installed and Homebrew is unavailable."
@@ -26,10 +22,6 @@ ensure_skhd() {
 }
 
 ensure_borders() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   if ! command -v borders &>/dev/null; then
     echo "  skipping borders service (borders not installed)"
     return 0
@@ -46,10 +38,6 @@ ensure_borders() {
 # macOS dependency: yabai
 # ------------------------------------------------------------------------------
 ensure_yabai() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   if ! command -v yabai &>/dev/null; then
     if ! command -v brew &>/dev/null; then
       echo "yabai is not installed and Homebrew is unavailable."
@@ -70,10 +58,6 @@ ensure_yabai() {
 }
 
 configure_yabai_scripting_addition() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   local installer="$HOME/.config/yabai/install-scripting-addition.sh"
   local sip_status
   sip_status="$(csrutil status 2>/dev/null || true)"
@@ -102,10 +86,6 @@ configure_yabai_scripting_addition() {
 }
 
 configure_macos_window_manager_defaults() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   "$DOTFILES_DIR/system/macos/apply-defaults.sh"
 }
 
@@ -113,10 +93,6 @@ configure_macos_window_manager_defaults() {
 # macOS login bootstrap: repair startup races after Dock/WindowServer are ready
 # ------------------------------------------------------------------------------
 ensure_yabai_login_bootstrap() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   local label="com.eduardo.yabai-bootstrap"
   local domain="gui/$(id -u)"
   local plist="$HOME/Library/LaunchAgents/$label.plist"
@@ -136,10 +112,6 @@ ensure_yabai_login_bootstrap() {
 }
 
 remove_yabai_login_bootstrap() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   launchctl bootout \
     "gui/$(id -u)/com.eduardo.yabai-bootstrap" 2>/dev/null || true
 }

@@ -18,10 +18,6 @@ load_homebrew_environment() {
 }
 
 ensure_homebrew() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
-
   load_homebrew_environment
   if command -v brew &>/dev/null; then
     return 0
@@ -39,9 +35,6 @@ ensure_homebrew() {
 }
 
 install_homebrew_bundle() {
-  if [[ "$OS" != "macos" ]]; then
-    return 0
-  fi
   if [[ ! -f "$BREWFILE" ]]; then
     echo "Brewfile not found: $BREWFILE"
     return 1
@@ -53,11 +46,6 @@ install_homebrew_bundle() {
 }
 
 save_homebrew_bundle() {
-  if [[ "$OS" != "macos" ]]; then
-    echo "Brewfile inventory is only supported on macOS."
-    return 1
-  fi
-
   ensure_homebrew
   brew bundle dump --force --file="$BREWFILE"
   echo "Saved Homebrew inventory to $BREWFILE"

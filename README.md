@@ -1,25 +1,23 @@
 # Dotfiles
 
-My daily configs for zsh, starship, Hyprland, waybar, yabai, skhd, JankyBorders, Alacritty, VS Code, and agent skills.
+My daily configs for zsh, starship, yabai, skhd, JankyBorders, Alacritty, Ghostty, tmux, VS Code, and agent skills.
 
-Works on **Arch Linux** (my main setup) and **macOS**. The installer detects your OS and only stows the packages that make sense there — the Hyprland desktop stack (`hypr`, `waybar`, `wireplumber`) and the system audio tweaks are Linux-only, while `yabai` and `skhd` provide tiling and hotkeys on macOS. Shell-level differences (clipboard, Android SDK path) are handled inside `.zshrc` at runtime.
+**macOS only.** `yabai` and `skhd` handle tiling and hotkeys, and the Brewfile tracks everything installed through Homebrew.
 
 Everything is symlinked into your home via [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Install
 
-On macOS, the installer bootstraps Homebrew when necessary and installs the
-tracked formulas and applications from [`Brewfile`](Brewfile). On Arch, you
-only need `stow` (`sudo pacman -S stow`; the installer can install it).
-Then:
+The installer bootstraps Homebrew when necessary and installs the tracked
+formulas and applications from [`Brewfile`](Brewfile), `stow` included. Then:
 
 ```bash
 ./install.sh
 ```
 
-The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, installs editor extensions from `extensions/vscode.txt` into VS Code, and (on Linux) reloads Hyprland and waybar if you’re in a Hyprland session.
+The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, and installs editor extensions from `extensions/vscode.txt` into VS Code.
 
-On macOS, the Brewfile restores the command-line tools and desktop apps,
+The Brewfile restores the command-line tools and desktop apps,
 including VS Code, Ghostty, Chrome, Docker, yabai, and skhd. The
 installer then starts the window-manager launchd services and configures
 VS Code as the default text/code editor. Grant yabai and skhd access
@@ -76,7 +74,7 @@ To put a previous backup back (unstow and copy files from backup):
 ./install.sh --restore
 ```
 
-Backups are stored in `~/.dotfiles-backup-YYYYMMDD-HHMMSS`. You pick one from the list; the script does the rest and reloads Hyprland/waybar.
+Backups are stored in `~/.dotfiles-backup-YYYYMMDD-HHMMSS`. You pick one from the list and the script does the rest.
 
 ## Stow commands
 
