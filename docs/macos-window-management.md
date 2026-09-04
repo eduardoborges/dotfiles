@@ -17,7 +17,7 @@ focused window.
 | `Option + Shift + Command + B` | Open an incognito Chrome window |
 | `Option + Shift + F` | Open Finder at Home |
 | `Option + Shift + M` | Open or focus Spotify |
-| `Option + Shift + N` | Open or focus VS Code Insiders |
+| `Option + Shift + N` | Open or focus VS Code |
 | `Option + Shift + D` | Open or focus Docker |
 | `Option + /` | Open or focus 1Password |
 | `Option + Shift + /` | Open or focus 1Password |
