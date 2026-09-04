@@ -2,18 +2,23 @@ tap "agavra/tap"
 tap "asmvik/formulae"
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
+tap "can1357/tap"
 tap "ddev/ddev"
-tap "eduardoborges/tap", trusted: { casks: ["zeca"] }
+tap "eduardoborges/tap"
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
 tap "floci-io/floci"
 tap "franzos/tap", trusted: true
 tap "lightpanda-io/browser"
 tap "modem-dev/tap"
 tap "tamtom/tap"
+# Run your GitHub Actions locally
+brew "act"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
+# Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
+brew "clang-format"
 # CLI tool for Cloudflare Workers
 brew "cloudflare-wrangler"
 # Cloudflare Tunnel client (formerly Argo Tunnel)
@@ -56,8 +61,14 @@ brew "rustup"
 brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Netcat-like tool over Tailscale's data plane, without its control plane
+brew "tailcat"
+# Terminal multiplexer
+brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Next-generation plugin manager for zsh
 brew "zplug"
 # Terminal UI for Code Reviews - review AI-generated diffs like a GitHub PR
@@ -70,6 +81,8 @@ brew "asmvik/formulae/yabai", trusted: true
 brew "avivsinai/tap/bitbucket-cli", trusted: true
 # A retro terminal music player inspired by Winamp 2.x
 brew "bjarneo/cliamp/cliamp", trusted: true
+# Coding agent with the IDE wired in
+brew "can1357/tap/omp", trusted: true
 # DDEV
 brew "ddev/ddev/ddev", trusted: true
 # A window border system for macOS
@@ -88,32 +101,30 @@ brew "tamtom/tap/gplay", trusted: true
 cask "1password@beta"
 # Tools for building Android applications
 cask "android-studio"
+# Screen capturing and editing tool
+cask "bettershot"
+# 3D creation suite
+cask "blender"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
-# OpenAI's Codex desktop app for managing coding agents
-cask "codex-app"
-# Tool to measure the computer system's performance
-cask "geekbench"
+# Collaborative team software
+cask "figma"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser
 cask "google-chrome"
-# Vector graphics editor
-cask "inkscape"
 # Open-source keystroke visualiser
 cask "keycastr"
 # Voice-to-text transcription and paste tool
 cask "kitlangton-hex"
-# Discover, download, and run local LLMs
-cask "lm-studio"
-# App to write, plan, collaborate, and get organised
-cask "notion"
 # Calendar for professionals and teams
 cask "notion-calendar"
 # Replacement for Docker Desktop
 cask "orbstack"
+# Open source virtual/remote desktop application
+cask "rustdesk"
 # Team communication and collaboration software
 cask "slack"
 # Music streaming service
@@ -124,33 +135,12 @@ cask "stats"
 cask "visual-studio-code"
 # Native desktop client for WhatsApp
 cask "whatsapp"
+# Meeting recorder with on-device transcription and AI summaries
+cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
-vscode "aaron-bond.better-comments"
-vscode "dbaeumer.vscode-eslint"
-vscode "dotjoshjohnson.xml"
-vscode "editorconfig.editorconfig"
-vscode "eduardoborges.draculinho"
-vscode "github.vscode-github-actions"
-vscode "github.vscode-pull-request-github"
-vscode "graphql.vscode-graphql"
-vscode "graphql.vscode-graphql-syntax"
-vscode "hashicorp.terraform"
-vscode "mikestead.dotenv"
-vscode "ms-azuretools.vscode-containers"
-vscode "ms-azuretools.vscode-docker"
-vscode "pkief.material-icon-theme"
-vscode "prisma.prisma"
-vscode "redhat.vscode-xml"
-vscode "tamasfe.even-better-toml"
-vscode "trentrand.git-rebase-shortcuts"
-vscode "unifiedjs.vscode-mdx"
-vscode "usernamehw.errorlens"
-vscode "vue.volar"
-vscode "wix.vscode-import-cost"
-vscode "yoavbls.pretty-ts-errors"
-vscode "zignd.html-css-class-completion"
-vscode "zitup.classnametocss"
+npm "@earendil-works/pi-coding-agent"
 npm "@opencode-ai/cli"
 npm "agent-device"
+npm "goldie"
 npm "opencode-with-claude"
