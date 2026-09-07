@@ -35,12 +35,18 @@ brew "fastfetch"
 brew "gh"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
+# Lazier way to manage everything docker
+brew "lazydocker"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Library to render SVG files using Cairo
 brew "librsvg"
+# Mac App Store command-line interface
+brew "mas"
 # Polyglot runtime manager (asdf rust clone)
 brew "mise"
+# Deep clean and optimize your Mac
+brew "mole"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # AI coding agent, built for the terminal
@@ -115,16 +121,12 @@ cask "figma"
 cask "ghostty"
 # Web browser
 cask "google-chrome"
-# Open-source keystroke visualiser
-cask "keycastr"
 # Voice-to-text transcription and paste tool
 cask "kitlangton-hex"
 # Calendar for professionals and teams
 cask "notion-calendar"
 # Replacement for Docker Desktop
 cask "orbstack"
-# Open source virtual/remote desktop application
-cask "rustdesk"
 # Team communication and collaboration software
 cask "slack"
 # Music streaming service
@@ -139,6 +141,8 @@ cask "whatsapp"
 cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
+mas "Keka", id: 470158793
+mas "Numbers", id: 409203825
 npm "@earendil-works/pi-coding-agent"
 npm "@opencode-ai/cli"
 npm "agent-device"
