@@ -17,7 +17,20 @@ export EDITOR="code --wait"
 export VISUAL="code --wait"
 export GIT_EDITOR="code --wait"
 
-source $HOME/.envrc
+# Historico. Sem isto o /etc/zshrc do macOS manda: 1000 linhas, sem dedupe.
+HISTSIZE=100000
+SAVEHIST=100000
+setopt HIST_IGNORE_ALL_DUPS   # um comando repetido guarda so a ultima ocorrencia
+setopt HIST_IGNORE_SPACE      # linha iniciada com espaco fica fora do arquivo
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY            # expansao com ! aparece antes de rodar
+setopt SHARE_HISTORY          # panes do herdr enxergam o historico um do outro
+setopt EXTENDED_HISTORY       # grava timestamp e duracao
+
+# Sem isto o PATH duplica cada vez que o .zshrc e recarregado.
+typeset -U path PATH fpath
+
+[[ -r $HOME/.envrc ]] && source $HOME/.envrc
 
 # Shell Plugins
 export ZPLUG_HOME=/opt/homebrew/opt/zplug
@@ -136,7 +149,7 @@ alias drebuild="docker compose build --no-cache"
 alias drestart="docker compose down && docker compose up -d"
 alias dlogs="docker compose logs -f"
 alias dexec="docker compose exec"
-alias dssh="docker compose exec /bin/sh"
+dssh() { docker compose exec "$1" /bin/sh; }
 
 alias h="http-server"
 
@@ -158,7 +171,7 @@ function ips {
 
 # My functions
 function f()    { find . -iname "*$1*" ${@:2} }
-function r()    { grep "$1" ${@:2} -R . }
+function r()    { if (( $+commands[rg] )); then rg "$@"; else grep "$1" ${@:2} -R .; fi }
 function size() { du -sh "$1" | awk '{print $1}' }
 function cleanGit() { git clean -Xdf }
 
@@ -175,8 +188,6 @@ function killatport() {
   echo "$pids" | xargs kill -9
   echo "Killed process(es) on port $1: $pids"
 }
-
-copy() { pbcopy; }
 
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
