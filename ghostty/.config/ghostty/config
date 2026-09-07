@@ -4,7 +4,7 @@
 font-family = "DankMono Nerd Font"
 font-style = Regular
 font-size = 13
-theme = dracula
+theme = draculinho
 
 # Window
 window-theme = ghostty

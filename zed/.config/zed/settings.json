@@ -1,3 +1,63 @@
 {
+  "agent": {
+    "dock": "right",
+    "thinking_display": "always_collapsed",
+    "play_sound_when_agent_done": "when_hidden",
+    "sidebar_side": "right",
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "edit_predictions": {
+    "mode": "eager",
+    "provider": "copilot"
+  },
+  "icon_theme": "Material Icon Theme",
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "Draculinho"
+  },
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "terminal": {
+    "env": {
+      "Q_NEW_SESSION": "\"1\"",
+      "FIG_NEW_SESSION": "\"1\""
+    },
+    "font_size": 14.0
+  },
+  "project_panel": {
+    "dock": "left",
+    "auto_fold_dirs": false
+  },
+  "base_keymap": "VSCode",
+  "preview_tabs": {
+    "enabled": false
+  },
+  "status_bar": {
+    "experimental.show": true
+  },
+  "sticky_scroll": {
+    "enabled": false
+  },
+  "minimap": {
+    "show": "never"
+  },
+  "buffer_font_size": 13.0,
+  "buffer_font_family": "DankMono Nerd Font",
+  "auto_indent_on_paste": true,
+  "linked_edits": true,
+  "use_on_type_format": true,
+  "show_whitespaces": "trailing",
+  "show_edit_predictions": true,
+  "format_on_save": "on",
+  "preferred_line_length": 120,
+  "tab_size": 2,
   "context_servers": {}
 }
