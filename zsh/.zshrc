@@ -35,7 +35,6 @@ typeset -U path PATH fpath
 # Shell Plugins
 export ZPLUG_HOME=/opt/homebrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
-zplug "plugins/git", from:oh-my-zsh
 zplug "zdharma-continuum/fast-syntax-highlighting"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "remcohaszing/zsh-node-bin"
@@ -70,68 +69,6 @@ alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work claude"
 for _f in ${HOME}/.config/herdr/plugins/github/herdr-automatic-rename-*/shell/hook.zsh(N); do
   source $_f; break
 done
-
-# creditos restantes da conta Enterprise (perfil ~/.claude-work)
-claude-work-credits() {
-  python3 - <<'PY'
-import json, os, subprocess, sys, urllib.request
-
-home = os.path.expanduser("~")
-cfgdir = home + "/.claude-work"
-
-import hashlib
-svc = "Claude Code-credentials-" + hashlib.sha256(cfgdir.encode()).hexdigest()[:8]
-tok = None
-r = subprocess.run(["security", "find-generic-password", "-s", svc, "-w"],
-                   capture_output=True, text=True)
-if r.returncode == 0:
-    try:
-        tok = json.loads(r.stdout.strip())["claudeAiOauth"]["accessToken"]
-    except Exception:
-        pass
-if not tok and os.path.exists(cfgdir + "/.credentials.json"):
-    tok = json.load(open(cfgdir + "/.credentials.json"))["claudeAiOauth"]["accessToken"]
-if not tok:
-    sys.exit("token nao encontrado (keychain nem .credentials.json)")
-
-def get(url):
-    req = urllib.request.Request(url, headers={
-        "Authorization": "Bearer " + tok,
-        "Content-Type": "application/json",
-        "anthropic-beta": "oauth-2025-04-20",
-    })
-    try:
-        return json.load(urllib.request.urlopen(req, timeout=10))
-    except Exception as e:
-        return {"_err": str(e)}
-
-u = get("https://api.anthropic.com/api/oauth/usage")
-if "_err" in u:
-    sys.exit("falha em /api/oauth/usage: " + u["_err"])
-
-for key, label in (("five_hour", "sessao 5h"), ("seven_day", "semana 7d")):
-    w = u.get(key)
-    if w and w.get("utilization") is not None:
-        print(f"{label}: {w['utilization']:.0f}% usado, reseta {w.get('resets_at')}")
-
-x = u.get("extra_usage")
-if x and x.get("is_enabled"):
-    lim, used = x.get("monthly_limit"), x.get("used_credits") or 0
-    cur = x.get("currency") or "USD"
-    if lim:
-        print(f"creditos: {used/100:.2f} de {lim/100:.2f} {cur} (restam {(lim-used)/100:.2f})")
-    else:
-        print(f"creditos usados no mes: {used/100:.2f} {cur} (sem limite)")
-else:
-    print("extra_usage: nao exposto para esta conta (alocacao gerida pelo admin da org)")
-
-org = json.load(open(cfgdir + "/.claude.json")).get("oauthAccount", {}).get("organizationUuid")
-if org:
-    b = get(f"https://api.anthropic.com/api/oauth/organizations/{org}/prepaid/credits")
-    if isinstance(b.get("amount"), (int, float)):
-        print(f"saldo prepago da org: {b['amount']/100:.2f} {b.get('currency', 'USD')}")
-PY
-}
 
 alias ..="cd .."
 alias ...="cd ../.."
@@ -209,6 +146,4 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# cmux: aponta o wrapper direto pro claude real (fix "claude not found in PATH")
-export CMUX_CUSTOM_CLAUDE_PATH="$HOME/.local/bin/claude"
 export PATH=$PATH:$HOME/.maestro/bin
