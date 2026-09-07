@@ -2,6 +2,20 @@ onboarding = false
 
 [keys]
 prefix = "ctrl+space"
+new_tab          = ["prefix+c", "cmd+t"]
+close_pane       = ["prefix+x", "cmd+w"]
+split_vertical   = ["prefix+v", "cmd+d"]
+split_horizontal = ["prefix+minus", "cmd+shift+d"]
+cycle_pane_next     = ["prefix+tab", "cmd+]"]
+cycle_pane_previous = ["prefix+shift+tab", "cmd+["]
+focus_pane_left  = ["prefix+h", "ctrl+alt+h", "prefix+left"]
+focus_pane_down  = ["prefix+j", "ctrl+alt+j", "prefix+down"]
+focus_pane_up    = ["prefix+k", "ctrl+alt+k", "prefix+up"]
+focus_pane_right = ["prefix+l", "ctrl+alt+l", "prefix+right"]
+previous_tab = ["prefix+p", "ctrl+alt+[", "prefix+shift+left", "cmd+shift+["]
+next_tab     = ["prefix+n", "ctrl+alt+]", "prefix+shift+right", "cmd+shift+]"]
+switch_tab       = ["prefix+1..9", "ctrl+alt+1..9"]
+switch_workspace = "cmd+1..9"
 
 [theme]
 name = "dracula"
