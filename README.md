@@ -1,10 +1,16 @@
 # Dotfiles
 
-My daily configs for zsh, starship, yabai, skhd, JankyBorders, Alacritty, Ghostty, tmux, VS Code, and agent skills.
+My daily configs for zsh, starship, yabai, skhd, JankyBorders, Alacritty, Ghostty, herdr, tmux, VS Code, and agent skills.
 
 **macOS only.** `yabai` and `skhd` handle tiling and hotkeys, and the Brewfile tracks everything installed through Homebrew.
 
 Everything is symlinked into your home via [GNU Stow](https://www.gnu.org/software/stow/).
+
+## Docs
+
+- [Ghostty](docs/ghostty.md): terminal config and every shortcut it keeps or hands to herdr.
+- [herdr](docs/herdr.md): multiplexer shortcuts for tabs, panes, and workspaces, plus who owns the number row.
+- [macOS window management](docs/macos-window-management.md): yabai and skhd shortcuts, Spaces, and troubleshooting.
 
 ## Install
 
@@ -50,7 +56,7 @@ remove unrelated software.
 
 The tracked yabai setup provides BSP tiling, directional focus and movement, resizing, dynamic Spaces, stacking, sticky/PiP windows, scratchpads, opacity, animations, layers, and layout controls. Its advanced profile uses yabai's scripting addition when System Integrity Protection is partially disabled.
 
-See [docs/macos-window-management.md](docs/macos-window-management.md) for the complete shortcut reference and troubleshooting commands.
+See [docs/macos-window-management.md](docs/macos-window-management.md) for the complete shortcut reference and troubleshooting commands. The number row is shared with herdr; [docs/herdr.md](docs/herdr.md) has the split.
 
 ## Extensions (VS Code)
 

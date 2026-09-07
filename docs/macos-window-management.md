@@ -22,7 +22,7 @@ focused window.
 | `Option + /` | Open or focus 1Password |
 | `Option + Shift + /` | Open or focus 1Password |
 | `Option + Shift + S` | Open or focus Slack |
-| `Option + Shift + G` | Open ChatGPT |
+| `Option + Shift + A` | Open or focus Claude |
 | `Option + Shift + C` | Open Notion Calendar |
 | `Option + Shift + W` | Open WhatsApp |
 
@@ -34,13 +34,18 @@ focused window.
 | `Option + Shift + H/J/K/L` or arrows | Move the window in the BSP tree |
 | `Option + Command + H/J/K/L` | Swap with the adjacent window |
 | `Option + Command + Shift + H/J/K/L` | Stack with the adjacent window |
-| `Option + Control + H/J/K/L` | Resize the focused window |
+| `Option + -` / `Option + =` | Shrink / grow the window horizontally |
+| `Option + Shift + -` / `Option + Shift + =` | Shrink / grow the window vertically |
 | `Option + Control + Shift + H/J/K/L` | Set the next insertion direction |
 | `Option + Command + Left/Right` | Focus the display to the west/east |
 | `Option + Command + Shift + Left/Right` | Move the window to another display |
 
 Horizontal focus and movement automatically cross to an adjacent display when
 there is no window in that direction.
+
+`Option + Control + J/K` are deliberately unbound here. herdr uses them to
+focus panes inside the terminal, and skhd would swallow them first (see
+[herdr.md](herdr.md)).
 
 ## Spaces
 
