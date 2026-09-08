@@ -5,7 +5,7 @@
     ],
     "defaultMode": "bypassPermissions"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "sonnet",
   "hooks": {
     "Notification": [
       {
@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "rtk hook claude"
+            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" rtk hook claude"
           }
         ]
       },
@@ -124,7 +124,8 @@
     "swift-lsp@claude-plugins-official": true,
     "atlassian@claude-plugins-official": true,
     "cloudflare@cloudflare": true,
-    "posthog@claude-plugins-official": true
+    "posthog@claude-plugins-official": true,
+    "herdr-claude-title-hook@herdr-claude-title-hook": true
   },
   "extraKnownMarketplaces": {
     "ponytail": {
@@ -138,12 +139,29 @@
         "source": "github",
         "repo": "cloudflare/skills"
       }
+    },
+    "herdr-claude-title-hook": {
+      "source": {
+        "source": "github",
+        "repo": "eduardoborges/herdr-claude-title-hook"
+      }
     }
   },
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-sonnet-5": {
+      "effortLevel": "high"
+    },
+    "claude-fable-5": {
+      "effortLevel": "xhigh"
+    }
+  },
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
-  "theme": "auto",
+  "theme": "custom:draculinho",
   "editorMode": "normal",
   "verbose": false,
   "remoteControlAtStartup": true,
