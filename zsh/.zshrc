@@ -147,3 +147,6 @@ esac
 # pnpm end
 
 export PATH=$PATH:$HOME/.maestro/bin
+
+# opencode
+export PATH=/Users/eduardo/.opencode/bin:$PATH

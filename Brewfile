@@ -122,7 +122,7 @@ cask "ghostty"
 # Web browser
 cask "google-chrome"
 # Voice-to-text transcription and paste tool
-cask "kitlangton-hex"
+cask "anomalyco/tap/hex", trusted: true
 # Calendar for professionals and teams
 cask "notion-calendar"
 # Replacement for Docker Desktop
@@ -141,8 +141,13 @@ cask "whatsapp"
 cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
+
+# macOS applications installed via the App Store
 mas "Keka", id: 470158793
 mas "Numbers", id: 409203825
+mas "Xcode", id: 497799835
+
+# Node.js packages for AI agents and development
 npm "@earendil-works/pi-coding-agent"
 npm "@opencode-ai/cli"
 npm "agent-device"
