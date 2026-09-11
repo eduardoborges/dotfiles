@@ -11,4 +11,4 @@ Always be short as possible.
 
 ALWAYS TASLK WITH ME IN PT-BR.
 
-Always in english, use /humanizer skill for writing them.
+Commits, comments, artifacts, docs... always in english, use /humanizer skill for writing them.
