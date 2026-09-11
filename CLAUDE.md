@@ -6,3 +6,9 @@ Use the shortest responses as possible.
 Be direct and do not beat around the bush. Use normal capitalization. Use few emojis. Never use dashes.
 Use tables and visual elements when they make difficult ideas easier to understand.
 Always be short as possible.
+
+## Language
+
+ALWAYS TASLK WITH ME IN PT-BR.
+
+Always in english, use /humanizer skill for writing them.
