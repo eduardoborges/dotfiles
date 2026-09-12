@@ -122,7 +122,9 @@ cask "ghostty"
 # Web browser
 cask "google-chrome"
 # Voice-to-text transcription and paste tool
-cask "anomalyco/tap/hex", trusted: true
+# using native Dictation from MacOS
+# cask "anomalyco/tap/hex", trusted: true
+
 # Calendar for professionals and teams
 cask "notion-calendar"
 # Replacement for Docker Desktop
