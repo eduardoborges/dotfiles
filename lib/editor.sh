@@ -16,6 +16,17 @@ ensure_claude_code() {
   curl -fsSL https://claude.ai/install.sh | bash
 }
 
+# rtk writes ~/.claude/RTK.md, which the global CLAUDE.md imports. The hook is
+# already in the stowed settings.json, so we skip the patch step.
+setup_rtk() {
+  if ! command -v rtk &>/dev/null; then
+    warn "skipping rtk init (rtk not found)"
+    return 0
+  fi
+  info "rtk init"
+  rtk init -g --no-patch --no-trust-filters </dev/null
+}
+
 save_editor_extensions() {
   local output_file="${1:-$VSCODE_EXTENSIONS_FILE}"
 

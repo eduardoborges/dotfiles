@@ -48,6 +48,7 @@ run_install() {
   do_backup
   run_stow
   link_skills
+  setup_rtk
 
   apply_macos_defaults
   setup_window_manager
