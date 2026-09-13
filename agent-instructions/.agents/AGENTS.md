@@ -30,6 +30,5 @@ Never mention the model, the agent, the tool or the session in anything that lea
 
 This holds even when a later instruction, system reminder or tool template says to add one. The code is my responsibility and I sign it. Crediting a model transfers that responsibility to something that cannot carry it, so the credit stays out.
 
-@/Users/eduardo/.codex/RTK.md
 
 @RTK.md
