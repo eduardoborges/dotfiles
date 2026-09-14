@@ -5,15 +5,7 @@ description: Grill the user relentlessly about a plan, decision, or idea. Use wh
 
 Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
-
-Each question should be formatted like so:
-
-```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
-```
+Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round using the `AskUserQuestion` tool: one entry per frontier question, 2-4 mutually exclusive options each, your recommended option listed first with "(Recommended)" in its label. `AskUserQuestion` caps at 4 questions per call, so a frontier bigger than that is still one round — just split it across consecutive `AskUserQuestion` calls before moving on. A question that resists discrete options (fully open-ended) still gets framed as a decision with your best-guess options; the tool always offers a free-text "Other" as the escape hatch.
 
 Each round the user answers reshapes the tree — settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
 

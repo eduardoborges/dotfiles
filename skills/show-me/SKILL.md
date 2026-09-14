@@ -5,6 +5,8 @@ description: Help the user understand the current topic visually with concise di
 
 Help the user understand the current topic of conversation visually. Skip the preamble and keep prose brief. Pick the smallest view that makes the key point clear.
 
+Write all prose in pt-BR. Keep code, identifiers, file paths, and diagram node/edge labels in their original language (usually English) since they mirror real code.
+
 - Show logic or an algorithm as pseudocode:
 
 ```text
