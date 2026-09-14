@@ -47,6 +47,10 @@ zplug load
 # My aliases
 alias p="cd ~/Projects"
 
+alias c="claude"
+alias cw="claude-work"
+alias h="herdr"
+
 alias g="git"
 alias gs="git status"
 alias ga="git add"
@@ -58,7 +62,6 @@ alias gpu="git push"
 alias gbr="git branch"
 alias gcl="git clone"
 
-alias c="clear"
 alias l="ls -la"
 alias ll="ls -l"
 alias la="ls -A"
@@ -150,3 +153,6 @@ export PATH=$PATH:$HOME/.maestro/bin
 
 # opencode
 export PATH=/Users/eduardo/.opencode/bin:$PATH
+
+# Added by cua-driver-rs installer — see https://github.com/trycua/cua
+export PATH="/Users/eduardo/.local/bin:$PATH"
