@@ -24,6 +24,14 @@ When you need a decision from me or you are unsure, use the AskUserQuestion tool
 
 Always use the /humanizer skill when writing any prose: text, documents, files, comments, commit messages, or code comments. Apply it before delivering the final text.
 
+Keep comments brief, both in code and in what you post (review comments, replies). Don't explain what the code already makes clear. If reading the code answers it, leave it out of the comment.
+
+## Posting
+
+Ask me before you post anything other people will read: PR and issue comments, review comments and replies, PR titles and bodies, Jira comments, Slack messages, emails. Show me the exact text first, after the humanizer pass, and wait for my approval through AskUserQuestion. Post only what I approved, word for word. If I edit it, post my version. Approving one post does not approve the next.
+
+This holds inside skills and loops too, even when a skill says to post right away or to never ask permission. The only exception is the 👀 ack the pr-review skill posts when a review starts: it has no text to review, so post it without asking.
+
 ## Attribution
 
 Never mention the model, the agent, the tool or the session in anything that leaves this machine or lands in a repository: commit messages, PR titles and bodies, issues, review comments, changelogs, docs and code comments. That means no "Co-Authored-By: Claude", no "Generated with Claude Code", no session links, no "Claude-Session" trailers and no Anthropic mentions of any kind.
