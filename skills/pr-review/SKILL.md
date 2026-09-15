@@ -16,7 +16,7 @@ Input: a PR URL passed as the argument. If no URL was given, ask for it and stop
 
 **Session title:** as soon as the PR is identified, set the terminal/session title to `PR Review {PR-ID}` (e.g. `PR Review #482` or `PR Review PROJ-123`): `printf '\033]0;PR Review #482\007'`.
 
-**Humanizer gate:** every comment and review body MUST pass through the `humanizer` skill before being shown to the user for approval, and therefore before posting. No exceptions — if a comment did not go through humanizer, it does not get posted.
+**Humanizer gate (never skip):** every comment and review body MUST come out of a fresh call to the `humanizer` skill before you show it to the user for approval, and therefore before posting. Call the Skill tool with `humanizer` and apply it to the drafted comments. One call can cover the comments drafted together; a comment you redraft later needs a new call. Loading humanizer earlier in the session does not count, and neither does applying its rules from memory. No exceptions: if a comment did not come out of a humanizer call, it is not shown and not posted.
 
 ## 1. Detect the platform
 
@@ -97,7 +97,7 @@ The "Descartados" table shows what you chose NOT to comment on (nits, subjective
 
 If a diagram helps explain a flow, draw it in plain ASCII (boxes with `┌─┐│└┘`, arrows with `-->`) inside a code fence. NEVER Mermaid in terminal output — the CLI does not render it. Mermaid only inside posted comments/bodies, where GitHub/Bitbucket render it.
 
-Comments are brief, direct, and friendly. No essays, no lecturing, no commit hashes. Run every comment through the `humanizer` skill before showing it. Ask which to post: all, some (pick), or none.
+Comments are brief, direct, and friendly. No essays, no lecturing, no commit hashes. Put every comment through a `humanizer` skill call (gate above) before showing it. Ask which to post: all, some (pick), or none.
 
 ## 6. Post
 

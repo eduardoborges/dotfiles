@@ -14,7 +14,7 @@ Input: a ticket URL passed as the argument. If no URL was given, ask for it and 
 
 **Session title:** as soon as the ticket is identified, set the terminal/session title to `{TICKET-ID} - {Title}` (e.g. `PROJ-123 - Add export endpoint`): `printf '\033]0;PROJ-123 - Add export endpoint\007'`.
 
-**Humanizer gate:** NOTHING leaves this skill as posted text without passing through the `humanizer` skill first. Commit messages, PR title, PR body, ticket comments, review replies — invoke `humanizer` on the drafted text BEFORE the command that posts it, every time. If you are about to run `git commit`, `gh pr create`, `gh api`, or a bkt/Jira write and the text did not go through humanizer, stop and run it.
+**Humanizer gate (never skip):** NOTHING this skill writes goes out without a fresh call to the `humanizer` skill. That covers commit messages, the PR title and body, ticket comments and review replies. Before you show a drafted text to the user, and before the command that posts it, call the Skill tool with `humanizer` and apply it to that text. One call can cover texts drafted together; anything drafted later needs a new call. Loading humanizer earlier in the session does not count, and neither does applying its rules from memory. One-line replies are no exception. If you are about to run `git commit`, `gh pr create`, `gh api`, or a bkt/Jira write and that exact text did not come out of a humanizer call, stop and make the call first.
 
 ## 1. Detect the platform
 
@@ -114,7 +114,7 @@ Keep the ticket status in sync with the work:
 - **On approval (before implementing):** work in a git worktree, never in the user's checkout — other agents may be working there in parallel. `git fetch origin` first, then create the worktree from the base branch (main/master/develop, whatever the repo uses) with the branch named `<ticket>/<title-with-dashes-lowercase>` (e.g. `PROJ-123/add-export-endpoint`, or `123/add-export-endpoint` for GitHub). Use the harness's EnterWorktree tool if available; otherwise `git worktree add <path> -b <branch> origin/<base>`. If the user explicitly asks to work in the current checkout instead, only then apply the old rules: ask before switching branches or touching a dirty workspace. Then, without asking:
   - Assign the ticket to the user. Jira: `atlassianUserInfo` for the accountId, then `editJiraIssue` with that assignee. GitHub: `gh issue edit <N> --add-assignee @me`.
   - Move it to "In Progress" or the closest equivalent. Jira: `getTransitionsForJiraIssue`, then `transitionJiraIssue` with the best match. GitHub: move the project item with `gh project item-edit` if the issue is on a board.
-- **When implementation is done:** open the PR as a draft. Title: `feat|fix|chore(<ticket>): title`. Body in English, sections below. TL;DR is always there; drop any other section that would be empty. Run title and body through `humanizer`, show both to the user, and create the PR only after they approve. `gh pr create --draft`, Bitbucket `bkt pr create --draft`. Link it to the ticket (Jira: the key is already in title and branch; GitHub: "Closes #N"). Leave the ticket status alone.
+- **When implementation is done:** open the PR as a draft. Title: `feat|fix|chore(<ticket>): title`. Body in English, sections below. TL;DR is always there; drop any other section that would be empty. Put title and body through a `humanizer` skill call (gate above), show both to the user, and create the PR only after they approve. `gh pr create --draft`, Bitbucket `bkt pr create --draft`. Link it to the ticket (Jira: the key is already in title and branch; GitHub: "Closes #N"). Leave the ticket status alone.
 
   ```markdown
   ## TL;DR
@@ -149,6 +149,6 @@ When the user asks how the ticket or PR is doing, or reports new comments, do bo
 
 1. Judge if it is valid. If not, say why to the user before pushing back on the reviewer.
 2. If valid, apply the fix and push.
-3. Draft a reply: brief, direct, and warm (e.g. "Good catch, fixed!"). No commit hashes or references. Run replies through the `humanizer` skill. No essays, no over-explaining.
+3. Draft a reply: brief, direct, and warm (e.g. "Good catch, fixed!"). No commit hashes or references. Put the replies through a `humanizer` skill call (gate above) before showing them. No essays, no over-explaining.
 
 Then show all drafted replies together and ask which to post: all, some, or none. Post only the approved ones, word for word.

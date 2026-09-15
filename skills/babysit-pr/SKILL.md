@@ -12,7 +12,7 @@ Input: a PR URL. If missing, use the PR of the current branch (`gh pr view`); if
 
 Talk to the user in pt-BR. Everything posted (comments, commits) in English.
 
-**Humanizer gate:** every commit message and comment reply MUST pass through the `humanizer` skill before the command that posts it. No exceptions.
+**Humanizer gate (never skip):** every commit message and comment reply MUST come out of a fresh call to the `humanizer` skill (Skill tool, `humanizer`) before you show it to the user or run the command that posts it. A call from an earlier pass or session does not count, and neither does applying its rules from memory. No exceptions.
 
 This skill does ONE pass. To keep watching, run it under a loop: `/loop 45m /babysit-pr <url>`. If the user invoked it bare and wants continuous watching, start that loop yourself with the 45m interval instead of only suggesting it.
 
