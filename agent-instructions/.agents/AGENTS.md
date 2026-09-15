@@ -22,7 +22,7 @@ When you need a decision from me or you are unsure, use the AskUserQuestion tool
 
 ## Writing
 
-Always use the /humanizer skill when writing any prose: text, documents, files, comments, commit messages, or code comments. Apply it before delivering the final text.
+**The humanizer skill is mandatory. Never skip it.** Run it on every piece of prose you write for a file, a commit or other people: documents, commit messages, PR titles and bodies, review comments and replies, ticket comments, code comments. In Claude Code that means calling the Skill tool with `humanizer` for each new text, before you show it to me or use it anywhere. Having loaded the skill earlier in the session does not count, and applying its rules from memory does not count either. Short text is no exception. If you are about to post, commit or save prose that has not been through that call, stop and make the call first. Only text I wrote or edited myself skips it: that goes out exactly as I wrote it.
 
 Keep comments brief, both in code and in what you post (review comments, replies). Don't explain what the code already makes clear. If reading the code answers it, leave it out of the comment.
 
