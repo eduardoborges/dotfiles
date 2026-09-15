@@ -1,11 +1,8 @@
 {
   "permissions": {
-    "allow": [
-      "mcp__pencil"
-    ],
     "defaultMode": "bypassPermissions"
   },
-  "model": "sonnet",
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -124,8 +121,8 @@
     "swift-lsp@claude-plugins-official": true,
     "atlassian@claude-plugins-official": true,
     "cloudflare@cloudflare": true,
-    "posthog@claude-plugins-official": true,
-    "herdr-claude-title-hook@herdr-claude-title-hook": true
+    "herdr-claude-title-hook@herdr-claude-title-hook": true,
+    "1password@1password": true
   },
   "extraKnownMarketplaces": {
     "ponytail": {
@@ -145,12 +142,18 @@
         "source": "github",
         "repo": "eduardoborges/herdr-claude-title-hook"
       }
+    },
+    "1password": {
+      "source": {
+        "source": "github",
+        "repo": "1Password/1password-claude-plugin"
+      }
     }
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "modelSettings": {
     "claude-opus-5": {
-      "effortLevel": "xhigh"
+      "effortLevel": "high"
     },
     "claude-sonnet-5": {
       "effortLevel": "high"
