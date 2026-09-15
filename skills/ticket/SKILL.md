@@ -114,7 +114,7 @@ Keep the ticket status in sync with the work:
 - **On approval (before implementing):** work in a git worktree, never in the user's checkout — other agents may be working there in parallel. `git fetch origin` first, then create the worktree from the base branch (main/master/develop, whatever the repo uses) with the branch named `<ticket>/<title-with-dashes-lowercase>` (e.g. `PROJ-123/add-export-endpoint`, or `123/add-export-endpoint` for GitHub). Use the harness's EnterWorktree tool if available; otherwise `git worktree add <path> -b <branch> origin/<base>`. If the user explicitly asks to work in the current checkout instead, only then apply the old rules: ask before switching branches or touching a dirty workspace. Then, without asking:
   - Assign the ticket to the user. Jira: `atlassianUserInfo` for the accountId, then `editJiraIssue` with that assignee. GitHub: `gh issue edit <N> --add-assignee @me`.
   - Move it to "In Progress" or the closest equivalent. Jira: `getTransitionsForJiraIssue`, then `transitionJiraIssue` with the best match. GitHub: move the project item with `gh project item-edit` if the issue is on a board.
-- **When implementation is done:** open the PR as a draft right away, never ask permission. Title: `feat|fix|chore(<ticket>): title`. Body in English, sections below. TL;DR is always there; drop any other section that would be empty. Run title and body through `humanizer` first. `gh pr create --draft`, Bitbucket `bkt pr create --draft`. Link it to the ticket (Jira: the key is already in title and branch; GitHub: "Closes #N"). Leave the ticket status alone.
+- **When implementation is done:** open the PR as a draft. Title: `feat|fix|chore(<ticket>): title`. Body in English, sections below. TL;DR is always there; drop any other section that would be empty. Run title and body through `humanizer`, show both to the user, and create the PR only after they approve. `gh pr create --draft`, Bitbucket `bkt pr create --draft`. Link it to the ticket (Jira: the key is already in title and branch; GitHub: "Closes #N"). Leave the ticket status alone.
 
   ```markdown
   ## TL;DR
@@ -149,4 +149,6 @@ When the user asks how the ticket or PR is doing, or reports new comments, do bo
 
 1. Judge if it is valid. If not, say why to the user before pushing back on the reviewer.
 2. If valid, apply the fix and push.
-3. Reply to the comment: brief, direct, and warm (e.g. "Good catch, fixed!"). No commit hashes or references. Run replies through the `humanizer` skill. No essays, no over-explaining.
+3. Draft a reply: brief, direct, and warm (e.g. "Good catch, fixed!"). No commit hashes or references. Run replies through the `humanizer` skill. No essays, no over-explaining.
+
+Then show all drafted replies together and ask which to post: all, some, or none. Post only the approved ones, word for word.

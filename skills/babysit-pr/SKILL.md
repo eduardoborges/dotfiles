@@ -19,7 +19,7 @@ This skill does ONE pass. To keep watching, run it under a loop: `/loop 45m /bab
 ## The pass
 
 1. **CI:** `gh pr checks` (or `bkt` equivalent). If a check failed, fetch the log, diagnose, fix in a worktree (same rules as the `ticket` skill: fetch first, fresh worktree on the PR branch, never the user's checkout), push the fix.
-2. **New review comments:** anything unresolved and not yet replied. Handle exactly as the `ticket` skill's "Review comments" step: judge validity, apply valid fixes, push, reply brief/direct/warm through `humanizer`, no commit hashes. If a comment is invalid or a big scope change, do NOT act; flag it for the user.
+2. **New review comments:** anything unresolved and not yet replied. Handle exactly as the `ticket` skill's "Review comments" step: judge validity, apply valid fixes, push, draft brief/direct/warm replies through `humanizer`, no commit hashes. Show the drafted replies together and post only the ones the user approves. Under `/loop` the pass waits for that answer; never skip the question to keep the loop moving. If a comment is invalid or a big scope change, do NOT act; flag it for the user.
 3. **State changes:** PR approved, merged, or changes requested — report it.
 
 ## Guardrails
