@@ -1,3 +1,5 @@
 /git/.config/git/local
 /git/.config/git/wc
 zed/.config/zed/prompts/
+# Claude Code syncs Anthropic's skills here through the ~/.claude/skills symlink
+skills/synced/

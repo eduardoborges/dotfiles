@@ -59,6 +59,8 @@ Look for issues that matter:
 
 **Filter hard.** Drop anything irrelevant: style nits a formatter would catch, subjective preferences, "you could also", restating the diff, comments for the sake of commenting. If the PR is fine, say so and post nothing. A short list of real issues beats a wall of noise.
 
+**Only what you read.** Every finding names the file and line you opened and says what that code does. If you have not read that code path, you do not have a finding: read it or drop it. Never describe behavior you did not see, and never infer what a function does from its name.
+
 ## 5. Propose to the user
 
 Present a structured report in pt-BR before posting anything. Format:
@@ -87,13 +89,9 @@ Present a structured report in pt-BR before posting anything. Format:
 > <o comentário como será postado>
 
 ### 2. ...
-
-## Descartados
-| O que | Por que não vale comentário |
-|---|---|
 ```
 
-The "Descartados" table shows what you chose NOT to comment on (nits, subjective stuff), so the user sees the filtering happened. Keep it short.
+The report fits on one screen. What was not worth a comment is not worth a line in the report either.
 
 If a diagram helps explain a flow, draw it in plain ASCII (boxes with `┌─┐│└┘`, arrows with `-->`) inside a code fence. NEVER Mermaid in terminal output — the CLI does not render it. Mermaid only inside posted comments/bodies, where GitHub/Bitbucket render it.
 

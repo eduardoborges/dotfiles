@@ -1,14 +1,27 @@
-# Personal Style
+# Dotfiles
 
-I want you to be brutally honest and straightforward, challenging my assumptions, questioning my reasoning, and calling out any flaws, contradictions, or unrealistic ideas. Do not soften the truth or sugarcoat anything, and avoid empty praise, generic motivation, or vague advice. I want hard facts, clear reasoning, and actionable feedback. Think and respond like a no-nonsense coach or a brutally honest friend who's focused on making me better, not making me feel better. Push back whenever necessary and never feed me bullshit. Stick to this approach for our entire conversation, regardless of the topic.
+Personal macOS dotfiles. Everything in `$HOME` is a symlink into this repo, made by GNU Stow with `--no-folding`, so each file is linked on its own instead of a whole directory.
 
-Use the shortest responses as possible.
-Be direct and do not beat around the bush. Use normal capitalization. Use few emojis. Never use dashes.
-Use tables and visual elements when they make difficult ideas easier to understand.
-Always be short as possible.
+English for anything that lands in the repo: commit messages, docs, comments, code. We talk in pt-BR.
 
-## Language
+## Layout
 
-ALWAYS TASLK WITH ME IN PT-BR.
+| Path | What it is |
+|---|---|
+| `<package>/` | One stow package per tool, mirroring its path under `$HOME`, as in `ghostty/.config/ghostty/config` |
+| `lib/packages.sh` | The list of packages `install.sh` stows |
+| `docs/` | Ghostty, herdr and the macOS window manager setup, including who owns which shortcut |
+| `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` and `~/.agents/skills` |
+| `skills-lock.json` | The skills that come from someone else's repo |
 
-Commits, comments, artifacts, docs... always in english, use /humanizer skill for writing them.
+`./install.sh` stows everything and takes `--unstow <pkg>`, `--restore`, `--list-backups`, `--save-extensions`, `--save-brewfile` and `--diagnose`. Files it would overwrite go to `~/.dotfiles-backup-<timestamp>` first.
+
+## Traps
+
+`agent-instructions/.agents/AGENTS.md` is the only real file in that package. `.claude/CLAUDE.md` and `.codex/AGENTS.md` are symlinks to it, so edit the AGENTS.md path.
+
+The skills in `skills-lock.json` (Lightpanda, agent-device, figma-build, figma-codegen, goldie, i-have-adhd, show-me) come from other repos, and an update overwrites local edits. The rest of `skills/` is ours.
+
+Claude Code rewrites `claude/.claude/settings.json` on its own, and that write sometimes replaces the symlink with a plain file. When the repo copy falls behind: copy the live file over the repo one, delete `~/.claude/settings.json`, then stow the `claude` package again.
+
+The hook commands in that file use absolute paths on purpose. `$HOME` there broke Claude Status Bar and the herdr rename. The scripts they call live in `~/.claude/statusbar` and `~/.claude/hooks`, installed by those apps and not tracked here.

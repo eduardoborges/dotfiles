@@ -16,6 +16,8 @@ Input: a ticket URL passed as the argument. If no URL was given, ask for it and 
 
 **Humanizer gate (never skip):** NOTHING this skill writes goes out without a fresh call to the `humanizer` skill. That covers commit messages, the PR title and body, ticket comments and review replies. Before you show a drafted text to the user, and before the command that posts it, call the Skill tool with `humanizer` and apply it to that text. One call can cover texts drafted together; anything drafted later needs a new call. Loading humanizer earlier in the session does not count, and neither does applying its rules from memory. One-line replies are no exception. If you are about to run `git commit`, `gh pr create`, `gh api`, or a bkt/Jira write and that exact text did not come out of a humanizer call, stop and make the call first.
 
+**Facts gate:** everything in the report, the plan and anything you post comes from something you read this session: the ticket, a linked page, the code. Never fill a gap from the ticket title or from what a name suggests. What you did not find stays an open question in the report, never a guess dressed as a fact.
+
 ## 1. Detect the platform
 
 | URL contains | Platform | Tooling |
@@ -66,6 +68,8 @@ Present in this order, in the user's language:
    - Only add a diagram when it beats prose; skip decoration.
 3. **Context map** — small table of what was fetched (epic, parent, N linked issues, Confluence pages, repo files) with links, so the user sees what informed the summary and what was missing.
 
+The whole report fits on one screen. Cut the description before the context map, and never pad a thin ticket into a long report: a small ticket gets a three line report.
+
 ## 4. Execution plan and approval
 
 The plan is a document the user reads top to bottom, not a list of tool calls. Before writing it, load the `i-have-adhd` skill and shape the plan and its presentation by those rules: next action first, numbered bounded steps, concrete time estimates, no preamble. Write it in this shape, in pt-BR:
@@ -96,7 +100,9 @@ means it worked. AWS pieces run through floci.
 What could break, what is still unknown, what needs the user's call.
 ```
 
-Skip the diagram only when the change does not touch any flow (a copy change, a config flip) and say why. A diagram that only repeats the steps table is decoration; cut it.
+Draw the diagram only when you traced the real flow in the code this session. If all you have is the ticket's description, leave it out and say so: a flow you did not read is a guess with boxes around it. Cut any diagram that only repeats the steps table.
+
+The plan fits on one screen. Every line is something the user has to decide or check; if a line does not change what happens next, cut it.
 
 Then STOP and ask for approval before touching any code:
 
@@ -111,9 +117,12 @@ Never start implementing without the approval.
 
 Keep the ticket status in sync with the work:
 
-- **On approval (before implementing):** work in a git worktree, never in the user's checkout — other agents may be working there in parallel. `git fetch origin` first, then create the worktree from the base branch (main/master/develop, whatever the repo uses) with the branch named `<ticket>/<title-with-dashes-lowercase>` (e.g. `PROJ-123/add-export-endpoint`, or `123/add-export-endpoint` for GitHub). Use the harness's EnterWorktree tool if available; otherwise `git worktree add <path> -b <branch> origin/<base>`. If the user explicitly asks to work in the current checkout instead, only then apply the old rules: ask before switching branches or touching a dirty workspace. Then, without asking:
+- **On approval, before any code:** two writes on the ticket come first, without asking, before the worktree and before touching a file.
   - Assign the ticket to the user. Jira: `atlassianUserInfo` for the accountId, then `editJiraIssue` with that assignee. GitHub: `gh issue edit <N> --add-assignee @me`.
-  - Move it to "In Progress" or the closest equivalent. Jira: `getTransitionsForJiraIssue`, then `transitionJiraIssue` with the best match. GitHub: move the project item with `gh project item-edit` if the issue is on a board.
+  - Move it to the column that means work started: "In Development" on the user's boards, "In Progress" where the board uses that name. Jira: `getTransitionsForJiraIssue`, then `transitionJiraIssue` with the best match. GitHub: move the project item with `gh project item-edit` if the issue is on a board.
+
+  Both writes land before the first edit. If one fails, tell the user and stop there instead of coding with the ticket still sitting in the backlog.
+- **Then the worktree:** work in a git worktree, never in the user's checkout, since other agents may be working there in parallel. `git fetch origin` first, then create the worktree from the base branch (main/master/develop, whatever the repo uses) with the branch named `<ticket>/<title-with-dashes-lowercase>` (e.g. `PROJ-123/add-export-endpoint`, or `123/add-export-endpoint` for GitHub). Use the harness's EnterWorktree tool if available; otherwise `git worktree add <path> -b <branch> origin/<base>`. If the user explicitly asks to work in the current checkout instead, only then apply the old rules: ask before switching branches or touching a dirty workspace.
 - **When implementation is done:** open the PR as a draft. Title: `feat|fix|chore(<ticket>): title`. Body in English, sections below. TL;DR is always there; drop any other section that would be empty. Put title and body through a `humanizer` skill call (gate above), show both to the user, and create the PR only after they approve. `gh pr create --draft`, Bitbucket `bkt pr create --draft`. Link it to the ticket (Jira: the key is already in title and branch; GitHub: "Closes #N"). Leave the ticket status alone.
 
   ```markdown
