@@ -8,6 +8,7 @@
     "defaultMode": "bypassPermissions"
   },
   "model": "opus[1m]",
+  "enableAllProjectMcpServers": true,
   "hooks": {
     "Notification": [
       {
@@ -127,7 +128,8 @@
     "atlassian@claude-plugins-official": true,
     "cloudflare@cloudflare": true,
     "herdr-claude-title-hook@herdr-claude-title-hook": true,
-    "1password@1password": true
+    "1password@1password": true,
+    "code-review@claude-code-plugins": true
   },
   "extraKnownMarketplaces": {
     "ponytail": {
@@ -152,6 +154,12 @@
       "source": {
         "source": "github",
         "repo": "1Password/1password-claude-plugin"
+      }
+    },
+    "claude-code-plugins": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/claude-code.git"
       }
     }
   },
