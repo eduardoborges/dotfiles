@@ -20,7 +20,13 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 
 `agent-instructions/.agents/AGENTS.md` is the only real file in that package. `.claude/CLAUDE.md` and `.codex/AGENTS.md` are symlinks to it, so edit the AGENTS.md path.
 
-The skills in `skills-lock.json` (Lightpanda, agent-device, figma-build, figma-codegen, goldie, i-have-adhd, show-me) come from other repos, and an update overwrites local edits. The rest of `skills/` is ours.
+There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.json` (Lightpanda, agent-device, figma-build, figma-codegen, goldie, i-have-adhd, show-me) are managed by the `skills` CLI, and an update overwrites local edits. The ones below were installed globally, which the CLI records nowhere, so this table is the only place their origin lives:
+
+| Source | Skills |
+|---|---|
+| `mcollina/skills` | documentation, fastify-best-practices, init, linting-neostandard-eslint9, node, nodejs-core, oauth, octocat, skill-optimizer, snipgrapher, typescript-magician |
+
+Update one of those with `npx skills add mcollina/skills@<skill> -g -y`. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours.
 
 Claude Code rewrites `claude/.claude/settings.json` on its own, and that write sometimes replaces the symlink with a plain file. When the repo copy falls behind: copy the live file over the repo one, delete `~/.claude/settings.json`, then stow the `claude` package again.
 
