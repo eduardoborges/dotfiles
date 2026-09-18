@@ -9,6 +9,7 @@ PACKAGES=(
   agent-instructions
   alacritty
   borders
+  btop
   claude
   ghostty
   git
