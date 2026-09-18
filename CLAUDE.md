@@ -25,6 +25,7 @@ There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.js
 | Source | Skills |
 |---|---|
 | `mcollina/skills` | documentation, fastify-best-practices, init, linting-neostandard-eslint9, node, nodejs-core, oauth, octocat, skill-optimizer, snipgrapher, typescript-magician |
+| `rorkai/app-store-connect-cli-skills` | asc-* (25 skills) |
 
 Update one of those with `npx skills add mcollina/skills@<skill> -g -y`. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours.
 
