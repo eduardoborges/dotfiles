@@ -62,6 +62,11 @@ alias gpu="git push"
 alias gbr="git branch"
 alias gcl="git clone"
 
+alias ls="lsd"
+alias cat="bat"
+alias lg="lazygit"
+alias top="btop"
+
 alias l="ls -la"
 alias ll="ls -l"
 alias la="ls -A"
