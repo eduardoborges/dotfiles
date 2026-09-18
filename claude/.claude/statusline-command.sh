@@ -49,7 +49,7 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
     git_status+=" \033[33m✗\033[0m"
     [ "$staged" -gt 0 ] && git_status+=" \033[32m●${staged}\033[0m"
     [ "$modified" -gt 0 ] && git_status+=" \033[33m~${modified}\033[0m"
-    [ "$untracked" -gt 0 ] && git_status+=" \033[2m?${untracked}\033[0m"
+    [ "$untracked" -gt 0 ] && git_status+=" \033[35m?${untracked}\033[0m"
   else
     git_status+=" \033[32m✓\033[0m"
   fi
