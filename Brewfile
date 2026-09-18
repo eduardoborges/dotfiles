@@ -1,10 +1,11 @@
 tap "agavra/tap"
+tap "anomalyco/tap"
 tap "asmvik/formulae"
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
 tap "can1357/tap"
 tap "ddev/ddev"
-tap "eduardoborges/tap"
+tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
 tap "floci-io/floci"
 tap "franzos/tap", trusted: true
@@ -13,16 +14,24 @@ tap "modem-dev/tap"
 tap "tamtom/tap"
 # Run your GitHub Actions locally
 brew "act"
+# Static checker for GitHub Actions workflow files
+brew "actionlint"
+# Fast, lightweight CLI for App Store Connect
+brew "asc"
 # Official Amazon AWS command-line interface
 brew "awscli"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
 # Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
 brew "clang-format"
 # CLI tool for Cloudflare Workers
 brew "cloudflare-wrangler"
 # Cloudflare Tunnel client (formerly Argo Tunnel)
-brew "cloudflared"
+brew "cloudflared", restart_service: :changed
 # Dependency manager for Cocoa projects
 brew "cocoapods"
 # Good-lookin' diffs with diff-highlight and more
@@ -41,6 +50,8 @@ brew "lazydocker"
 brew "lazygit"
 # Library to render SVG files using Cairo
 brew "librsvg"
+# Clone of ls with colorful output, file type icons, and more
+brew "lsd"
 # Mac App Store command-line interface
 brew "mas"
 # Polyglot runtime manager (asdf rust clone)
@@ -103,28 +114,28 @@ brew "lightpanda-io/browser/lightpanda", trusted: true
 brew "modem-dev/tap/hunk", trusted: true
 # CLI for Google Play Console - manage Android apps from the terminal
 brew "tamtom/tap/gplay", trusted: true
-# Password manager
-cask "1password@beta"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
 # Tools for building Android applications
 cask "android-studio"
-# Screen capturing and editing tool
-cask "bettershot"
 # 3D creation suite
 cask "blender"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
+# Android device hub with a live, clickable emulator screen
+cask "eduardoborges/tap/droidhub"
 # Collaborative team software
 cask "figma"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser
 cask "google-chrome"
+# Local-first voice dictation
+cask "anomalyco/tap/hex", trusted: true
 # Voice-to-text transcription and paste tool
-# using native Dictation from MacOS
-# cask "anomalyco/tap/hex", trusted: true
-
+cask "kitlangton-hex"
 # Calendar for professionals and teams
 cask "notion-calendar"
 # Replacement for Docker Desktop
@@ -135,6 +146,10 @@ cask "slack"
 cask "spotify"
 # System monitor for the menu bar
 cask "stats"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
+# Messaging app with a focus on speed and security
+cask "telegram"
 # Open-source code editor
 cask "visual-studio-code"
 # Native desktop client for WhatsApp
@@ -143,13 +158,10 @@ cask "whatsapp"
 cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
-
-# macOS applications installed via the App Store
 mas "Keka", id: 470158793
 mas "Numbers", id: 409203825
 mas "Xcode", id: 497799835
-
-# Node.js packages for AI agents and development
+uv "browser-use"
 npm "@earendil-works/pi-coding-agent"
 npm "@opencode-ai/cli"
 npm "agent-device"
