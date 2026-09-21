@@ -30,11 +30,25 @@ revert_liquid_glass() {
   defaults write NSGlobalDomain AppleReduceTransparency -bool false
 }
 
+# Power settings. Asks for a sudo password.
+apply_power_defaults() {
+  # Closing the lid does nothing while SleepDisabled is set, and pmset
+  # restoredefaults does not clear it.
+  sudo pmset -a disablesleep 0
+
+  # On battery: no Power Nap or network keepalive, so sleep stays deep.
+  sudo pmset -b displaysleep 30 powernap 0 tcpkeepalive 0
+
+  # On the charger: stay awake, full speed.
+  sudo pmset -c displaysleep 0 sleep 0 powermode 2
+}
+
 usage() {
-  echo "Usage: $0 [--apply|--revert-liquid-glass|--no-restart]"
+  echo "Usage: $0 [--apply|--revert-liquid-glass|--no-restart|--skip-power]"
 }
 
 restart=true
+power=true
 action=apply
 
 for arg in "$@"; do
@@ -47,6 +61,9 @@ for arg in "$@"; do
       ;;
     --no-restart)
       restart=false
+      ;;
+    --skip-power)
+      power=false
       ;;
     -h|--help)
       usage
@@ -64,6 +81,9 @@ case "$action" in
   apply)
     apply_window_manager_defaults
     disable_liquid_glass
+    if [[ "$power" == "true" ]]; then
+      apply_power_defaults
+    fi
     echo "macOS defaults applied."
     ;;
   revert-liquid-glass)
