@@ -62,6 +62,8 @@ alias gpu="git push"
 alias gbr="git branch"
 alias gcl="git clone"
 
+alias coffee="caffeinate -s"
+
 alias ls="lsd"
 alias cat="bat"
 alias lg="lazygit"
