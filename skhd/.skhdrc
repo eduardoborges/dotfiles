@@ -9,8 +9,10 @@ alt - return : open -na /Applications/Ghostty.app
 # Tmux terminal. Falls back to a normal Ghostty window when tmux is unavailable.
 alt + cmd - return : command -v tmux >/dev/null && open -na /Applications/Ghostty.app --args -e tmux new || open -na /Applications/Ghostty.app
 
+# Ghostty running herdr. Falls back to a plain window when herdr is missing.
+alt + shift - return : [ -x "$HOME/.local/bin/herdr" ] && open -na /Applications/Ghostty.app --args -e "$HOME/.local/bin/herdr" || open -na /Applications/Ghostty.app
+
 # Browser
-alt + shift - return : open -a "Google Chrome"
 alt + shift - b : open -a "Google Chrome"
 alt + shift + cmd - b : open -na "Google Chrome" --args --incognito
 
