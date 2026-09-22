@@ -1,0 +1,44 @@
+{
+  "chrome-devtools": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "chrome-devtools-mcp@latest"
+    ],
+    "env": {}
+  },
+  "figwright": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@figwright/mcp@latest"
+    ],
+    "env": {}
+  },
+  "unsplash": {
+    "type": "stdio",
+    "command": "~/.local/share/unsplash-mcp/.venv/bin/python",
+    "args": [
+      "~/.local/share/unsplash-mcp/server.py"
+    ],
+    "env": {
+      "UNSPLASH_ACCESS_KEY": "${UNSPLASH_ACCESS_KEY}"
+    }
+  },
+  "dokploy": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@dokploy/mcp@latest"
+    ],
+    "env": {
+      "DOKPLOY_URL": "${DOKPLOY_URL}",
+      "DOKPLOY_API_KEY": "${DOKPLOY_API_KEY}",
+      "DOKPLOY_CUSTOM_HEADERS": "${DOKPLOY_CUSTOM_HEADERS}",
+      "DOKPLOY_TOOL_PRESET": "core"
+    }
+  }
+}

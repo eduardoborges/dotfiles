@@ -58,6 +58,23 @@ The tracked yabai setup provides BSP tiling, directional focus and movement, res
 
 See [docs/macos-window-management.md](docs/macos-window-management.md) for the complete shortcut reference and troubleshooting commands. The number row is shared with herdr; [docs/herdr.md](docs/herdr.md) has the split.
 
+## MCP servers
+
+The user-scoped servers are tracked in `mcp-servers.json`. Claude Code keeps
+them in `~/.claude.json`, which also holds session history and OAuth tokens, so
+that file is not stowed. The installer reads the tracked list and puts each
+server back with `claude mcp add-json`. Home paths are written as `~/...` and
+expanded on the way in.
+
+To refresh the list after adding or removing a server:
+
+```bash
+./install.sh --save-mcp
+```
+
+Project-scoped servers are not tracked here. They belong in a `.mcp.json` in
+the project that uses them.
+
 ## Extensions (VS Code)
 
 The shared extension list is tracked in:
@@ -88,3 +105,4 @@ Backups are stored in `~/.dotfiles-backup-YYYYMMDD-HHMMSS`. You pick one from th
 - Unstow one package: `stow -t ~ -D <package>`
 - Update editor extension lists: `./install.sh --save-extensions`
 - Update the Homebrew inventory: `./install.sh --save-brewfile`
+- Update the MCP server list: `./install.sh --save-mcp`

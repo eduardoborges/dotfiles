@@ -16,7 +16,7 @@ BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 VSCODE_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscode.txt"
 BREWFILE="$DOTFILES_DIR/Brewfile"
 
-for lib in ui packages homebrew stow backup editor window-manager diagnostics; do
+for lib in ui packages homebrew stow backup editor window-manager mcp diagnostics; do
   # shellcheck source=/dev/null
   source "$DOTFILES_DIR/lib/$lib.sh"
 done
@@ -29,6 +29,7 @@ Usage: $0 [install]        - install dotfiles (stow), with optional backup
        $0 --unstow <pkg>    - unstow a single package (e.g. yabai, alacritty)
        $0 --save-extensions - update extensions/vscode.txt from VS Code
        $0 --save-brewfile   - refresh the Brewfile from installed Homebrew packages
+       $0 --save-mcp        - refresh mcp-servers.json from the user-scoped MCP servers
        $0 --diagnose        - check the yabai/skhd setup
 
 Packages: ${PACKAGES[*]}
@@ -49,6 +50,7 @@ run_install() {
   run_stow
   link_skills
   setup_rtk
+  sync_mcp_servers
 
   apply_macos_defaults
   setup_window_manager
@@ -67,6 +69,7 @@ main() {
     --unstow|-u)            run_unstow "${2:-}" ;;
     --save-extensions)      save_editor_extensions ;;
     --save-brewfile)        save_homebrew_bundle ;;
+    --save-mcp)             save_mcp_servers ;;
     --diagnose)             run_macos_diagnostics ;;
     -h|--help)              usage ;;
     *)                      echo "Unknown option: $1"; usage; exit 1 ;;

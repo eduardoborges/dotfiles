@@ -13,8 +13,9 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 | `docs/` | Ghostty, herdr and the macOS window manager setup, including who owns which shortcut |
 | `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` and `~/.agents/skills` |
 | `skills-lock.json` | The skills that come from someone else's repo |
+| `mcp-servers.json` | The user-scoped MCP servers, merged into `~/.claude.json` by `lib/mcp.sh` |
 
-`./install.sh` stows everything and takes `--unstow <pkg>`, `--restore`, `--list-backups`, `--save-extensions`, `--save-brewfile` and `--diagnose`. Files it would overwrite go to `~/.dotfiles-backup-<timestamp>` first.
+`./install.sh` stows everything and takes `--unstow <pkg>`, `--restore`, `--list-backups`, `--save-extensions`, `--save-brewfile`, `--save-mcp` and `--diagnose`. Files it would overwrite go to `~/.dotfiles-backup-<timestamp>` first.
 
 ## Traps
 
