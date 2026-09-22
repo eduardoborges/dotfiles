@@ -9,6 +9,7 @@ tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
 tap "floci-io/floci"
 tap "franzos/tap", trusted: true
+tap "letstri/tap"
 tap "lightpanda-io/browser"
 tap "modem-dev/tap"
 tap "tamtom/tap"
@@ -106,6 +107,8 @@ brew "ddev/ddev/ddev", trusted: true
 brew "felixkratz/formulae/borders", trusted: true
 # Official CLI for the Floci local AWS emulator
 brew "floci-io/floci/floci", trusted: true
+# Terminal code editor
+brew "letstri/tap/druk", trusted: true
 # Token Usage CLI for Claude Code, Codex and others
 brew "franzos/tap/tku"
 # Headless browser for AI agents and automation (nightly build)
@@ -122,6 +125,8 @@ cask "android-studio"
 cask "blender"
 # Anthropic's official Claude AI desktop app
 cask "claude"
+# Menu bar status indicator for Claude Code
+cask "claude-status-bar"
 # Free app that makes your Internet safer
 cask "cloudflare-warp"
 # Android device hub with a live, clickable emulator screen
