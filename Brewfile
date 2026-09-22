@@ -1,3 +1,4 @@
+tap "abue-ammar/tinycast", trusted: true
 tap "agavra/tap"
 tap "anomalyco/tap"
 tap "asmvik/formulae"
@@ -107,10 +108,10 @@ brew "ddev/ddev/ddev", trusted: true
 brew "felixkratz/formulae/borders", trusted: true
 # Official CLI for the Floci local AWS emulator
 brew "floci-io/floci/floci", trusted: true
-# Terminal code editor
-brew "letstri/tap/druk", trusted: true
 # Token Usage CLI for Claude Code, Codex and others
 brew "franzos/tap/tku"
+# Terminal code editor
+brew "letstri/tap/druk", trusted: true
 # Headless browser for AI agents and automation (nightly build)
 brew "lightpanda-io/browser/lightpanda", trusted: true
 # Desktop-inspired terminal diff viewer for agent-authored changesets
@@ -155,6 +156,8 @@ cask "stats"
 cask "tailscale-app"
 # Messaging app with a focus on speed and security
 cask "telegram"
+# Tiny, fully native launcher, hotkeys, and clipboard history
+cask "abue-ammar/tinycast/tinycast"
 # Open-source code editor
 cask "visual-studio-code"
 # Native desktop client for WhatsApp
