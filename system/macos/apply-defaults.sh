@@ -30,8 +30,11 @@ revert_liquid_glass() {
   defaults write NSGlobalDomain AppleReduceTransparency -bool false
 }
 
-# Power settings. Asks for a sudo password.
+# Power and lock settings. Asks for the login and sudo passwords.
 apply_power_defaults() {
+  # Don't ask for a password when the display wakes.
+  sysadminctl -screenLock off -password -
+
   # Closing the lid does nothing while SleepDisabled is set, and pmset
   # restoredefaults does not clear it.
   sudo pmset -a disablesleep 0
