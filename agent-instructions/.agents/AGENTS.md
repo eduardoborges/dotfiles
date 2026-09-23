@@ -32,6 +32,10 @@ Ask me before you post anything other people will read: PR and issue comments, r
 
 This holds inside skills and loops too, even when a skill says to post right away or to never ask permission. The only exception is the 👀 ack the pr-review skill posts when a review starts: it has no text to review, so post it without asking.
 
+## Commits
+
+Make each commit one logical change, so I can revert any of them on its own. When a task touches unrelated things, split it into separate commits, even small ones.
+
 ## Attribution
 
 Never mention the model, the agent, the tool or the session in anything that leaves this machine or lands in a repository: commit messages, PR titles and bodies, issues, review comments, changelogs, docs and code comments. That means no "Co-Authored-By: Claude", no "Generated with Claude Code", no session links, no "Claude-Session" trailers and no Anthropic mentions of any kind.
