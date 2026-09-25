@@ -19,7 +19,7 @@ Do this for each scope in play (both by default).
 
 The journal is the notes in `<Escopo>/Diario/` within the period. They hold the session lines (`▶` for a start, `■` for commits) and the tagged entries from `/diario`.
 
-Git is the ground truth for what got done. `Trabalho` means every repo under `~/Projects/wc` and `Pessoal` every other repo under `~/Projects`. Per repo, run `git log --all --no-merges --since=<start> --author="$(git config user.email)" --format='%h %ad %s' --date=short` and skip the ones with no commits.
+Git is the ground truth for what got done. `Trabalho` means every repo under `~/Projects/wc` and `Pessoal` every other repo under `~/Projects`. Per repo, run `git log --all --no-merges --since="<start> 00:00" --author="$(git config user.email)" --format='%h %ad %s' --date=short` and skip the ones with no commits.
 
 Evidence is the `![[...]]` embeds in the period's journal notes. The files live in `<Escopo>/Evidencias/`.
 

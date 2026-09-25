@@ -15,7 +15,7 @@ It starts at the date of the latest `Trabalho/Relatorios/retro-*.md` and ends to
 
 ## 2. Gather, in parallel
 
-- Git is the source of truth. For each repo under `~/Projects/wc`, run `git log --all --no-merges --since=<start> --author="$(git config user.email)" --format='%h %ad %D %s%n%b' --date=short`. Ticket keys (PUB-123) show up in the messages and branch names.
+- Git is the source of truth. For each repo under `~/Projects/wc`, run `git log --all --no-merges --since="<start> 00:00" --author="$(git config user.email)" --format='%h %ad %D %s%n%b' --date=short`. Ticket keys (PUB-123) show up in the messages and branch names.
 - Jira (Atlassian MCP): `assignee = currentUser() AND status CHANGED AFTER "<start>"`. Summary, status and resolution only.
 - PRs merged or opened in the period, through `bkt` for the Bitbucket repos and `gh` for the GitHub ones. Title and state.
 - The journal notes in `Trabalho/Diario/` for the period. Their #decisao and #resultado entries explain the why.
