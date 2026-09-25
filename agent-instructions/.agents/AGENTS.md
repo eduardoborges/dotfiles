@@ -42,7 +42,7 @@ I keep a work journal in an Obsidian vault at `~/Library/Mobile Documents/iCloud
 
 A daily note has two sections. `## Tarefas` is a checklist of what I'm working on, and open items carry over to the next day. `## Registro` is the log: a hook writes a line when a session starts (project, ticket, branch) and lists the commits when it ends, and the `diario` skill adds tagged entries (`#decisao`, `#resultado`, `#importante`, `#bloqueio`).
 
-Keep it current without being asked. When a task starts or finishes, or a session produces a decision, a result (a PR merged, a fix verified, tests going green) or a blocker, run the `diario` skill right then. Don't wait for the end of the session, because you can't tell when it ends. If nothing happened that I'd want to reread in a month, log nothing.
+Keep it current without being asked. When a task starts or finishes, or a session produces a decision, a result (a PR merged, a fix verified, tests going green) or a blocker, run the `diario` skill right then. Don't wait for the end of the session, because you can't tell when it ends. If nothing happened that I'd want to reread in a month, log nothing. When a task produces evidence (a screenshot, a screen recording), save it with the `diario` skill as well, because reports and retro slides pull from it.
 
 Read it when you need context: what I did yesterday, why something was decided, where a ticket stopped. The `relatorio` skill builds daily, weekly and monthly reports. The `retro` skill prepares the team retro, held every two weeks and usually on a Tuesday, and it covers work only.
 
