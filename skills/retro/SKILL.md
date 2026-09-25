@@ -49,3 +49,13 @@ Embed each deliverable's evidence under it.
 
 Show it in the chat. The user presents it, so never post it anywhere.
 
+## 5. Slides
+
+When I ask for slides, build them in Open Design. The app has to be running.
+
+1. Follow the `simple-deck` template in `/Applications/Open Design.app/Contents/Resources/open-design/design-templates/simple-deck/`: read its `SKILL.md`, start from `assets/template.html` and pick layouts from `references/layouts.md`. Write the slides in English, since the team works in English, and run the copy through the humanizer.
+2. A feature with evidence gets its own slide, with an `<img>` or `<video controls>` where the layout has a `.ph-img` placeholder.
+3. Find the daemon with `lsof -nP -iTCP -sTCP:LISTEN -a -p "$(pgrep -f daemon-sidecar.mjs)"`. The port changes every time the app starts.
+4. Create the project with a POST to `<daemon>/api/projects` and the body `{"id":"retro-<today>","name":"Retro · <period>","skillId":"simple-deck","skipDiscoveryBrief":true}`.
+5. Upload the deck with `node "/Applications/Open Design.app/Contents/Resources/app/prebundled/daemon/daemon-cli.mjs" artifacts create --name index.html --input <file> --project retro-<today> --daemon-url <daemon>`. The CLI rejects images because it wants a manifest, so copy the evidence files straight into `~/Library/Application Support/Open Design/namespaces/release-stable/data/projects/retro-<today>/assets/` and reference them as `assets/<file>`.
+6. Screenshot a few slides with headless Chrome before you tell me the deck is ready.
