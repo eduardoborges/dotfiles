@@ -7,10 +7,18 @@
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/.claude/luvus-agent-hook.sh"
+          }
+        ]
+      },
       {
         "hooks": [
           {
@@ -74,7 +82,15 @@
     ],
     "SessionStart": [
       {
-        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/.claude/luvus-agent-hook.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
         "hooks": [
           {
             "type": "command",
@@ -93,6 +109,14 @@
       }
     ],
     "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/.claude/luvus-agent-hook.sh"
+          }
+        ]
+      },
       {
         "hooks": [
           {
@@ -122,20 +146,26 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true,
-    "ponytail@ponytail": true,
-    "swift-lsp@claude-plugins-official": true,
-    "atlassian@claude-plugins-official": true,
-    "cloudflare@cloudflare": true,
-    "herdr-claude-title-hook@herdr-claude-title-hook": true,
     "1password@1password": true,
-    "code-review@claude-code-plugins": true
+    "atlassian@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true,
+    "cloudflare@cloudflare": true,
+    "code-review@claude-code-plugins": true,
+    "herdr-claude-title-hook@herdr-claude-title-hook": true,
+    "ponytail@ponytail": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "ponytail": {
+    "1password": {
       "source": {
         "source": "github",
-        "repo": "DietrichGebert/ponytail"
+        "repo": "1Password/1password-claude-plugin"
+      }
+    },
+    "claude-code-plugins": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/claude-code.git"
       }
     },
     "cloudflare": {
@@ -150,37 +180,40 @@
         "repo": "eduardoborges/herdr-claude-title-hook"
       }
     },
-    "1password": {
+    "ponytail": {
       "source": {
         "source": "github",
-        "repo": "1Password/1password-claude-plugin"
-      }
-    },
-    "claude-code-plugins": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/anthropics/claude-code.git"
+        "repo": "DietrichGebert/ponytail"
       }
     }
   },
+  "language": "Portuguese",
   "effortLevel": "xhigh",
   "modelSettings": {
-    "claude-opus-5": {
+    "claude-fable-5": {
       "effortLevel": "xhigh"
+    },
+    "claude-opus-5": {
+      "effortLevel": "medium"
     },
     "claude-sonnet-5": {
       "effortLevel": "high"
     },
-    "claude-fable-5": {
-      "effortLevel": "xhigh"
+    "claude-opus-5-5": {
+      "effortLevel": "high"
     }
   },
   "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "skipDangerousModePermissionPrompt": true,
   "theme": "custom:draculinho",
   "editorMode": "normal",
   "verbose": false,
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
 }
