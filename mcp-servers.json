@@ -1,11 +1,8 @@
 {
   "chrome-devtools": {
     "type": "stdio",
-    "command": "npx",
-    "args": [
-      "-y",
-      "chrome-devtools-mcp@latest"
-    ],
+    "command": "~/.config/yabai/test-chrome-mcp.sh",
+    "args": [],
     "env": {}
   },
   "figwright": {
