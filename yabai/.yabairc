@@ -66,6 +66,11 @@ yabai -m signal --add label=ghostty_destroyed app="^Ghostty$" event=window_destr
 # destroyed; fall back to the last focused window, then mouse, then any window.
 yabai -m signal --add label=focus_on_destroy event=window_destroyed action='yabai -m query --windows --window >/dev/null 2>&1 || yabai -m window --focus recent || yabai -m window --focus mouse || yabai -m window --focus "$(yabai -m query --windows --space | jq -r ".[0].id // empty")"'
 
+# The chrome-devtools MCP browser used by test agents lives on ws-7. The
+# personal Chrome has the same app name, so the script checks the profile of
+# the owning process before moving the window.
+yabai -m signal --add label=test_chrome_ws7 app="^Google Chrome$" event=window_created action="$HOME/.config/yabai/test-chrome-space.sh"
+
 # Stable labels keep numeric shortcuts working when native-fullscreen Spaces
 # change the global Space indexes.
 yabai -m signal --add event=space_created action="$HOME/.config/yabai/label-spaces.sh"
