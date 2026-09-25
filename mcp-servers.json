@@ -40,5 +40,9 @@
       "DOKPLOY_CUSTOM_HEADERS": "${DOKPLOY_CUSTOM_HEADERS}",
       "DOKPLOY_TOOL_PRESET": "core"
     }
+  },
+  "notion": {
+    "type": "http",
+    "url": "https://mcp.notion.com/mcp"
   }
 }
