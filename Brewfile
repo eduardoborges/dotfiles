@@ -144,6 +144,8 @@ cask "anomalyco/tap/hex", trusted: true
 cask "kitlangton-hex"
 # Calendar for professionals and teams
 cask "notion-calendar"
+# Local-first, agent-native design tool
+cask "open-design"
 # Replacement for Docker Desktop
 cask "orbstack"
 # Team communication and collaboration software
