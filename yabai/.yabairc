@@ -2,8 +2,8 @@
 
 # BSP tiling with yabai's scripting addition.
 
-yabai -m signal --add event=dock_did_restart action="sudo -n yabai --load-sa"
-sudo -n yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo -n $HOME/.local/libexec/yabai --load-sa"
+sudo -n $HOME/.local/libexec/yabai --load-sa
 
 yabai -m config layout                       bsp
 yabai -m config split_ratio                  0.50
