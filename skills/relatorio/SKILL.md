@@ -21,6 +21,8 @@ The journal is the notes in `<Escopo>/Diario/` within the period. They hold the 
 
 Git is the ground truth for what got done. `Trabalho` means every repo under `~/Projects/wc` and `Pessoal` every other repo under `~/Projects`. Per repo, run `git log --all --no-merges --since=<start> --author="$(git config user.email)" --format='%h %ad %s' --date=short` and skip the ones with no commits.
 
+Evidence is the `![[...]]` embeds in the period's journal notes. The files live in `<Escopo>/Evidencias/`.
+
 The journal only has what someone logged. If git shows work the journal never mentions, report it anyway.
 
 ## 3. Write
@@ -43,4 +45,4 @@ The #importante and #bloqueio entries that still matter.
 Commits per project, tickets touched.
 ```
 
-For `dia`, drop the empty sections. Show the report in the chat as well.
+Put each deliverable's evidence right under it, reusing the same embeds. For `dia`, drop the empty sections. Show the report in the chat as well.

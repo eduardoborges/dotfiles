@@ -19,6 +19,7 @@ It starts at the date of the latest `Trabalho/Relatorios/retro-*.md` and ends to
 - Jira (Atlassian MCP): `assignee = currentUser() AND status CHANGED AFTER "<start>"`. Summary, status and resolution only.
 - PRs merged or opened in the period, through `bkt` for the Bitbucket repos and `gh` for the GitHub ones. Title and state.
 - The journal notes in `Trabalho/Diario/` for the period. Their #decisao and #resultado entries explain the why.
+- Evidence: the files in `Trabalho/Evidencias/<TICKET>/` for each ticket in the period, and the embeds in the journal.
 
 If a source is not connected, skip it without comment. Git alone is enough.
 
@@ -44,4 +45,7 @@ What it does and why it matters.
 ## Bloqueios e pontos pra discutir
 ```
 
+Embed each deliverable's evidence under it.
+
 Show it in the chat. The user presents it, so never post it anywhere.
+

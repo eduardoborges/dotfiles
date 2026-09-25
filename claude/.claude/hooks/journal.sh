@@ -54,7 +54,7 @@ case ${1:-} in
   ctx)
     context "${2:-$PWD}"
     notes
-    printf 'escopo=%s\nprojeto=%s\nticket=%s\nbranch=%s\nrepo=%s\nnota=%s\n' "$scope" "$project" "$ticket" "$branch" "$root" "$note"
+    printf 'escopo=%s\nprojeto=%s\nticket=%s\nbranch=%s\nrepo=%s\nnota=%s\nevidencias=%s\n' "$scope" "$project" "$ticket" "$branch" "$root" "$note" "$VAULT/$scope/Evidencias/${ticket:-$project}"
     ;;
   start | end)
     IFS=$'\t' read -r cwd sid < <(jq -r '[.cwd, .session_id] | @tsv')
