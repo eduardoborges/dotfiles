@@ -36,6 +36,16 @@ This holds inside skills and loops too, even when a skill says to post right awa
 
 Make each commit one logical change, so I can revert any of them on its own. When a task touches unrelated things, split it into separate commits, even small ones.
 
+## Journal
+
+I keep a work journal in an Obsidian vault at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas`. Work and personal never mix there. Anything from a repo under `~/Projects/wc` goes in `Trabalho/`, everything else in `Pessoal/`, and each side has `Diario/` (one note per day), `Projetos/`, `Tickets/` and `Relatorios/`.
+
+A daily note has two sections. `## Tarefas` is a checklist of what I'm working on, and open items carry over to the next day. `## Registro` is the log: a hook writes a line when a session starts (project, ticket, branch) and lists the commits when it ends, and the `diario` skill adds tagged entries (`#decisao`, `#resultado`, `#importante`, `#bloqueio`).
+
+Keep it current without being asked. When a task starts or finishes, or a session produces a decision, a result (a PR merged, a fix verified, tests going green) or a blocker, run the `diario` skill right then. Don't wait for the end of the session, because you can't tell when it ends. If nothing happened that I'd want to reread in a month, log nothing.
+
+Read it when you need context: what I did yesterday, why something was decided, where a ticket stopped. The `relatorio` skill builds daily, weekly and monthly reports. The `retro` skill prepares the team retro, held every two weeks and usually on a Tuesday, and it covers work only.
+
 ## Attribution
 
 Never mention the model, the agent, the tool or the session in anything that leaves this machine or lands in a repository: commit messages, PR titles and bodies, issues, review comments, changelogs, docs and code comments. That means no "Co-Authored-By: Claude", no "Generated with Claude Code", no session links, no "Claude-Session" trailers and no Anthropic mentions of any kind.
