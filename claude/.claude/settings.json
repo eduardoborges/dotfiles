@@ -78,6 +78,15 @@
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/lifecycle.js' end"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' end",
+            "timeout": 15
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -104,6 +113,16 @@
           {
             "type": "command",
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/lifecycle.js' start"
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' start",
+            "timeout": 15
           }
         ]
       }
