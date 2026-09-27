@@ -25,6 +25,11 @@ seven_day_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // emp
 effort=$(echo "$input" | jq -r '.effort.level // empty')
 session_id=$(echo "$input" | jq -r '.session_id // empty')
 
+# abtop reads rate limits from this file; `abtop --setup` would want the statusLine slot for itself
+[ -n "$five_hour_pct$seven_day_pct" ] && echo "$input" | jq -c '{source: "claude", updated_at: (now | floor)}
+  + (.rate_limits | {five_hour, seven_day} | with_entries(select(.value)) | map_values({used_percentage, resets_at}))' \
+  > "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/abtop-rate-limits.json"
+
 # Path relative to home
 home="${HOME:-/home/$(id -un)}"
 if [ "$cwd" = "$home" ]; then
