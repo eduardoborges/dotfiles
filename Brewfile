@@ -10,6 +10,7 @@ tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
 tap "floci-io/floci"
 tap "franzos/tap", trusted: true
+tap "graykode/tap"
 tap "letstri/tap"
 tap "lightpanda-io/browser"
 tap "modem-dev/tap"
@@ -110,6 +111,8 @@ brew "felixkratz/formulae/borders", trusted: true
 brew "floci-io/floci/floci", trusted: true
 # Token Usage CLI for Claude Code, Codex and others
 brew "franzos/tap/tku"
+# Like htop, but for AI coding agents
+brew "graykode/tap/abtop"
 # Terminal code editor
 brew "letstri/tap/druk", trusted: true
 # Headless browser for AI agents and automation (nightly build)
