@@ -49,7 +49,7 @@ show_agent_labels_on_pane_borders = true
 
 status_indicators = "symbols"
 [ui.sound]
-enabled = true
+enabled = false
 
 [ui.toast]
 delivery = "terminal"
