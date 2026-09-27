@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Give normal macOS Spaces stable labels without touching native-fullscreen
-# Spaces. Existing labels are preserved; new Spaces receive the first free
-# ws-N label.
+# Label the Nth normal Space ws-N, the same position the number shortcuts use.
+# Native-fullscreen Spaces are skipped and lose any label they picked up.
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
@@ -21,27 +20,25 @@ for _attempt in {1..30}; do
 done
 
 [[ -n "$spaces" ]] || exit 1
-used_labels="$(
-  jq -r '.[] | select(."is-native-fullscreen" == false) | .label' <<<"$spaces" |
-    grep -E '^ws-[1-9]$' || true
-)"
 
-while IFS= read -r space_index; do
-  [[ -n "$space_index" ]] || continue
+# index, current label, wanted label. Fullscreen Spaces want no label.
+plan="$(jq -r '
+  [.[] | select(."is-native-fullscreen" == false)] as $normal
+  | .[]
+  | . as $s
+  | ($normal | map(.index) | index($s.index)) as $pos
+  | [.index, .label, (if $pos == null then "" else "ws-\($pos + 1)" end)]
+  | join("|")
+' <<<"$spaces")"
 
-  for number in {1..9}; do
-    label="ws-$number"
-    if ! grep -qx "$label" <<<"$used_labels"; then
-      if yabai -m space "$space_index" --label "$label" 2>/dev/null; then
-        used_labels="${used_labels}${used_labels:+$'\n'}${label}"
-      fi
-      break
-    fi
-  done
-done < <(
-  jq -r '
-    .[]
-    | select(."is-native-fullscreen" == false and .label == "")
-    | .index
-  ' <<<"$spaces"
-)
+# Clear wrong labels before setting any, so two Spaces never share one.
+while IFS='|' read -r index label want; do
+  if [[ -n "$label" && "$label" != "$want" ]]; then
+    yabai -m space "$index" --label "" 2>/dev/null || true
+  fi
+done <<<"$plan"
+while IFS='|' read -r index label want; do
+  if [[ -n "$want" && "$label" != "$want" ]]; then
+    yabai -m space "$index" --label "$want" 2>/dev/null || true
+  fi
+done <<<"$plan"
