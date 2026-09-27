@@ -109,5 +109,6 @@
     "longitude": -122.4324,
     "isDisabled": true
   },
-  "RadonIDE.userInterface.panelLocation": "side-panel"
+  "RadonIDE.userInterface.panelLocation": "side-panel",
+  "claudeCode.hideOnboarding": true
 }
