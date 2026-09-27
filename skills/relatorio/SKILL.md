@@ -7,7 +7,7 @@ description: Daily, weekly or monthly report built from the Obsidian journal and
 
 Argument: `dia` (default), `semana` or `mes`, optionally followed by `trabalho` or `pessoal` to limit the scope. Talk and write in pt-BR.
 
-Vault: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas`.
+Vault: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas`. The scope folders are `💼 Trabalho` and `🏠 Pessoal`.
 
 ## 1. Period
 
@@ -17,17 +17,17 @@ Vault: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas`.
 
 Do this for each scope in play (both by default).
 
-The journal is the notes in `<Escopo>/Diario/` within the period. They hold the session lines (`▶` for a start, `■` for commits) and the tagged entries from `/diario`.
+The journal is the notes in `<scope folder>/📓 Diario/` within the period. Their frontmatter lists the day's projects and tickets, `## Registro` holds the labeled entries from `/diario` grouped by project, and `## Commits` lists the commits.
 
 Git is the ground truth for what got done. `Trabalho` means every repo under `~/Projects/wc` and `Pessoal` every other repo under `~/Projects`. Per repo, run `git log --all --no-merges --since="<start> 00:00" --author="$(git config user.email)" --format='%h %ad %s' --date=short` and skip the ones with no commits.
 
-Evidence is the `![[...]]` embeds in the period's journal notes. The files live in `<Escopo>/Evidencias/`.
+Evidence is the `![[...]]` embeds in the period's journal notes. The files live in `<scope folder>/📸 Evidencias/`.
 
 The journal only has what someone logged. If git shows work the journal never mentions, report it anyway.
 
 ## 3. Write
 
-Save one file per scope to `<Escopo>/Relatorios/<periodo>-<start date>.md`, e.g. `semana-2026-09-21.md`. A file never mixes the two scopes. Frontmatter: `periodo`, `inicio`, `fim`, `escopo`.
+Save one file per scope to `<scope folder>/📊 Relatorios/<periodo>-<start date>.md`, e.g. `semana-2026-09-21.md`. A file never mixes the two scopes. Frontmatter: `periodo`, `inicio`, `fim`, `escopo`.
 
 ```markdown
 # Semana de 21/09 · Trabalho
@@ -36,10 +36,10 @@ Save one file per scope to `<Escopo>/Relatorios/<periodo>-<start date>.md`, e.g.
 Per project, the features and fixes that got done, not a commit list. Link [[projeto]] and [[TICKET]].
 
 ## Decisões
-The #decisao entries and their reasons.
+The **Decisão** entries and their reasons.
 
 ## Importante e bloqueios
-The #importante and #bloqueio entries that still matter.
+The **Importante** and **Bloqueio** entries that still matter.
 
 ## Números
 Commits per project, tickets touched.

@@ -33,33 +33,27 @@ Keep the proof of the work when there is any: screenshots, screen recordings, GI
 Copy each file to `evidencias` as `YYYY-MM-DD-<short-slug>.<ext>`, and never move or delete the original. Embed it under the entry it proves:
 
 ```markdown
-  - #resultado status change blocks the user in Auth0
-    ![[2026-09-25-staff-block-auth0.png]]
+- **Resultado** · status change blocks the user in Auth0
+  ![[2026-09-25-staff-block-auth0.png]]
 ```
 
 A file that no entry points to gets lost, so always tie it to a line.
 
 ## 4. Classify
 
-Keep only what is worth rereading a month from now:
+Keep only what is worth rereading a month from now, under one of four labels:
 
-| Tag | What goes there |
+| Label | What goes there |
 |---|---|
-| `#decisao` | The choice, why, and the alternative you dropped |
-| `#resultado` | Something delivered or confirmed working: PR merged, fix verified, tests green |
-| `#importante` | A fact that will bite later: a trap, a limit, a contact, an environment detail |
-| `#bloqueio` | What is stuck and who it waits on |
+| **Decisão** | The choice, why, and the alternative you dropped |
+| **Resultado** | Something delivered or confirmed working: PR merged, fix verified, tests green |
+| **Importante** | A fact that will bite later: a trap, a limit, a contact, an environment detail |
+| **Bloqueio** | What is stuck and who it waits on |
 
 Leave out the step by step, the commands you ran and anything the commit messages already say. One line per entry.
 
 ## 5. Write
 
-Append the entries to the end of `nota`, under `## Registro`:
+Under `## Registro`, find the heading for the project and ticket, `### [[<projeto>]] · [[<ticket>]]` (just `### [[<projeto>]]` when there is no ticket), and append the entries below it. If it is missing, add it at the end of `## Registro`. `## Commits` stays last; the hook writes it.
 
-```markdown
-- HH:MM [[<projeto>]] [[<ticket>]]
-  - #decisao ...
-  - #resultado ...
-```
-
-Drop `[[<ticket>]]` when there is none. Wrap other tickets and projects that came up in `[[...]]` as well. If no task changed and nothing qualifies, tell the user and write nothing. Otherwise show them what you wrote.
+Each entry is one line: `- **Decisão** · <text>`. Wrap other tickets and projects that came up in `[[...]]` as well. If no task changed and nothing qualifies, tell the user and write nothing. Otherwise show them what you wrote.

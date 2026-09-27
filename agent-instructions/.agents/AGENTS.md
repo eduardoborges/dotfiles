@@ -38,9 +38,9 @@ Make each commit one logical change, so I can revert any of them on its own. Whe
 
 ## Journal
 
-I keep a work journal in an Obsidian vault at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas`. Work and personal never mix there. Anything from a repo under `~/Projects/wc` goes in `Trabalho/`, everything else in `Pessoal/`, and each side has `Diario/` (one note per day), `Projetos/`, `Tickets/` and `Relatorios/`.
+I keep a work journal in an Obsidian vault at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas`. Work and personal never mix there. Anything from a repo under `~/Projects/wc` goes in `💼 Trabalho/`, everything else in `🏠 Pessoal/`, and each side has `📓 Diario/` (one note per day), `📁 Projetos/`, `🎫 Tickets/`, `📊 Relatorios/` and `📸 Evidencias/`.
 
-A daily note has two sections. `## Tarefas` is a checklist of what I'm working on, and open items carry over to the next day. `## Registro` is the log: a hook writes a line when a session starts (project, ticket, branch) and lists the commits when it ends, and the `diario` skill adds tagged entries (`#decisao`, `#resultado`, `#importante`, `#bloqueio`).
+A daily note has a frontmatter and three sections. The frontmatter lists the day's projects and tickets, filled in by a hook when a session starts. `## Tarefas` is a checklist of what I'm working on, and open items carry over to the next day. `## Registro` holds the `diario` skill's entries, grouped by project and labeled **Decisão**, **Resultado**, **Importante** or **Bloqueio**. `## Commits` comes last, and the hook fills it when a session ends.
 
 Keep it current without being asked. When a task starts or finishes, or a session produces a decision, a result (a PR merged, a fix verified, tests going green) or a blocker, run the `diario` skill right then. Don't wait for the end of the session, because you can't tell when it ends. If nothing happened that I'd want to reread in a month, log nothing. When a task produces evidence (a screenshot, a screen recording), save it with the `diario` skill as well, because reports and retro slides pull from it.
 
