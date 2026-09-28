@@ -181,7 +181,8 @@
     "code-review@claude-code-plugins": true,
     "herdr-claude-title-hook@herdr-claude-title-hook": true,
     "ponytail@ponytail": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "claude-animation@claude-animation-skill": true
   },
   "extraKnownMarketplaces": {
     "1password": {
@@ -212,6 +213,12 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "claude-animation-skill": {
+      "source": {
+        "source": "github",
+        "repo": "buildwithhanif/claude-animation-skill"
       }
     }
   },
