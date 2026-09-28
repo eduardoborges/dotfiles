@@ -127,8 +127,6 @@ cask "1password"
 cask "android-studio"
 # 3D creation suite
 cask "blender"
-# OpenAI's official ChatGPT desktop app
-cask "chatgpt"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Menu bar status indicator for Claude Code
