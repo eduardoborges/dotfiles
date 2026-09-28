@@ -63,8 +63,6 @@ brew "mise"
 brew "mole"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
-# AI coding agent, built for the terminal
-brew "opencode"
 # Development kit for the Java programming language
 brew "openjdk"
 # Spec-driven development (SDD) for AI coding assistants
@@ -177,7 +175,5 @@ mas "Numbers", id: 409203825
 mas "Xcode", id: 497799835
 uv "browser-use"
 npm "@earendil-works/pi-coding-agent"
-npm "@opencode-ai/cli"
 npm "agent-device"
 npm "goldie"
-npm "opencode-with-claude"

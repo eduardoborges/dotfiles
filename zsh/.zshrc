@@ -158,8 +158,5 @@ esac
 
 export PATH=$PATH:$HOME/.maestro/bin
 
-# opencode
-export PATH=/Users/eduardo/.opencode/bin:$PATH
-
 # Added by cua-driver-rs installer — see https://github.com/trycua/cua
 export PATH="/Users/eduardo/.local/bin:$PATH"
