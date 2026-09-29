@@ -80,6 +80,14 @@ alias ll="ls -l"
 alias la="ls -A"
 
 alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work claude"
+# Inside ~/Projects/wc, claude runs on the work account unless CLAUDE_CONFIG_DIR is already set.
+claude() {
+  if [[ -z $CLAUDE_CONFIG_DIR && $PWD == $HOME/Projects/wc(|/*) ]]; then
+    CLAUDE_CONFIG_DIR=$HOME/.claude-work command claude "$@"
+  else
+    command claude "$@"
+  fi
+}
 
 # herdr-automatic-rename: renomeia a aba assim que um comando inicia
 for _f in ${HOME}/.config/herdr/plugins/github/herdr-automatic-rename-*/shell/hook.zsh(N); do
