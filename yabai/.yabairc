@@ -54,6 +54,8 @@ yabai -m rule --add app="^Finder$" title="^(Copy|Copying|Move|Moving|Delete|Dele
 yabai -m rule --add app="^Google Chrome$" title="^(Settings|Downloads)$" manage=off
 yabai -m rule --add app="^Spotify$" title="^(Settings|Preferences)$" manage=off
 yabai -m rule --add app="^1Password$" title="^(Quick Access|Preferences)$" manage=off sub-layer=above
+# Tile only Zoom's main and meeting windows; its toolbars and popups float.
+yabai -m rule --add app="^zoom.us$" title!="^(Zoom|Zoom Workplace|Zoom Meeting)$" manage=off
 
 # Restore BSP after native Ghostty tabs appear as macOS window events.
 # Only re-apply when the space actually left bsp: re-setting the layout on an
