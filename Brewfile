@@ -6,7 +6,6 @@ tap "ddev/ddev"
 tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
 tap "floci-io/floci"
-tap "franzos/tap", trusted: true
 tap "graykode/tap"
 tap "letstri/tap"
 tap "lightpanda-io/browser"
@@ -98,8 +97,6 @@ brew "ddev/ddev/ddev", trusted: true
 brew "felixkratz/formulae/borders", trusted: true
 # Official CLI for the Floci local AWS emulator
 brew "floci-io/floci/floci", trusted: true
-# Token Usage CLI for Claude Code, Codex and others
-brew "franzos/tap/tku"
 # Like htop, but for AI coding agents
 brew "graykode/tap/abtop"
 # Terminal code editor
