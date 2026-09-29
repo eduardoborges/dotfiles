@@ -61,6 +61,12 @@ alias gpl="git pull"
 alias gpu="git push"
 alias gbr="git branch"
 alias gcl="git clone"
+# With no args, shows this branch's changes against the base branch. With args, runs the regular diff.
+diff() {
+  (( $# )) && { command diff "$@"; return; }
+  local base=$(git symbolic-ref -q --short refs/remotes/origin/HEAD || echo main)
+  git diff "$(git merge-base "$base" HEAD)"
+}
 
 alias coffee="caffeinate -s"
 
