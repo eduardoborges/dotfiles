@@ -4,7 +4,6 @@ tap "anomalyco/tap"
 tap "asmvik/formulae"
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
-tap "can1357/tap"
 tap "ddev/ddev"
 tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
@@ -99,8 +98,6 @@ brew "asmvik/formulae/yabai", trusted: true
 brew "avivsinai/tap/bitbucket-cli", trusted: true
 # A retro terminal music player inspired by Winamp 2.x
 brew "bjarneo/cliamp/cliamp", trusted: true
-# Coding agent with the IDE wired in
-brew "can1357/tap/omp", trusted: true
 # DDEV
 brew "ddev/ddev/ddev", trusted: true
 # A window border system for macOS
