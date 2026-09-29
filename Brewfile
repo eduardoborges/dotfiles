@@ -149,7 +149,6 @@ cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "Amphetamine", id: 937984704
-mas "Numbers", id: 409203825
 mas "Xcode", id: 497799835
 uv "browser-use"
 npm "agent-device"
