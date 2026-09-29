@@ -11,7 +11,7 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 | `<package>/` | One stow package per tool, mirroring its path under `$HOME`, as in `ghostty/.config/ghostty/config` |
 | `lib/packages.sh` | The list of packages `install.sh` stows |
 | `docs/` | Ghostty, herdr and the macOS window manager setup, including who owns which shortcut |
-| `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` and `~/.agents/skills` |
+| `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` |
 | `skills-lock.json` | The skills that come from someone else's repo |
 | `mcp-servers.json` | The user-scoped MCP servers, merged into `~/.claude.json` by `lib/mcp.sh` |
 
@@ -26,7 +26,7 @@ There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.js
 | `mcollina/skills` | documentation, fastify-best-practices, init, linting-neostandard-eslint9, node, nodejs-core, oauth, octocat, skill-optimizer, snipgrapher, typescript-magician |
 | `rorkai/app-store-connect-cli-skills` | asc-* (25 skills) |
 
-Update one of those with `npx skills add mcollina/skills@<skill> -g -y`. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours.
+Update one of those with `npx skills add mcollina/skills@<skill> -g -a claude-code --copy -y`. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours.
 
 Claude Code rewrites `claude/.claude/settings.json` on its own, and that write sometimes replaces the symlink with a plain file. When the repo copy falls behind: copy the live file over the repo one, delete `~/.claude/settings.json`, then stow the `claude` package again.
 

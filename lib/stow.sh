@@ -89,11 +89,11 @@ run_unstow() {
   ok "$pkg has been unstowed."
 }
 
-# skills/ is not a stow package: it is linked wholesale into each agent's dir
+# skills/ is not a stow package: it is linked wholesale into ~/.claude/skills
 link_skills() {
   section "Linking agent skills"
   local target
-  for target in "$HOME/.claude/skills" "$HOME/.agents/skills"; do
+  for target in "$HOME/.claude/skills"; do
     mkdir -p "$(dirname "$target")"
     if [[ -e "$target" && ! -L "$target" ]]; then
       warn "skipping $target (exists and is not a symlink)"
