@@ -114,8 +114,6 @@ cask "blender"
 cask "claude"
 # Menu bar status indicator for Claude Code
 cask "claude-status-bar"
-# Free app that makes your Internet safer
-cask "cloudflare-warp"
 # Android device hub with a live, clickable emulator screen
 cask "eduardoborges/tap/droidhub"
 # Collaborative team software
