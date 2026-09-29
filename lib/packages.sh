@@ -16,7 +16,6 @@ PACKAGES=(
   herdr
   skhd
   starship
-  tmux
   vscode
   yabai
   zed

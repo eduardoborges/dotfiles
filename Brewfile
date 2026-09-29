@@ -74,8 +74,6 @@ brew "starship"
 brew "stow"
 # Netcat-like tool over Tailscale's data plane, without its control plane
 brew "tailcat"
-# Terminal multiplexer
-brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust

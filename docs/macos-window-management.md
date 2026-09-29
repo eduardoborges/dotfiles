@@ -11,7 +11,6 @@ focused window.
 | Shortcut | Action |
 | --- | --- |
 | `Option + Return` | Open a new Ghostty instance |
-| `Option + Command + Return` | Open Ghostty with tmux when available |
 | `Option + Shift + Return` | Open Ghostty running herdr |
 | `Option + Shift + B` | Open or focus Google Chrome |
 | `Option + Shift + Command + B` | Open an incognito Chrome window |

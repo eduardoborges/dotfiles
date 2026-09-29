@@ -1,6 +1,6 @@
 # Dotfiles
 
-My daily configs for zsh, starship, yabai, skhd, JankyBorders, Alacritty, Ghostty, herdr, tmux, VS Code, and agent skills.
+My daily configs for zsh, starship, yabai, skhd, JankyBorders, Alacritty, Ghostty, herdr, VS Code, and agent skills.
 
 **macOS only.** `yabai` and `skhd` handle tiling and hotkeys, and the Brewfile tracks everything installed through Homebrew.
 
