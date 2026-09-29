@@ -1,5 +1,4 @@
 tap "abue-ammar/tinycast", trusted: true
-tap "agavra/tap"
 tap "asmvik/formulae"
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
@@ -85,8 +84,6 @@ brew "tree"
 brew "uv"
 # Next-generation plugin manager for zsh
 brew "zplug"
-# Terminal UI for Code Reviews - review AI-generated diffs like a GitHub PR
-brew "agavra/tap/tuicr", trusted: true
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd", trusted: true
 # A tiling window manager for macOS based on binary space partitioning.
