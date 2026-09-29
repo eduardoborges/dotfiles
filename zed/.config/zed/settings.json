@@ -8,8 +8,7 @@
     "model_parameters": []
   },
   "edit_predictions": {
-    "mode": "eager",
-    "provider": "copilot"
+    "provider": "none"
   },
   "icon_theme": "Material Icon Theme",
   "theme": {
