@@ -41,5 +41,12 @@
   "notion": {
     "type": "http",
     "url": "https://mcp.notion.com/mcp"
+  },
+  "taby": {
+    "type": "http",
+    "url": "http://127.0.0.1:43127/mcp",
+    "headers": {
+      "Authorization": "Bearer ${TABY_MCP_TOKEN}"
+    }
   }
 }
