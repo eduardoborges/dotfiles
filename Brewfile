@@ -171,6 +171,5 @@ mas "Keka", id: 470158793
 mas "Numbers", id: 409203825
 mas "Xcode", id: 497799835
 uv "browser-use"
-npm "@earendil-works/pi-coding-agent"
 npm "agent-device"
 npm "goldie"
