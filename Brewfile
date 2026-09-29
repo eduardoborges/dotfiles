@@ -1,6 +1,6 @@
 tap "abue-ammar/tinycast", trusted: true
 tap "anomalyco/tap"
-tap "asmvik/formulae"
+tap "asmvik/formulae", trusted: { formulae: ["yabai"] }
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
 tap "ddev/ddev"
@@ -23,6 +23,10 @@ brew "bat"
 brew "blueutil"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
+# Development kit for the Java programming language
+brew "openjdk"
+# Command-line tool to manipulate Android App Bundles
+brew "bundletool"
 # Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
 brew "clang-format"
 # CLI tool for Cloudflare Workers
@@ -43,6 +47,8 @@ brew "gh"
 brew "herdr"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
+# Modern load testing tool, using Go and JavaScript
+brew "k6"
 # Lazier way to manage everything docker
 brew "lazydocker"
 # Simple terminal UI for git commands
@@ -57,16 +63,14 @@ brew "mas"
 brew "mise"
 # Deep clean and optimize your Mac
 brew "mole"
-# Search tool like grep and The Silver Searcher
-brew "ripgrep"
-# Development kit for the Java programming language
-brew "openjdk"
 # Spec-driven development (SDD) for AI coding assistants
 brew "openspec"
 # Your Gateway to Embedded Software Development Excellence
 brew "platformio"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # CLI proxy to minimize LLM token consumption
 brew "rtk"
 # Rust toolchain installer
@@ -85,20 +89,20 @@ brew "uv"
 brew "zplug"
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd", trusted: true
-# A tiling window manager for macOS based on binary space partitioning.
-brew "asmvik/formulae/yabai", trusted: true
 # CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal
 brew "avivsinai/tap/bitbucket-cli", trusted: true
 # A retro terminal music player inspired by Winamp 2.x
 brew "bjarneo/cliamp/cliamp", trusted: true
 # DDEV
 brew "ddev/ddev/ddev", trusted: true
+# Tiling window manager for macOS based on binary space partitioning
+brew "eduardoborges/tap/yabai", trusted: true
 # A window border system for macOS
 brew "felixkratz/formulae/borders", trusted: true
 # Official CLI for the Floci local AWS emulator
 brew "floci-io/floci/floci", trusted: true
-# Like htop, but for AI coding agents
-brew "graykode/tap/abtop"
+# AI agent monitor for your terminal
+brew "graykode/tap/abtop", trusted: true
 # Terminal code editor
 brew "letstri/tap/druk", trusted: true
 # Headless browser for AI agents and automation (nightly build)
@@ -127,6 +131,8 @@ cask "google-chrome"
 cask "anomalyco/tap/hex", trusted: true
 # Calendar for professionals and teams
 cask "notion-calendar"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
 # Local-first, agent-native design tool
 cask "open-design"
 # Replacement for Docker Desktop
