@@ -9,7 +9,6 @@ tap "floci-io/floci"
 tap "graykode/tap"
 tap "letstri/tap"
 tap "lightpanda-io/browser"
-tap "modem-dev/tap"
 tap "tamtom/tap"
 # Static checker for GitHub Actions workflow files
 brew "actionlint"
@@ -103,8 +102,6 @@ brew "graykode/tap/abtop"
 brew "letstri/tap/druk", trusted: true
 # Headless browser for AI agents and automation (nightly build)
 brew "lightpanda-io/browser/lightpanda", trusted: true
-# Desktop-inspired terminal diff viewer for agent-authored changesets
-brew "modem-dev/tap/hunk", trusted: true
 # CLI for Google Play Console - manage Android apps from the terminal
 brew "tamtom/tap/gplay", trusted: true
 # Password manager that keeps all passwords secure behind one password
