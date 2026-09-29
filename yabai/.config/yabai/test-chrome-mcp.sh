@@ -6,8 +6,8 @@ set -uo pipefail
 # This script opens Chrome for Testing through LaunchServices instead, and the
 # ws-7 signal in .yabairc picks up its windows. It is a separate app from the
 # personal Chrome, so clicking Chrome in the Dock never lands on the test
-# profile. The script keeps Chrome running while the MCP is up and points the
-# MCP at it with --browserUrl.
+# profile. The MCP connects to it with --browserUrl. Chrome starts once per MCP
+# launch, and if you quit it, it stays closed.
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
@@ -36,12 +36,7 @@ start_chrome() {
   return 1
 }
 
+# Nothing here may write to stdout, which is the MCP's protocol channel.
 start_chrome </dev/null >>"$LOG" 2>&1
 
-# Reopen Chrome if it dies or gets updated mid-session; the MCP reconnects on its
-# next call. Nothing here may write to stdout, which is the MCP's protocol channel.
-(while sleep 5; do chrome_up || start_chrome; done) </dev/null >>"$LOG" 2>&1 &
-supervisor=$!
-trap 'kill "$supervisor" 2>/dev/null' EXIT
-
-npx -y chrome-devtools-mcp@latest --browserUrl "$URL" "$@"
+exec npx -y chrome-devtools-mcp@latest --browserUrl "$URL" "$@"
