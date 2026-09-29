@@ -39,6 +39,8 @@ brew "duti"
 brew "fastfetch"
 # GitHub command-line tool
 brew "gh"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Lazier way to manage everything docker
