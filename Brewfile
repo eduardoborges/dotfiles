@@ -1,6 +1,5 @@
 tap "abue-ammar/tinycast", trusted: true
 tap "agavra/tap"
-tap "anomalyco/tap"
 tap "asmvik/formulae"
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
@@ -136,10 +135,6 @@ cask "figma"
 cask "ghostty"
 # Web browser
 cask "google-chrome"
-# Local-first voice dictation
-cask "anomalyco/tap/hex", trusted: true
-# Voice-to-text transcription and paste tool
-cask "kitlangton-hex"
 # Calendar for professionals and teams
 cask "notion-calendar"
 # Local-first, agent-native design tool
