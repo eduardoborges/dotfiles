@@ -15,14 +15,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/eduardo/.claude/luvus-agent-hook.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' notify"
           }
         ]
@@ -91,14 +83,6 @@
     ],
     "SessionStart": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/eduardo/.claude/luvus-agent-hook.sh"
-          }
-        ]
-      },
-      {
         "matcher": "^(startup|resume|clear|compact|fork)$",
         "hooks": [
           {
@@ -128,14 +112,6 @@
       }
     ],
     "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/eduardo/.claude/luvus-agent-hook.sh"
-          }
-        ]
-      },
       {
         "hooks": [
           {
