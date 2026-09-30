@@ -217,16 +217,25 @@
   "effortLevel": "xhigh",
   "modelSettings": {
     "claude-fable-5": {
-      "effortLevel": "xhigh"
+      "effortLevel": "high"
     },
     "claude-opus-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
     },
     "claude-sonnet-5": {
-      "effortLevel": "high"
+      "effortLevel": "max"
     },
     "claude-opus-5-5": {
       "effortLevel": "high"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "max"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    },
+    "claude-haiku-4-5": {
+      "effortLevel": "max"
     }
   },
   "tui": "fullscreen",
