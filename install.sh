@@ -26,7 +26,7 @@ usage() {
 Usage: $0 [install]        - install dotfiles (stow), with optional backup
        $0 --restore         - restore a previous set of configs from a backup
        $0 --list-backups    - list backup directories
-       $0 --unstow <pkg>    - unstow a single package (e.g. yabai, alacritty)
+       $0 --unstow <pkg>    - unstow a single package (e.g. yabai, zsh)
        $0 --save-extensions - update extensions/vscode.txt from VS Code
        $0 --save-brewfile   - refresh the Brewfile from installed Homebrew packages
        $0 --save-mcp        - refresh mcp-servers.json from the user-scoped MCP servers
