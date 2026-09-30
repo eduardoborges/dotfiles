@@ -12,6 +12,10 @@ Use the shortest responses possible. Be direct and do not beat around the bush. 
 
 Before adding or upgrading a library, check its latest stable version on the registry (npm view, pip index, brew info, the GitHub releases page) and use that one. Never pin a version from memory, it is stale. The same applies to APIs and CLI flags: confirm against current docs when the version matters.
 
+## Skills
+
+When the task touches Node.js or TypeScript code, load the matching skill before writing: `node` for app code, `nodejs-core` for Node internals, native addons or V8, and `typescript-magician` for types, generics and `any` cleanup.
+
 ## Questions
 
 Do not ask before obvious actions: reading files, running tests, installing a dependency the task needs, formatting, or the small refactors the request implies. Do them.
