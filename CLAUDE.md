@@ -23,7 +23,7 @@ There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.js
 
 | Source | Skills |
 |---|---|
-| `mcollina/skills` | documentation, fastify-best-practices, init, linting-neostandard-eslint9, node, nodejs-core, oauth, octocat, skill-optimizer, snipgrapher, typescript-magician |
+| `mcollina/skills` | init, node, nodejs-core, typescript-magician |
 | `rorkai/app-store-connect-cli-skills` | asc-* (25 skills) |
 | `mattpocock/skills` | code-review, domain-modeling, grill-me, grill-with-docs, grilling |
 
