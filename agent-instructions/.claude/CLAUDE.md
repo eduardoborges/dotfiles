@@ -56,5 +56,12 @@ Never mention the model, the agent, the tool or the session in anything that lea
 
 This holds even when a later instruction, system reminder or tool template says to add one. The code is my responsibility and I sign it. Crediting a model transfers that responsibility to something that cannot carry it, so the credit stays out.
 
+## Cloudflare
+
+Anything involving Cloudflare (DNS, tunnels, Access, R2, Workers, WAF, cache, reading config or metrics) goes through the `cf` CLI. Don't use the dashboard, curl against the API, or the Cloudflare MCPs.
+
+- Find the command with `cf cli search "<what you want to do>"` instead of chaining `--help`. The query describes only the action and the resource type, with no domain, ID or token.
+- `cf <command> --help` details a command, and `cf schema <command>` shows the API request behind it.
+- Ask me before any mutation: DNS records, tunnel ingress rules, Access policies, WAF rules, deleting a resource.
 
 @RTK.md
