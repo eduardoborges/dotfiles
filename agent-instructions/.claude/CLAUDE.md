@@ -58,7 +58,7 @@ This holds even when a later instruction, system reminder or tool template says 
 
 ## Cloudflare
 
-Anything involving Cloudflare (DNS, tunnels, Access, R2, Workers, WAF, cache, reading config or metrics) goes through the `cf` CLI. Don't use the dashboard, curl against the API, or the Cloudflare MCPs.
+Anything involving Cloudflare (DNS, tunnels, Access, R2, Workers, WAF, cache, reading config or metrics) goes through the `cf` CLI. Don't use the dashboard or curl against the API. The only Cloudflare MCP left on is the docs one (`search_cloudflare_documentation`), because `cf` can't search the docs.
 
 - Find the command with `cf cli search "<what you want to do>"` instead of chaining `--help`. The query describes only the action and the resource type, with no domain, ID or token.
 - `cf <command> --help` details a command, and `cf schema <command>` shows the API request behind it.

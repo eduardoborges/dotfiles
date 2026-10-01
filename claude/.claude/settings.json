@@ -5,7 +5,14 @@
     "sessionUrl": false
   },
   "permissions": {
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "bypassPermissions",
+    "deny": [
+      "mcp__plugin_cloudflare_cloudflare-api",
+      "mcp__plugin_cloudflare_cloudflare-bindings",
+      "mcp__plugin_cloudflare_cloudflare-builds",
+      "mcp__plugin_cloudflare_cloudflare-observability",
+      "mcp__claude_ai_Cloudflare_Developer_Platform"
+    ]
   },
   "model": "opus",
   "enableAllProjectMcpServers": true,
