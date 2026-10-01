@@ -5,14 +5,14 @@
     "sessionUrl": false
   },
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "deny": [
       "mcp__plugin_cloudflare_cloudflare-api",
       "mcp__plugin_cloudflare_cloudflare-bindings",
       "mcp__plugin_cloudflare_cloudflare-builds",
       "mcp__plugin_cloudflare_cloudflare-observability",
       "mcp__claude_ai_Cloudflare_Developer_Platform"
-    ]
+    ],
+    "defaultMode": "bypassPermissions"
   },
   "model": "opus",
   "enableAllProjectMcpServers": true,
@@ -205,21 +205,15 @@
     "claude-opus-5": {
       "effortLevel": "high"
     },
-    "claude-sonnet-5": {
-      "effortLevel": "max"
-    },
+    "claude-sonnet-5": {},
     "claude-opus-5-5": {
       "effortLevel": "high"
     },
-    "claude-sonnet-5-5": {
-      "effortLevel": "max"
-    },
+    "claude-sonnet-5-5": {},
     "claude-fable-5-1": {
       "effortLevel": "high"
     },
-    "claude-haiku-4-5": {
-      "effortLevel": "max"
-    }
+    "claude-haiku-4-5": {}
   },
   "tui": "fullscreen",
   "voice": {
