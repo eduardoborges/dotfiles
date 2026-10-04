@@ -151,6 +151,8 @@ cask "telegram"
 cask "abue-ammar/tinycast/tinycast"
 # Open-source code editor
 cask "visual-studio-code"
+# Menu bar toolkit with keep-awake, system monitor and volume mixer
+cask "vorssaint"
 # Native desktop client for WhatsApp
 cask "whatsapp"
 # Meeting recorder with on-device transcription and AI summaries
