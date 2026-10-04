@@ -144,7 +144,6 @@ cask "slack"
 # Music streaming service
 cask "spotify"
 # System monitor for the menu bar
-cask "stats"
 # Mesh VPN based on WireGuard
 cask "tailscale-app"
 # Messaging app with a focus on speed and security
