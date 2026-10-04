@@ -85,6 +85,8 @@ brew "tailcat"
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# Swift native on-device speech recognition with Whisper for Apple Silicon
+brew "whisperkit-cli"
 # Next-generation plugin manager for zsh
 brew "zplug"
 # Simple hotkey-daemon for macOS.
@@ -159,7 +161,9 @@ cask "whatsapp"
 cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
+mas "Adobe Lightroom", id: 1451544217
 mas "Amphetamine", id: 937984704
+mas "GoPro Quik", id: 561350520
 mas "Xcode", id: 497799835
 uv "browser-use"
 npm "agent-device"
