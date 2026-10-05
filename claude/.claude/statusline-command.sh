@@ -159,7 +159,7 @@ fi
 line_git=()
 [ -n "$branch" ] && line_git+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
 
-# Line 2 — AI info
+# Model line — model, effort and session settings
 line2=()
 [ -n "$model" ] && line2+=("$(printf '\033[36m%s %s\033[0m' "$I_MODEL" "$model")")
 if [ -n "$effort" ]; then
@@ -173,6 +173,17 @@ if [ -n "$effort" ]; then
   esac
   line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
+[ "$(echo "$input" | jq -r '.thinking.enabled // false')" = true ] && line2+=("$(printf '\033[35m💭 thinking\033[0m')")
+[ "$(echo "$input" | jq -r '.fast_mode // false')" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
+out_style=$(echo "$input" | jq -r '.output_style.name // empty')
+[ -n "$out_style" ] && [ "$out_style" != default ] && line2+=("$(printf '\033[36m🎨 %s\033[0m' "$out_style")")
+sess_name=$(echo "$input" | jq -r '.session_name // empty')
+[ -n "$sess_name" ] && line2+=("$(printf '\033[37m🏷️ %s\033[0m' "$sess_name")")
+cc_version=$(echo "$input" | jq -r '.version // empty')
+[ -n "$cc_version" ] && line2+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
+
+# Usage line — tokens, cost, session time, rate limits, credits
+line_usage=()
 
 # Context line — bar (up to 40 cells) split into base / conversation / free, then the cached share of the last request
 ctx_line=""
@@ -242,8 +253,14 @@ if [ -n "$transcript" ] && [ -f "$transcript" ]; then
   if [ "$total" -gt 0 ]; then
     seg=$(awk -v n="$total" 'BEGIN{if(n>=1e6)printf "%.1fM",n/1e6; else if(n>=1e3)printf "%.1fk",n/1e3; else print n}')
     [ -n "$cost" ] && seg+=$(printf ' \033[2m·\033[0m $%.2f' "$cost")
-    line2+=("$(printf '\033[36m🪙 %b\033[0m' "$seg")")
+    line_usage+=("$(printf '\033[36m🪙 %b\033[0m' "$seg")")
   fi
+fi
+
+dur_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // empty')
+if [ -n "$dur_ms" ] && [ "$dur_ms" -gt 0 ] 2>/dev/null; then
+  dur_s=$((dur_ms / 1000))
+  line_usage+=("$(printf '\033[37m⏳ %dh%02d\033[0m' $((dur_s / 3600)) $(((dur_s % 3600) / 60)))")
 fi
 
 if [ -n "$five_hour_pct" ]; then
@@ -261,7 +278,7 @@ if [ -n "$five_hour_pct" ]; then
       reset_suffix=$(printf " (%dh%02d)" "$h" "$m")
     fi
   fi
-  line2+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_5H" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
+  line_usage+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_5H" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
 fi
 
 if [ -n "$seven_day_pct" ]; then
@@ -279,7 +296,7 @@ if [ -n "$seven_day_pct" ]; then
       reset_suffix=$(printf " (%dd %dh)" "$d" "$h")
     fi
   fi
-  line2+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
+  line_usage+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
 # Usage credits (Enterprise work profile) — not in the statusline stdin JSON,
@@ -320,7 +337,7 @@ if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
     mkdir -p "${cred_cache%/*}" && printf '%s' "$seg" > "$cred_cache"
   fi
   credits_seg=$(cat "$cred_cache" 2>/dev/null)
-  [ -n "$credits_seg" ] && line2+=("$credits_seg")
+  [ -n "$credits_seg" ] && line_usage+=("$credits_seg")
 fi
 
 # Todos for this session (~/.claude/tasks/$session_id/*.json) — one item per line
@@ -351,6 +368,10 @@ if [ "${#line_git[@]}" -gt 0 ]; then
 fi
 printf '\n'
 join_parts "${line2[@]}"
+if [ "${#line_usage[@]}" -gt 0 ]; then
+  printf '\n'
+  join_parts "${line_usage[@]}"
+fi
 [ -n "$ctx_line" ] && printf '\n%s' "$ctx_line"
 if [ -n "$todo_header" ]; then
   printf '\n%b' "$todo_header"
