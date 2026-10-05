@@ -174,12 +174,47 @@ if [ -n "$effort" ]; then
   line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
 
+# Context line — bar (up to 40 cells) split into base / conversation / free, then the cached share of the last request
+ctx_line=""
 if [ -n "$used_pct" ]; then
   used_int=$(printf '%.0f' "$used_pct")
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
   elif [ "$used_int" -ge 50 ]; then color='\033[33m'
   else color='\033[32m'; fi
-  line2+=("$(printf "${color}%s %s %d%%\033[0m" "$I_CTX" "$(progress_bar "$used_int")" "$used_int")")
+  read -r c_new c_write c_read ctx_size <<<"$(echo "$input" | jq -r '.context_window | (.current_usage // {}) as $u
+    | "\($u.input_tokens//0) \($u.cache_creation_input_tokens//0) \($u.cache_read_input_tokens//0) \(.context_window_size//0)"')"
+  ctx_used=$((c_new + c_write + c_read))
+  # Base = context of the session's first response: system prompt, tools, memory files and the first prompt.
+  # ponytail: estimate measured once per session; /context has the real split but the statusline doesn't get it
+  base_cache="${TMPDIR:-/tmp}/claude-ctx-base-$session_id"
+  base=$(cat "$base_cache" 2>/dev/null)
+  if [ -z "$base" ]; then
+    tp=$(echo "$input" | jq -r '.transcript_path // empty')
+    base=$(grep '"isSidechain":false' "$tp" 2>/dev/null | grep -m1 '"role":"assistant"' \
+      | jq -r '.message.usage | (.input_tokens//0) + (.cache_creation_input_tokens//0) + (.cache_read_input_tokens//0)')
+    [ -n "$base" ] && echo "$base" > "$base_cache"
+  fi
+  : "${base:=0}"
+  [ "$base" -gt "$ctx_used" ] && base=$ctx_used
+  if [ "$ctx_size" -gt 0 ]; then
+    IFS=$'\t' read -r t_base t_conv t_free t_read <<<"$(awk -v a="$base" -v b="$((ctx_used - base))" \
+      -v c="$((ctx_size - ctx_used))" -v d="$c_read" \
+      'function h(n){return n>=1e6?sprintf("%.1fM",n/1e6):n>=1e3?sprintf("%.1fk",n/1e3):n}
+      BEGIN{printf "%s\t%s\t%s\t%s", h(a), h(b), h(c), h(d)}')"
+    legend="$used_int% · 🧩 $t_base · 💬 $t_conv · 🆓 $t_free │ 💾 $t_read"
+    # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
+    # +4: the four emoji in the legend are 2 cols wide but count as 1 char
+    bar_width=$(( ${COLUMNS:-80} - ${#legend} - 4 - 14 ))
+    [ "$bar_width" -gt 40 ] && bar_width=40
+    [ "$bar_width" -lt 10 ] && bar_width=10
+    used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
+    base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
+    [ "$base" -gt 0 ] && [ "$base_cells" -eq 0 ] && [ "$used_cells" -gt 0 ] && base_cells=1
+    rep() { local i; for ((i = 0; i < $2; i++)); do printf '%s' "$1"; done; }
+    ctx_line=$(printf "%s \033[34m%s${color}%s\033[2m%s\033[0m ${color}%d%%\033[0m \033[2m·\033[0m \033[34m🧩 %s\033[0m \033[2m·\033[0m ${color}💬 %s\033[0m \033[2m· 🆓 %s │ 💾 %s\033[0m" \
+      "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" \
+      "$used_int" "$t_base" "$t_conv" "$t_free" "$t_read")
+  fi
 fi
 
 # Session tokens: sum of usage across the transcript, input + cache + output.
@@ -316,6 +351,7 @@ if [ "${#line_git[@]}" -gt 0 ]; then
 fi
 printf '\n'
 join_parts "${line2[@]}"
+[ -n "$ctx_line" ] && printf '\n%s' "$ctx_line"
 if [ -n "$todo_header" ]; then
   printf '\n%b' "$todo_header"
   for item in "${todo_items[@]}"; do
