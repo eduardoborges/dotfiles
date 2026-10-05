@@ -92,6 +92,8 @@ brew "tree"
 brew "uv"
 # Swift native on-device speech recognition with Whisper for Apple Silicon
 brew "whisperkit-cli"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd", trusted: true
 # CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal

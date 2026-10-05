@@ -168,3 +168,6 @@ export PATH=$PATH:$HOME/.maestro/bin
 
 # Added by cua-driver-rs installer — see https://github.com/trycua/cua
 export PATH="/Users/eduardo/.local/bin:$PATH"
+
+# zoxide has to come last so its cd hook stays in place
+eval "$(zoxide init zsh)"
