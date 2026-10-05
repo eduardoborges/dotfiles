@@ -1,3 +1,4 @@
+Aloxaf/fzf-tab
 zsh-users/zsh-autosuggestions
 remcohaszing/zsh-node-bin
 zdharma-continuum/fast-syntax-highlighting
