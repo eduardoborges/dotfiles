@@ -32,17 +32,10 @@ typeset -U path PATH fpath
 
 [[ -r $HOME/.envrc ]] && source $HOME/.envrc
 
-# Shell Plugins
-export ZPLUG_HOME=/opt/homebrew/opt/zplug
-source $ZPLUG_HOME/init.zsh
-zplug "zdharma-continuum/fast-syntax-highlighting"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "remcohaszing/zsh-node-bin"
-
-if ! zplug check; then
-  zplug install
-fi
-zplug load
+# Shell Plugins, listed in ~/.zsh_plugins.txt
+autoload -Uz compinit && compinit
+source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+antidote load
 
 # My aliases
 alias p="cd ~/Projects"

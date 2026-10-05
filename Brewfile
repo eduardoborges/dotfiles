@@ -14,6 +14,8 @@ tap "lightpanda-io/browser"
 tap "tamtom/tap"
 # Static checker for GitHub Actions workflow files
 brew "actionlint"
+# Plugin manager for zsh, inspired by antigen and antibody
+brew "antidote"
 # Fast, lightweight CLI for App Store Connect
 brew "asc"
 # Official Amazon AWS command-line interface
@@ -88,8 +90,6 @@ brew "tree"
 brew "uv"
 # Swift native on-device speech recognition with Whisper for Apple Silicon
 brew "whisperkit-cli"
-# Next-generation plugin manager for zsh
-brew "zplug"
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd", trusted: true
 # CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal
