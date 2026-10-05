@@ -33,7 +33,7 @@ typeset -U path PATH fpath
 [[ -r $HOME/.envrc ]] && source $HOME/.envrc
 
 # Shell Plugins, listed in ~/.zsh_plugins.txt
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -C
 source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 antidote load
 
