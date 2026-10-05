@@ -44,7 +44,8 @@ herdr server reload-config
 | `Prefix + R` | Resize mode |
 | `Prefix + Z` | Toggle zoom |
 | `Prefix + Shift + P` | Rename pane |
-| `Prefix + [` | Copy mode |
+| `Command + F` or `Prefix + [` | Copy mode (`/` and `?` search, `n`/`N` repeat) |
+| `Command + K` | Clear the pane and its scrollback |
 | `Prefix + E` | Open the scrollback in `$EDITOR` |
 
 `Prefix + Shift + H` is also bound by the hunkdiff plugin below. Both entries

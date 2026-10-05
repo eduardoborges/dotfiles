@@ -16,6 +16,8 @@ previous_tab = ["prefix+p", "ctrl+alt+[", "prefix+shift+left", "cmd+shift+["]
 next_tab     = ["prefix+n", "ctrl+alt+]", "prefix+shift+right", "cmd+shift+]"]
 switch_tab       = ["prefix+1..9", "ctrl+alt+1..9"]
 switch_workspace = "cmd+1..9"
+copy_mode  = ["prefix+[", "cmd+f"]
+clear_pane = "cmd+k"
 
 [theme]
 name = "dracula"

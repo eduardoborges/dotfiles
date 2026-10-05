@@ -42,6 +42,8 @@ keybind = super+control+shift+alt+arrow_right=resize_split:right,100
 # Cmd liberado para o herdr (tabs, panes e workspaces ficam la)
 keybind = super+t=unbind
 keybind = super+w=unbind
+keybind = super+k=unbind
+keybind = super+f=unbind
 keybind = super+d=unbind
 keybind = super+shift+d=unbind
 keybind = super+[=unbind

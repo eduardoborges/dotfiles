@@ -28,6 +28,8 @@ full herdr reference.
 | --- | --- | --- |
 | `Command + T` | New tab | New tab |
 | `Command + W` | Close surface | Close pane |
+| `Command + K` | Clear screen | Clear pane |
+| `Command + F` | Start search | Copy mode, then `/` to search |
 | `Command + D` | Split right | Split side by side |
 | `Command + Shift + D` | Split down | Split stacked |
 | `Command + [` / `]` | Previous/next split | Previous/next pane |
@@ -70,7 +72,6 @@ herdr owns panes and tabs.
 | `Command + A` | Select all |
 | `Shift + Arrows`, `Shift + Home/End`, `Shift + Page Up/Down` | Adjust the selection |
 | `Command + Z` / `Command + Shift + Z` | Undo / redo |
-| `Command + K` | Clear screen |
 | `Command + Shift + J` | Write the screen to a file and paste its path |
 | `Command + Control + Shift + J` | Write the screen to a file and copy its path |
 | `Command + Option + Shift + J` | Write the screen to a file and open it |
@@ -79,7 +80,6 @@ herdr owns panes and tabs.
 
 | Shortcut | Action |
 | --- | --- |
-| `Command + F` | Start search |
 | `Command + G` / `Command + Shift + G` | Next / previous match |
 | `Command + E` | Search the current selection |
 | `Command + Shift + F` or `Escape` | End search |
