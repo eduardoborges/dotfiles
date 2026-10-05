@@ -20,8 +20,9 @@ The second command prints the effective bindings, defaults plus overrides.
 
 ## Shortcuts handed to herdr
 
-Ghostty unbinds these so the keypress reaches herdr, which runs inside every
-Ghostty window. See [herdr.md](herdr.md) for the full herdr reference.
+Ghostty unbinds these so the keypress reaches herdr, which runs in Ghostty
+windows opened with `Option + Shift + Return`. See [herdr.md](herdr.md) for the
+full herdr reference.
 
 | Shortcut | Ghostty default (off) | herdr now |
 | --- | --- | --- |
