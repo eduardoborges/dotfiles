@@ -3,6 +3,7 @@ tap "anomalyco/tap"
 tap "asmvik/formulae", trusted: { formulae: ["yabai"] }
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
+tap "crmne/tap"
 tap "ddev/ddev"
 tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
@@ -141,8 +142,8 @@ cask "open-design"
 cask "orbstack"
 # Team communication and collaboration software
 cask "slack"
-# Music streaming service
-cask "spotify"
+# Native Spotify client
+cask "crmne/tap/spotifast", trusted: true
 # System monitor for the menu bar
 # Mesh VPN based on WireGuard
 cask "tailscale-app"
