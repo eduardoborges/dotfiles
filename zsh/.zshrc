@@ -36,6 +36,7 @@ typeset -U path PATH fpath
 autoload -Uz compinit && compinit -C
 source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 antidote load
+source <(fzf --zsh)
 
 # My aliases
 alias p="cd ~/Projects"

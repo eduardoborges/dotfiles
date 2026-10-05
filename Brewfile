@@ -44,6 +44,8 @@ brew "diff-so-fancy"
 brew "duti"
 # Like neofetch, but much faster because written mostly in C
 brew "fastfetch"
+# Command-line fuzzy finder written in Go
+brew "fzf"
 # GitHub command-line tool
 brew "gh"
 # Agent multiplexer that lives in your terminal
