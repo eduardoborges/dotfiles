@@ -32,7 +32,7 @@ Keep comments brief, both in code and in what you post (review comments, replies
 
 ## Posting
 
-Ask me before you post anything other people will read: PR and issue comments, review comments and replies, PR titles and bodies, Jira comments, Slack messages, emails. Show me the exact text first, after the humanizer pass, and wait for my approval through AskUserQuestion. Post only what I approved, word for word. If I edit it, post my version. Approving one post does not approve the next.
+Ask me before you post anything other people will read: PR and issue comments, review comments and replies, PR titles and bodies, Jira comments, Slack messages, emails. Show me the exact text first, after the humanizer pass, as plain text in your message. The AskUserQuestion dialog hides whatever you wrote before it in the same turn, so I often miss the text, and I can't approve what I can't see. Put the full text in the `preview` of the approve option too, then wait for my approval through AskUserQuestion. Post only what I approved, word for word. If I edit it, post my version. Approving one post does not approve the next.
 
 This holds inside skills and loops too, even when a skill says to post right away or to never ask permission. The only exception is the 👀 ack the pr-review skill posts when a review starts: it has no text to review, so post it without asking.
 
