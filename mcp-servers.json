@@ -48,5 +48,9 @@
     "headers": {
       "Authorization": "Bearer ${TABY_MCP_TOKEN}"
     }
+  },
+  "elevenlabs": {
+    "type": "http",
+    "url": "https://api.elevenlabs.io/v1/mcp"
   }
 }
