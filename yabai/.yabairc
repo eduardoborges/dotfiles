@@ -72,9 +72,10 @@ yabai -m signal --add label=ghostty_destroyed app="^Ghostty$" event=window_destr
 # destroyed; fall back to the last focused window, then mouse, then any window.
 yabai -m signal --add label=focus_on_destroy event=window_destroyed action='yabai -m query --windows --window >/dev/null 2>&1 || yabai -m window --focus recent || yabai -m window --focus mouse || yabai -m window --focus "$(yabai -m query --windows --space | jq -r ".[0].id // empty")"'
 
-# The chrome-devtools MCP browser used by test agents lives on ws-7.
-# Rules can't target space labels, so a signal moves the window instead.
-yabai -m signal --add label=test_chrome_ws7 app="^Google Chrome for Testing$" event=window_created action='yabai -m window "$YABAI_WINDOW_ID" --space ws-7'
+# The firefox-devtools MCP browser used by test agents lives on ws-7.
+# Rules can't target space labels, so a signal moves the window instead. The
+# personal browser is the same app, so match the MCP profile in its arguments.
+yabai -m signal --add label=test_firefox_ws7 app="^Firefox Developer Edition$" event=window_created action='ps -p "$(yabai -m query --windows --window "$YABAI_WINDOW_ID" | jq .pid)" -o args= | grep -q firefox-devtools-mcp && yabai -m window "$YABAI_WINDOW_ID" --space ws-7'
 
 # ws-N labels follow the Nth normal Space, so native-fullscreen Spaces don't
 # shift them. Relabel on destroy too, or the Spaces after

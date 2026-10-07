@@ -1,8 +1,17 @@
 {
-  "chrome-devtools": {
+  "firefox-devtools": {
     "type": "stdio",
-    "command": "~/.config/yabai/test-chrome-mcp.sh",
-    "args": [],
+    "command": "npx",
+    "args": [
+      "-y",
+      "@mozilla/firefox-devtools-mcp@latest",
+      "--firefox-path",
+      "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox",
+      "--profile-path",
+      "~/.cache/firefox-devtools-mcp",
+      "--tool-preset",
+      "developer"
+    ],
     "env": {}
   },
   "figwright": {
