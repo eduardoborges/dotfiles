@@ -10,8 +10,8 @@ alt - return : open -na /Applications/Ghostty.app
 alt + shift - return : [ -x "/opt/homebrew/bin/herdr" ] && open -na /Applications/Ghostty.app --args -e "/opt/homebrew/bin/herdr" || open -na /Applications/Ghostty.app
 
 # Browser
-alt + shift - b : open -a "Firefox Developer Edition"
-alt + shift + cmd - b : open -na "Firefox Developer Edition" --args --private-window
+alt + shift - b : open -a "Google Chrome"
+alt + shift + cmd - b : open -na "Google Chrome" --args --incognito
 
 # Finder
 alt + shift - f : open "$HOME"

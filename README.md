@@ -24,7 +24,7 @@ formulas and applications from [`Brewfile`](Brewfile), `stow` included. Then:
 The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, and installs editor extensions from `extensions/vscode.txt` into VS Code.
 
 The Brewfile restores the command-line tools and desktop apps,
-including VS Code, Ghostty, Firefox Developer Edition, Docker, yabai, and skhd. The
+including VS Code, Ghostty, Chrome, Docker, yabai, and skhd. The
 installer then starts the window-manager launchd services and configures
 VS Code as the default text/code editor. Grant yabai and skhd access
 in **System Settings → Privacy & Security → Accessibility**.

@@ -133,7 +133,7 @@ cask "figma"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser
-cask "firefox@developer-edition"
+cask "google-chrome"
 # Local-first voice dictation
 cask "anomalyco/tap/hex", trusted: true
 # Calendar for professionals and teams

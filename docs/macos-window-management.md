@@ -12,8 +12,8 @@ focused window.
 | --- | --- |
 | `Option + Return` | Open a new Ghostty instance |
 | `Option + Shift + Return` | Open Ghostty running herdr |
-| `Option + Shift + B` | Open or focus Firefox Developer Edition |
-| `Option + Shift + Command + B` | Open a private Firefox window |
+| `Option + Shift + B` | Open or focus Google Chrome |
+| `Option + Shift + Command + B` | Open an incognito Chrome window |
 | `Option + Shift + F` | Open Finder at Home |
 | `Option + Shift + M` | Open or focus Spotifast |
 | `Option + Shift + N` | Open or focus VS Code |
