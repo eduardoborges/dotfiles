@@ -51,7 +51,7 @@ yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Hex$" manage=off
 yabai -m rule --add app="^OrbStack$" title="^(Settings|Preferences)$" manage=off
 yabai -m rule --add app="^Finder$" title="^(Copy|Copying|Move|Moving|Delete|Deleting|Remove|Removing|Preparing|Emptying the Trash|Trash|Connect to Server|Info|Preferences|Copiar|Copiando|Mover|Movendo|Apagar|Apagando|Excluir|Excluindo|Remover|Removendo|Preparando|Esvaziando o Lixo|Lixeira|Conectar ao Servidor|Informações|Preferências)" manage=off
-yabai -m rule --add app="^Google Chrome$" title="^(Settings|Downloads)$" manage=off
+yabai -m rule --add app="^Firefox Developer Edition$" title="^Library$" manage=off
 yabai -m rule --add app="^1Password$" title="^(Quick Access|Preferences)$" manage=off sub-layer=above
 # Tile only Zoom's main and meeting windows; its toolbars and popups float.
 yabai -m rule --add app="^zoom.us$" title!="^(Zoom|Zoom Workplace|Zoom Meeting)$" manage=off
