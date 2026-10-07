@@ -19,7 +19,7 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 
 ## Traps
 
-There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.json` (agent-device, i-have-adhd, show-me) are managed by the `skills` CLI, and an update overwrites local edits. The ones below were installed globally, which the CLI records nowhere, so this table is the only place their origin lives:
+There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.json` (agent-device, i-have-adhd, show-me and ten from `elevenlabs/skills`) are managed by the `skills` CLI, and an update overwrites local edits. The ones below were installed globally, which the CLI records nowhere, so this table is the only place their origin lives:
 
 | Source | Skills |
 |---|---|
