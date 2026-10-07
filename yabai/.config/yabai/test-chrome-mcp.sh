@@ -29,7 +29,9 @@ start_chrome() {
   # holds the profile lock and would swallow the new launch.
   if pkill -f -- "--user-data-dir=$PROFILE( |$)"; then sleep 1; fi
   [[ -n "$(cft_app)" ]] || npx -y @puppeteer/browsers install chrome@stable --path "$CFT_DIR"
-  open -gna "$(cft_app)" --args --user-data-dir="$PROFILE" --remote-debugging-port="$PORT" \
+  # --test-type=gpu is the only switch that skips the "only for automated testing"
+  # infobar (chrome/browser/ui/startup/infobar_utils.cc).
+  open -gna "$(cft_app)" --args --user-data-dir="$PROFILE" --remote-debugging-port="$PORT" --test-type=gpu \
     --no-first-run --no-default-browser-check about:blank
   for _ in $(seq 1 40); do chrome_up && return 0; sleep 0.25; done
   echo "test Chrome did not answer on $URL"
