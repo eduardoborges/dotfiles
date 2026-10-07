@@ -18,7 +18,7 @@ alt + shift - f : open "$HOME"
 alt + cmd + shift - f : open "$HOME"
 
 # Music
-alt + shift - m : open -a "Spotifast"
+alt + shift - m : open -a "Spotify"
 
 # Editor
 alt + shift - n : open "/Applications/Visual Studio Code.app"
