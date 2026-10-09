@@ -54,4 +54,4 @@ status_indicators = "dots"
 enabled = false
 
 [ui.toast]
-delivery = "terminal"
+delivery = "herdr"
