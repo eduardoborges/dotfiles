@@ -41,7 +41,7 @@ source <(fzf --zsh)
 # My aliases
 alias p="cd ~/Projects"
 
-alias c="claude"
+alias cc="claude"
 alias cw="claude-work"
 alias h="herdr"
 
