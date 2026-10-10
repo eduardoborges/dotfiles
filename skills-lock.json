@@ -25,6 +25,12 @@
       "skillPath": "skills/i-have-adhd/SKILL.md",
       "computedHash": "938d0e350a0c2b0e2e6c3a9032542e062846d108e0f89dd27c798ba5b436397e"
     },
+    "image": {
+      "source": "smixs/visual-skills",
+      "sourceType": "github",
+      "skillPath": "image/SKILL.md",
+      "computedHash": "fba73f0a6b9ebed817fb4e653754091f8ca9774c964772af08009cdfc91ec62d"
+    },
     "music": {
       "source": "elevenlabs/skills",
       "sourceType": "github",
@@ -66,6 +72,12 @@
       "sourceType": "github",
       "skillPath": "text-to-speech/SKILL.md",
       "computedHash": "bb182b4e3a864bdc7f04c0401dfd45b2b5c6f144281d5e6ddb7da0c00b7de3ad"
+    },
+    "video": {
+      "source": "smixs/visual-skills",
+      "sourceType": "github",
+      "skillPath": "video/SKILL.md",
+      "computedHash": "f43cfb62f4c6d81290f2676336edbb6104e327a7490c3defe16176c0f273a6b4"
     },
     "voice-changer": {
       "source": "elevenlabs/skills",
