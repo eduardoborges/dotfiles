@@ -52,5 +52,10 @@
   "elevenlabs": {
     "type": "http",
     "url": "https://api.us.elevenlabs.io/v1/mcp"
+  },
+  "apiframe": {
+    "type": "http",
+    "url": "https://mcp.apiframe.ai",
+    "headersHelper": "sh -c '. \"$HOME/.envrc\"; printf \"{\\\"X-API-Key\\\":\\\"%s\\\"}\" \"$APIFRAME_API_KEY\"'"
   }
 }
