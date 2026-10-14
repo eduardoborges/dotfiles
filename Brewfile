@@ -3,6 +3,7 @@ tap "anomalyco/tap"
 tap "asmvik/formulae", trusted: { formulae: ["yabai"] }
 tap "avivsinai/tap"
 tap "bjarneo/cliamp"
+tap "cameroncooke/axe"
 tap "ddev/ddev"
 tap "eduardoborges/tap", trusted: true
 tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae", trusted: true
@@ -11,6 +12,7 @@ tap "graykode/tap"
 tap "letstri/tap"
 tap "lightpanda-io/browser"
 tap "tamtom/tap"
+tap "teamookla/speedtest"
 # Static checker for GitHub Actions workflow files
 brew "actionlint"
 # Plugin manager for zsh, inspired by antigen and antibody
@@ -19,6 +21,8 @@ brew "antidote"
 brew "asc"
 # Official Amazon AWS command-line interface
 brew "awscli"
+# Light UNIX download accelerator
+brew "axel"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Get/set bluetooth power and discoverable state
@@ -35,8 +39,12 @@ brew "clang-format"
 brew "cloudflare-wrangler"
 # Cloudflare Tunnel client (formerly Argo Tunnel)
 brew "cloudflared", restart_service: :changed
+# Cross-platform make
+brew "cmake"
 # Dependency manager for Cocoa projects
 brew "cocoapods"
+# USB programmer
+brew "dfu-util"
 # Good-lookin' diffs with diff-highlight and more
 brew "diff-so-fancy"
 # Select default apps for documents and URL schemes on macOS
@@ -67,6 +75,8 @@ brew "mas"
 brew "mise"
 # Deep clean and optimize your Mac
 brew "mole"
+# Small build system for use with gyp or CMake
+brew "ninja"
 # Spec-driven development (SDD) for AI coding assistants
 brew "openspec"
 # Your Gateway to Embedded Software Development Excellence
@@ -85,20 +95,30 @@ brew "starship"
 brew "stow"
 # Netcat-like tool over Tailscale's data plane, without its control plane
 brew "tailcat"
+# Lightweight BitTorrent client
+brew "transmission-cli"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# Port of OpenAI's Whisper model in C/C++
+brew "whisper.cpp"
 # Swift native on-device speech recognition with Whisper for Apple Silicon
 brew "whisperkit-cli"
+# Generate your Xcode project from a spec file and your folder structure
+brew "xcodegen"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# OpenCode V2 - the AI coding agent for the terminal
+brew "anomalyco/tap/opencode-v2", trusted: true
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd", trusted: true
 # CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal
 brew "avivsinai/tap/bitbucket-cli", trusted: true
 # A retro terminal music player inspired by Winamp 2.x
 brew "bjarneo/cliamp/cliamp", trusted: true
+# CLI tool for interacting with iOS Simulators via accessibility and HID APIs
+brew "cameroncooke/axe/axe", trusted: true
 # DDEV
 brew "ddev/ddev/ddev", trusted: true
 # Tiling window manager for macOS based on binary space partitioning
@@ -115,6 +135,8 @@ brew "letstri/tap/druk", trusted: true
 brew "lightpanda-io/browser/lightpanda", trusted: true
 # CLI for Google Play Console - manage Android apps from the terminal
 brew "tamtom/tap/gplay", trusted: true
+# Ookla Speedtest
+brew "teamookla/speedtest/speedtest", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Tools for building Android applications
@@ -125,6 +147,8 @@ cask "blender"
 cask "claude"
 # Menu bar status indicator for Claude Code
 cask "claude-status-bar"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
 # Android device hub with a live, clickable emulator screen
 cask "eduardoborges/tap/droidhub"
 # Collaborative team software
@@ -147,11 +171,8 @@ cask "orbstack"
 cask "slack"
 # Music streaming service
 cask "spotify"
-# System monitor for the menu bar
 # Mesh VPN based on WireGuard
 cask "tailscale-app"
-# Messaging app with a focus on speed and security
-cask "telegram"
 # Tiny, fully native launcher, hotkeys, and clipboard history
 cask "abue-ammar/tinycast/tinycast"
 # Open-source code editor
@@ -165,6 +186,8 @@ cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "Adobe Lightroom", id: 1451544217
+mas "Amphetamine", id: 937984704
+mas "Anchor", id: 6748285761
 mas "GoPro Quik", id: 561350520
 mas "Xcode", id: 497799835
 uv "browser-use"
