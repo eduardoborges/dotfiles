@@ -74,6 +74,8 @@ alias ll="ls -l"
 alias la="ls -A"
 
 alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work claude"
+# env skips the claude function below, so the folder never picks the account.
+alias claude-personal="env -u CLAUDE_CONFIG_DIR claude"
 # Inside ~/Projects/wc, claude runs on the work account unless CLAUDE_CONFIG_DIR is already set.
 claude() {
   if [[ -z $CLAUDE_CONFIG_DIR && $PWD == $HOME/Projects/wc(|/*) ]]; then
