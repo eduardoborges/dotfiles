@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-# Launch wrapper for the chrome-devtools MCP. A Chrome started by the MCP itself
-# never registers with the accessibility API, so yabai cannot move its windows.
-# This script opens Chrome for Testing through LaunchServices instead, and the
-# ws-7 signal in .yabairc picks up its windows. It is a separate app from the
-# personal Chrome, so clicking Chrome in the Dock never lands on the test
-# profile. The MCP connects to it with --browserUrl. Chrome starts once per MCP
-# launch, and if you quit it, it stays closed.
+# Launch wrapper for the chrome-devtools MCP. It runs Chrome for Testing
+# headless on a fixed port and profile, and the MCP connects with --browserUrl.
+# Headless because on macOS Chrome only adds a tab to a window on the active
+# Space: with a visible window parked elsewhere, every new_page opened another
+# window and pulled focus to it. Chrome starts once per MCP launch, and if you
+# quit it, it stays closed.
+#
+# To log in to a site, run this script with --login. It restarts Chrome headed
+# on the same profile and exits. Quit that Chrome when you're done; the cookies
+# stay in the profile.
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
@@ -23,6 +26,8 @@ cft_app() { compgen -G "$CFT_DIR/chrome/*/*/Google Chrome for Testing.app" | tai
 
 chrome_up() { curl -fs "$URL/json/version" >/dev/null 2>&1; }
 
+HEADLESS=--headless
+
 start_chrome() {
   chrome_up && return 0
   # A Chrome left on this profile without the debug port (the old pipe launch)
@@ -32,11 +37,18 @@ start_chrome() {
   # --test-type=gpu is the only switch that skips the "only for automated testing"
   # infobar (chrome/browser/ui/startup/infobar_utils.cc).
   open -gna "$(cft_app)" --args --user-data-dir="$PROFILE" --remote-debugging-port="$PORT" --test-type=gpu \
-    --no-first-run --no-default-browser-check about:blank
+    --no-first-run --no-default-browser-check $HEADLESS about:blank
   for _ in $(seq 1 40); do chrome_up && return 0; sleep 0.25; done
   echo "test Chrome did not answer on $URL"
   return 1
 }
+
+if [[ "${1:-}" == --login ]]; then
+  pkill -f -- "--user-data-dir=$PROFILE( |$)" && sleep 1
+  HEADLESS=
+  start_chrome
+  exit
+fi
 
 # Nothing here may write to stdout, which is the MCP's protocol channel.
 start_chrome </dev/null >>"$LOG" 2>&1
