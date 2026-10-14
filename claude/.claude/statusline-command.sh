@@ -118,7 +118,7 @@ fi
 
 # Progress bar — braille cells, 6 fill steps per cell for a smoother ramp
 progress_bar() {
-  local pct=$1 width=5
+  local pct=$1 width=8
   local levels=(⣀ ⣄ ⣤ ⣦ ⣶ ⣷ ⣿)
   local total=$((width * 6)) filled i lvl
   filled=$(( (pct * total + 50) / 100 ))
@@ -180,7 +180,7 @@ fi
 # Usage line — cost, session time, rate limits, credits
 line_usage=()
 
-# Context — bar (up to 20 cells) split into base / conversation / free, then the tokens used; joins the model line
+# Context — bar (up to 28 cells) split into base / conversation / free, then the tokens used; joins the model line
 if [ -n "$used_pct" ]; then
   used_int=$(printf '%.0f' "$used_pct")
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
@@ -204,7 +204,7 @@ if [ -n "$used_pct" ]; then
     # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
     # + one per part: each part's emoji is 2 cols wide but counts as 1 char
     bar_width=$(( ${COLUMNS:-80} - ${#model_plain} - ${#line2[@]} - ${#t_used} - 20 ))
-    [ "$bar_width" -gt 20 ] && bar_width=20
+    [ "$bar_width" -gt 28 ] && bar_width=28
     [ "$bar_width" -lt 10 ] && bar_width=10
     used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
     base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
