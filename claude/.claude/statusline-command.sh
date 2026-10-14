@@ -185,7 +185,7 @@ cc_version=$(echo "$input" | jq -r '.version // empty')
 # Usage line — tokens, cost, session time, rate limits, credits
 line_usage=()
 
-# Context line — bar (up to 40 cells) split into base / conversation / free, then the cached share of the last request
+# Context line — bar (up to 40 cells) split into base / conversation / free, then the tokens used
 ctx_line=""
 if [ -n "$used_pct" ]; then
   used_int=$(printf '%.0f' "$used_pct")
@@ -208,23 +208,18 @@ if [ -n "$used_pct" ]; then
   : "${base:=0}"
   [ "$base" -gt "$ctx_used" ] && base=$ctx_used
   if [ "$ctx_size" -gt 0 ]; then
-    IFS=$'\t' read -r t_base t_conv t_free t_read <<<"$(awk -v a="$base" -v b="$((ctx_used - base))" \
-      -v c="$((ctx_size - ctx_used))" -v d="$c_read" \
-      'function h(n){return n>=1e6?sprintf("%.1fM",n/1e6):n>=1e3?sprintf("%.1fk",n/1e3):n}
-      BEGIN{printf "%s\t%s\t%s\t%s", h(a), h(b), h(c), h(d)}')"
-    legend="$used_int% · 🧩 $t_base · 💬 $t_conv · 🆓 $t_free │ 💾 $t_read"
+    t_used=$(awk -v n="$ctx_used" 'BEGIN{print (n>=1e6?sprintf("%.1fM",n/1e6):n>=1e3?sprintf("%.1fk",n/1e3):n)}')
+    legend="$t_used"
     # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
-    # +4: the four emoji in the legend are 2 cols wide but count as 1 char
-    bar_width=$(( ${COLUMNS:-80} - ${#legend} - 4 - 14 ))
+    bar_width=$(( ${COLUMNS:-80} - ${#legend} - 14 ))
     [ "$bar_width" -gt 40 ] && bar_width=40
     [ "$bar_width" -lt 10 ] && bar_width=10
     used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
     base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
     [ "$base" -gt 0 ] && [ "$base_cells" -eq 0 ] && [ "$used_cells" -gt 0 ] && base_cells=1
     rep() { local i; for ((i = 0; i < $2; i++)); do printf '%s' "$1"; done; }
-    ctx_line=$(printf "%s \033[34m%s${color}%s\033[2m%s\033[0m ${color}%d%%\033[0m \033[2m·\033[0m \033[34m🧩 %s\033[0m \033[2m·\033[0m ${color}💬 %s\033[0m \033[2m· 🆓 %s │ 💾 %s\033[0m" \
-      "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" \
-      "$used_int" "$t_base" "$t_conv" "$t_free" "$t_read")
+    ctx_line=$(printf "%s \033[34m%s${color}%s\033[2m%s\033[0m ${color}%s\033[0m" \
+      "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" "$t_used")
   fi
 fi
 
