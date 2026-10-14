@@ -5,13 +5,13 @@
       "source": "callstack/agent-device",
       "sourceType": "github",
       "skillPath": "skills/agent-device/SKILL.md",
-      "computedHash": "a35262f3c23acafd69417aacbc88970007f343f5bbcfeb9007971f7e7467ec21"
+      "computedHash": "3187ae73a1a8b055e20630d64c86e5bb7576341b495c9a755f5e3ec7927c0302"
     },
     "agents": {
       "source": "elevenlabs/skills",
       "sourceType": "github",
       "skillPath": "agents/SKILL.md",
-      "computedHash": "2b984386043242e5f151409ec4ac21f628174a132f5525c21fc7aef175c82ee3"
+      "computedHash": "1beebb18d44ee097911ef979517ec151cd427d0f40276ff5e330089d86b7de2b"
     },
     "dubbing": {
       "source": "elevenlabs/skills",
@@ -23,7 +23,7 @@
       "source": "ayghri/i-have-adhd",
       "sourceType": "github",
       "skillPath": "skills/i-have-adhd/SKILL.md",
-      "computedHash": "938d0e350a0c2b0e2e6c3a9032542e062846d108e0f89dd27c798ba5b436397e"
+      "computedHash": "e12ff08dfe4b5baae7065c2f05a5738b8a55f3ccbed82ba45f5496c8e83b2a25"
     },
     "image": {
       "source": "smixs/visual-skills",
@@ -47,7 +47,7 @@
       "source": "humanlayer/skills",
       "sourceType": "github",
       "skillPath": "plugins/show-me/skills/show-me/SKILL.md",
-      "computedHash": "bea6da70a58096730b9aeb0bae293ddf4726103a98efc9ce13c481619942a810"
+      "computedHash": "43766f53afe7eb9feba0bb7716590c35cbb8d39d4a91eddef50e9566a6f6ae19"
     },
     "sound-effects": {
       "source": "elevenlabs/skills",
