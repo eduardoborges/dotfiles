@@ -317,12 +317,12 @@ if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
         | jq -r '.extra_usage // {} | "\(.is_enabled // false) \(.monthly_limit // 0) \(.used_credits // 0)"')"
       if [ "$enabled" = "true" ] && awk "BEGIN{exit !($limit > 0)}"; then
         pct=$(awk "BEGIN{printf \"%d\", $used * 100 / $limit}")
-        remain=$(awk "BEGIN{printf \"%.2f\", ($limit - $used) / 100}")
+        spent=$(awk "BEGIN{printf \"%.2f\", $used / 100}")
         total=$(awk "BEGIN{printf \"%.0f\", $limit / 100}")
         if [ "$pct" -ge 75 ]; then color='\033[31m'
         elif [ "$pct" -ge 50 ]; then color='\033[33m'
         else color='\033[32m'; fi
-        seg=$(printf "${color}💳 %s %d%% \$%s/\$%s\033[0m" "$(progress_bar "$pct")" "$pct" "$remain" "$total")
+        seg=$(printf "${color}💳 %s %d%% \$%s/\$%s\033[0m" "$(progress_bar "$pct")" "$pct" "$spent" "$total")
       elif [ "$enabled" = "true" ]; then
         seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk -v x="$used" 'BEGIN{printf "%.2f", x / 100}')")
       else
