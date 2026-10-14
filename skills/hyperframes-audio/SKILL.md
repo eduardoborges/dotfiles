@@ -52,7 +52,7 @@ the first two, on an `<hf-audio-group>` bus (see "One bus for many tracks"):
 | `data-fx-carve`   | the carve's own settings, so it can be re-derived         |
 
 The shipped effect families are gain, EQ (highpass, lowpass, peaking, shelves),
-compressor, limiter, gate, saturate, delay, reverb, chorus, phaser, and bitcrush.
+compressor, limiter, truepeak (lookahead true-peak limiter), gate, saturate, delay, reverb, chorus, phaser, and bitcrush.
 
 Exact JSON for each, and the rules a lane must satisfy: `references/attributes.md`.
 Every effect with its parameters, ranges and units: `references/fx-registry.md`.
@@ -195,10 +195,14 @@ want 1–3 kHz, and taking that from the bed costs the bed far less than turning
 the whole thing down costs the mix. A high-pass on a voice is the standard fix
 for rumble; a low-pass darkens or muffles deliberately.
 
-**Dynamics** (`gain`, `compressor`, `limiter`, `gate`) decide how a track's level
+**Dynamics** (`gain`, `compressor`, `limiter`, `truepeak`, `gate`) decide how a track's level
 behaves over time. Compression narrows the distance between loud and quiet so the
-quiet parts can come up. A limiter is a ceiling — it does not shape anything, it
-guarantees nothing gets past. A gate removes what is below a threshold, which is
+quiet parts can come up. A limiter pulls peaks down toward a ceiling and does not
+shape anything else. `limiter` follows the level and has no lookahead, so a fast
+or inter-sample peak can pass its ceiling; for a delivery ceiling use `truepeak`, which looks ahead and measures the inter-sample peak. It
+holds a 4x estimate at the ceiling, not the waveform itself, so full-band noise can
+end up to 1.7 dB over: under a hard delivery limit set the ceiling at least 2 dB
+below it. A gate removes what is below a threshold, which is
 how you silence room tone between phrases. `gain` is a plain level stage, and it
 is what an automation lane rides when a track has to move out of the way.
 
@@ -340,6 +344,13 @@ of, so only the filters survive — and a bus and its members are one signal pat
 so the bed then runs through the bus's filters AND its own. The
 `audio_group_carve_attr` lint rule catches it.
 
+**One effect across the whole mix: the master bus.** A clip names exactly one
+group, so a limiter or EQ over everything cannot be a group. Put it in
+`data-fx-chain` on the top-level composition root: it runs once over the sum of all clips and groups, after each
+group's chain and fader. A delivery ceiling is the usual use — `truepeak` last in
+the master chain. Only the top-level root is read as the master bus; a
+sub-composition root's `data-fx-chain` is not applied inside a parent composition. No master automation.
+
 **One clip is not a bus.** A group exists to give several tracks one chain, one
 fader and one clock. Wrapping a single clip in a bus buys nothing the clip's own
 `data-fx-chain` does not already do, and it doubles the places a later edit has
@@ -440,8 +451,8 @@ and the parameter's own units. Targets are `volume` for the track's level, or
 `fx.<nodeId>.<param>` for an effect's knob.
 
 **Only some parameters can be automated, and a lane on the others is silently
-inert.** A knob is automatable when a Web Audio `AudioParam` backs it. The four
-worklet-based effects — `compressor`, `limiter`, `gate`, `bitcrush` — expose
+inert.** A knob is automatable when a Web Audio `AudioParam` backs it. The
+worklet-based effects — `compressor`, `limiter`, `truepeak`, `gate`, `bitcrush` — expose
 none at all, so no lane on any of their parameters will ever move: to make a
 compressor's behaviour change over time, automate a `gain` stage before it
 instead. `references/fx-registry.md` marks every parameter.
