@@ -173,7 +173,6 @@ if [ -n "$effort" ]; then
   esac
   line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
-[ "$(echo "$input" | jq -r '.thinking.enabled // false')" = true ] && line2+=("$(printf '\033[35m💭 thinking\033[0m')")
 [ "$(echo "$input" | jq -r '.fast_mode // false')" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
 out_style=$(echo "$input" | jq -r '.output_style.name // empty')
 [ -n "$out_style" ] && [ "$out_style" != default ] && line2+=("$(printf '\033[36m🎨 %s\033[0m' "$out_style")")
