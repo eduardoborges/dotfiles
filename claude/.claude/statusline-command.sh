@@ -11,9 +11,6 @@ I_5H='⏱️'
 I_7D='📅'
 I_EFFORT='⚡'
 I_TODO='📋'
-I_DONE='✅'
-I_PROG='🔄'
-I_PEND='⬜'
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 model=$(echo "$input" | jq -r '.model.display_name // empty' | sed -E 's/ *\([^)]*\)//g')
@@ -335,25 +332,13 @@ if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
   [ -n "$credits_seg" ] && line_usage+=("$credits_seg")
 fi
 
-# Todos for this session (~/.claude/tasks/$session_id/*.json) — one item per line
+# Todos for this session — header only, Claude Code already lists the items
 todo_header=""
-todo_items=()
-taskdir="$HOME/.claude/tasks/$session_id"
+taskdir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/tasks/$session_id"
 if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
-  done=0; prog=0; pend=0
-  while IFS= read -r f; do
-    [ -e "$f" ] || continue
-    st=$(jq -r '.status // empty' "$f" 2>/dev/null)
-    case "$st" in
-      completed)   done=$((done+1)); icon="\033[32m$I_DONE"; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
-      in_progress) prog=$((prog+1)); icon="\033[33m$I_PROG"; text=$(jq -r '.activeForm // .subject // empty' "$f" 2>/dev/null) ;;
-      *)           pend=$((pend+1)); icon="\033[2m$I_PEND"; text=$(jq -r '.subject // empty' "$f" 2>/dev/null) ;;
-    esac
-    [ -z "$st" ] && continue
-    todo_items+=("$(printf '\033[2m│\033[0m %s %s\033[0m' "$icon" "$text")")
-  done < <(find "$taskdir" -maxdepth 1 -name '*.json' 2>/dev/null | sort -V)
-  total=$((done+prog+pend))
-  [ "$total" -gt 0 ] && todo_header="$(printf '\033[2m╭─\033[0m \033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
+  read -r done total <<<"$(find "$taskdir" -maxdepth 1 -name '*.json' -exec cat {} + 2>/dev/null \
+    | jq -rs 'map(select(.status)) | "\(map(select(.status == "completed")) | length) \(length)"')"
+  [ "${total:-0}" -gt 0 ] && todo_header="$(printf '\033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
 join_parts "${line1[@]}"
@@ -368,11 +353,5 @@ if [ "${#line_usage[@]}" -gt 0 ]; then
   join_parts "${line_usage[@]}"
 fi
 [ -n "$ctx_line" ] && printf '\n%s' "$ctx_line"
-if [ -n "$todo_header" ]; then
-  printf '\n%b' "$todo_header"
-  for item in "${todo_items[@]}"; do
-    printf '\n%b' "$item"
-  done
-  printf '\n\033[2m╰─\033[0m'
-fi
+[ -n "$todo_header" ] && printf '\n%s' "$todo_header"
 printf '\n'
