@@ -95,7 +95,21 @@ The report fits on one screen. What was not worth a comment is not worth a line 
 
 If a diagram helps explain a flow, draw it in plain ASCII (boxes with `┌─┐│└┘`, arrows with `-->`) inside a code fence. NEVER Mermaid in terminal output — the CLI does not render it. Mermaid only inside posted comments/bodies, where GitHub/Bitbucket render it.
 
-Comments are brief, direct, and friendly. No essays, no lecturing, no commit hashes. Put every comment through a `humanizer` skill call (gate above) before showing it. Ask which to post: all, some (pick), or none.
+**Comment voice.** Write the way a teammate talks in a normal review: casual, direct and kind, neither formal nor sweet. Most comments are one sentence: the problem, plus the fix when it isn't obvious. Humor or an emoji is fine once in a while, not in every comment.
+
+- No commit hashes, PR numbers, file paths, line numbers or quoted code. The comment already sits on the line.
+- Skip the why when the author will get it alone. No "Consider…" or "It might be worth…", no headings, bullets or bold.
+- Start sentences with a capital letter, like normal writing.
+
+> This crashes when the list is empty, maybe an early return?
+
+> The retry never stops if the API keeps failing
+
+> Should this be behind the flag too?
+
+The review body is one short line, like "Looks good, just a couple of things", or empty.
+
+Put every comment through a `humanizer` skill call (gate above) before showing it. Ask which to post: all, some (pick), or none.
 
 ## 6. Post
 
