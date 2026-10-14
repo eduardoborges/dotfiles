@@ -175,14 +175,11 @@ fi
 [ "$(echo "$input" | jq -r '.fast_mode // false')" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
 out_style=$(echo "$input" | jq -r '.output_style.name // empty')
 [ -n "$out_style" ] && [ "$out_style" != default ] && line2+=("$(printf '\033[36m🎨 %s\033[0m' "$out_style")")
-sess_name=$(echo "$input" | jq -r '.session_name // empty')
-[ -n "$sess_name" ] && line2+=("$(printf '\033[37m🏷️ %s\033[0m' "$sess_name")")
 
 # Usage line — cost, session time, rate limits, credits
 line_usage=()
 
-# Context line — bar (up to 40 cells) split into base / conversation / free, then the tokens used
-ctx_line=""
+# Context — bar (up to 20 cells) split into base / conversation / free, then the tokens used; joins the model line
 if [ -n "$used_pct" ]; then
   used_int=$(printf '%.0f' "$used_pct")
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
@@ -205,17 +202,18 @@ if [ -n "$used_pct" ]; then
   [ "$base" -gt "$ctx_used" ] && base=$ctx_used
   if [ "$ctx_size" -gt 0 ]; then
     t_used=$(awk -v n="$ctx_used" 'BEGIN{print (n>=1e6?sprintf("%.1fM",n/1e6):n>=1e3?sprintf("%.1fk",n/1e3):n)}')
-    legend="$t_used"
+    model_plain=$(join_parts "${line2[@]}" | sed $'s/\x1b\\[[0-9;]*m//g')
     # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
-    bar_width=$(( ${COLUMNS:-80} - ${#legend} - 14 ))
-    [ "$bar_width" -gt 40 ] && bar_width=40
+    # + one per part: each part's emoji is 2 cols wide but counts as 1 char
+    bar_width=$(( ${COLUMNS:-80} - ${#model_plain} - ${#line2[@]} - ${#t_used} - 20 ))
+    [ "$bar_width" -gt 20 ] && bar_width=20
     [ "$bar_width" -lt 10 ] && bar_width=10
     used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
     base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
     [ "$base" -gt 0 ] && [ "$base_cells" -eq 0 ] && [ "$used_cells" -gt 0 ] && base_cells=1
     rep() { local i; for ((i = 0; i < $2; i++)); do printf '%s' "$1"; done; }
-    ctx_line=$(printf "%s \033[34m%s${color}%s\033[2m%s\033[0m ${color}%s\033[0m" \
-      "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" "$t_used")
+    line2+=("$(printf "%s \033[34m%s${color}%s\033[2m%s\033[0m ${color}%s\033[0m" \
+      "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" "$t_used")")
   fi
 fi
 
@@ -326,6 +324,5 @@ if [ "${#line_usage[@]}" -gt 0 ]; then
   printf '\n'
   join_parts "${line_usage[@]}"
 fi
-[ -n "$ctx_line" ] && printf '\n%s' "$ctx_line"
 [ -n "$todo_header" ] && printf '\n%s' "$todo_header"
 printf '\n'
