@@ -323,14 +323,14 @@ if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
         else color='\033[32m'; fi
         seg=$(printf "${color}💳 %s %d%% (\$%s left)\033[0m" "$(progress_bar "$pct")" "$pct" "$remain")
       elif [ "$enabled" = "true" ]; then
-        seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk "BEGIN{printf \"%.2f\", $used / 100}")")
+        seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk -v x="$used" 'BEGIN{printf "%.2f", x / 100}')")
       else
         # no per-member allocation exposed: fall back to org prepaid balance if this seat can read it
         org=$(jq -r '.oauthAccount.organizationUuid // empty' "$CLAUDE_CONFIG_DIR/.claude.json" 2>/dev/null)
         if [ -n "$org" ]; then
           amt=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
             "https://api.anthropic.com/api/oauth/organizations/$org/prepaid/credits" | jq -r '.amount // empty')
-          [ -n "$amt" ] && seg=$(printf '\033[32m💳 $%s org\033[0m' "$(awk "BEGIN{printf \"%.2f\", $amt / 100}")")
+          [ -n "$amt" ] && seg=$(printf '\033[32m💳 $%s org\033[0m' "$(awk -v x="$amt" 'BEGIN{printf "%.2f", x / 100}')")
         fi
       fi
     fi
