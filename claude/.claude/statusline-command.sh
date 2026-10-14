@@ -154,6 +154,8 @@ fi
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
 [ -n "$pkg_mgr" ] && line1+=("$(printf '\033[2m%s\033[0m' "$pkg_mgr")")
 [ -n "$mise_seg" ] && line1+=("$mise_seg")
+cc_version=$(echo "$input" | jq -r '.version // empty')
+[ -n "$cc_version" ] && line1+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
 
 # Git line — branch, tree counts, ahead/behind
 line_git=()
@@ -178,8 +180,6 @@ out_style=$(echo "$input" | jq -r '.output_style.name // empty')
 [ -n "$out_style" ] && [ "$out_style" != default ] && line2+=("$(printf '\033[36m🎨 %s\033[0m' "$out_style")")
 sess_name=$(echo "$input" | jq -r '.session_name // empty')
 [ -n "$sess_name" ] && line2+=("$(printf '\033[37m🏷️ %s\033[0m' "$sess_name")")
-cc_version=$(echo "$input" | jq -r '.version // empty')
-[ -n "$cc_version" ] && line2+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
 
 # Usage line — tokens, cost, session time, rate limits, credits
 line_usage=()
