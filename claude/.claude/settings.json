@@ -25,6 +25,15 @@
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' notify"
           }
         ]
+      },
+      {
+        "matcher": "permission_prompt|elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh alert"
+          }
+        ]
       }
     ],
     "PermissionRequest": [
@@ -47,6 +56,15 @@
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' post"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh clear"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -67,6 +85,24 @@
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' pre"
           }
         ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh alert"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh tool"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -84,6 +120,14 @@
             "type": "command",
             "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' end",
             "timeout": 15
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh end"
           }
         ]
       }
@@ -126,6 +170,14 @@
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' stop"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh stop"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -134,6 +186,14 @@
           {
             "type": "command",
             "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' prompt"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh clear"
           }
         ]
       }
@@ -207,7 +267,7 @@
     },
     "claude-sonnet-5": {},
     "claude-opus-5-5": {
-      "effortLevel": "high"
+      "effortLevel": "medium"
     },
     "claude-sonnet-5-5": {},
     "claude-fable-5-1": {
@@ -215,6 +275,7 @@
     },
     "claude-haiku-4-5": {}
   },
+  "advisorModel": "fable",
   "tui": "fullscreen",
   "voice": {
     "enabled": true,
