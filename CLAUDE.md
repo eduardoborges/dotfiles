@@ -30,6 +30,8 @@ There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.js
 
 Update one of those with `npx skills add <source>@<skill> -g -a claude-code --copy -y`, or just `<source>` when the repo holds a single skill. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours. `skills/init-docs` is a symlink to the public repo `eduardoborges/lean-docs`, which has to be cloned at `~/Projects/lean-docs`: edit the skill there and push from there.
 
+`npx skills update` reinstalls as symlinks, not copies: global skills point into `~/.agents/skills`, project ones into a new `.agents/skills` at the repo root, with a `.claude/skills` beside it. After an update, copy each linked skill over its symlink, then delete `.agents/` and `.claude/skills/` from the repo. `skills/init-docs` is the only symlink that belongs there.
+
 Claude Code rewrites `claude/.claude/settings.json` on its own, and that write sometimes replaces the symlink with a plain file. When the repo copy falls behind: copy the live file over the repo one, delete `~/.claude/settings.json`, then stow the `claude` package again.
 
 The hook commands in that file use absolute paths on purpose. `$HOME` there broke Claude Status Bar and the herdr rename. The scripts they call live in `~/.claude/statusbar` and `~/.claude/hooks`, installed by those apps and not tracked here.
