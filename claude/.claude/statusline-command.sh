@@ -178,7 +178,7 @@ out_style=$(echo "$input" | jq -r '.output_style.name // empty')
 sess_name=$(echo "$input" | jq -r '.session_name // empty')
 [ -n "$sess_name" ] && line2+=("$(printf '\033[37m🏷️ %s\033[0m' "$sess_name")")
 
-# Usage line — tokens, cost, session time, rate limits, credits
+# Usage line — cost, session time, rate limits, credits
 line_usage=()
 
 # Context line — bar (up to 40 cells) split into base / conversation / free, then the tokens used
@@ -219,34 +219,8 @@ if [ -n "$used_pct" ]; then
   fi
 fi
 
-# Session tokens: sum of usage across the transcript, input + cache + output.
-# ponytail: incremental, only bytes appended since last run get parsed; main transcript only, subagents not counted
-transcript=$(echo "$input" | jq -r '.transcript_path // empty')
-if [ -n "$transcript" ] && [ -f "$transcript" ]; then
-  tok_cache="${TMPDIR:-/tmp}/claude-tokens-$session_id"
-  read -r off t_in t_out t_cache last_id 2>/dev/null < "$tok_cache"
-  : "${off:=0}" "${t_in:=0}" "${t_out:=0}" "${t_cache:=0}" "${last_id:=-}"
-  size=$(stat -f %z "$transcript")
-  [ "$size" -lt "$off" ] && off=0 t_in=0 t_out=0 t_cache=0 last_id=-
-  if [ "$size" -gt "$off" ]; then
-    new_off=$size
-    # last line still being written: leave it for the next run
-    tail -c 1 "$transcript" | read -r _ || new_off=$((size - $(tail -n 1 "$transcript" | wc -c)))
-    read -r d_in d_out d_cache new_last <<<"$(tail -c +$((off + 1)) "$transcript" \
-      | jq -rR 'fromjson? | select(.type=="assistant") | .message
-          | [.id, (.usage.input_tokens//0), (.usage.output_tokens//0), ((.usage.cache_creation_input_tokens//0)+(.usage.cache_read_input_tokens//0))] | @tsv' \
-      | awk -v p="$last_id" '$1!=p{i+=$2;o+=$3;c+=$4;p=$1} END{print i+0,o+0,c+0,p}')"
-    t_in=$((t_in + d_in)); t_out=$((t_out + d_out)); t_cache=$((t_cache + d_cache)); last_id=$new_last
-    printf '%s %s %s %s %s' "$new_off" "$t_in" "$t_out" "$t_cache" "$last_id" > "$tok_cache"
-  fi
-  total=$((t_in + t_cache + t_out))
-  cost=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
-  if [ "$total" -gt 0 ]; then
-    seg=$(awk -v n="$total" 'BEGIN{if(n>=1e6)printf "%.1fM",n/1e6; else if(n>=1e3)printf "%.1fk",n/1e3; else print n}')
-    [ -n "$cost" ] && seg+=$(printf ' \033[2m·\033[0m $%.2f' "$cost")
-    line_usage+=("$(printf '\033[36m🪙 %b\033[0m' "$seg")")
-  fi
-fi
+cost=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
+[ -n "$cost" ] && line_usage+=("$(printf '\033[36m🪙 $%.2f\033[0m' "$cost")")
 
 dur_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // empty')
 if [ -n "$dur_ms" ] && [ "$dur_ms" -gt 0 ] 2>/dev/null; then
