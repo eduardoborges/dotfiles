@@ -160,6 +160,16 @@
             "timeout": 15
           }
         ]
+      },
+      {
+        "matcher": "startup|resume|fork",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/session-title.sh'",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Stop": [
