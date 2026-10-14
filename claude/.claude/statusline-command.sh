@@ -12,15 +12,17 @@ I_7D='📅'
 I_EFFORT='⚡'
 I_TODO='📋'
 
-cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
-model=$(echo "$input" | jq -r '.model.display_name // empty' | sed -E 's/ *\([^)]*\)//g')
-used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
-five_hour_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
-five_hour_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
-seven_day_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
-seven_day_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
-effort=$(echo "$input" | jq -r '.effort.level // empty')
-session_id=$(echo "$input" | jq -r '.session_id // empty')
+# Every input field in one jq call; \x1f keeps empty fields in place (tab is whitespace and would collapse)
+IFS=$'\x1f' read -r cwd model used_pct five_hour_pct five_hour_reset seven_day_pct seven_day_reset effort session_id \
+  cc_version fast_mode out_style sess_name transcript cost dur_ms c_new c_write c_read ctx_size <<<"$(echo "$input" | jq -r '
+  (.context_window.current_usage // {}) as $u
+  | [(.workspace.current_dir // .cwd), (.model.display_name // "" | gsub(" *\\([^)]*\\)"; "")),
+     .context_window.used_percentage, .rate_limits.five_hour.used_percentage, .rate_limits.five_hour.resets_at,
+     .rate_limits.seven_day.used_percentage, .rate_limits.seven_day.resets_at, .effort.level, .session_id,
+     .version, (.fast_mode // false), .output_style.name, .session_name, .transcript_path,
+     .cost.total_cost_usd, .cost.total_duration_ms, ($u.input_tokens // 0), ($u.cache_creation_input_tokens // 0),
+     ($u.cache_read_input_tokens // 0), (.context_window.context_window_size // 0)]
+  | map(. // "" | tostring) | join("\u001f")')"
 
 # abtop reads rate limits from this file; `abtop --setup` would want the statusLine slot for itself
 [ -n "$five_hour_pct$seven_day_pct" ] && echo "$input" | jq -c '{source: "claude", updated_at: (now | floor)}
@@ -151,7 +153,6 @@ fi
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
 [ -n "$pkg_mgr" ] && line1+=("$(printf '\033[2m%s\033[0m' "$pkg_mgr")")
 [ -n "$mise_seg" ] && line1+=("$mise_seg")
-cc_version=$(echo "$input" | jq -r '.version // empty')
 [ -n "$cc_version" ] && line1+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
 
 # Git line — branch, tree counts, ahead/behind
@@ -172,8 +173,7 @@ if [ -n "$effort" ]; then
   esac
   line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
-[ "$(echo "$input" | jq -r '.fast_mode // false')" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
-out_style=$(echo "$input" | jq -r '.output_style.name // empty')
+[ "$fast_mode" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
 [ -n "$out_style" ] && [ "$out_style" != default ] && line2+=("$(printf '\033[36m🎨 %s\033[0m' "$out_style")")
 
 # Usage line — cost, session time, rate limits, credits
@@ -185,16 +185,13 @@ if [ -n "$used_pct" ]; then
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
   elif [ "$used_int" -ge 50 ]; then color='\033[33m'
   else color='\033[32m'; fi
-  read -r c_new c_write c_read ctx_size <<<"$(echo "$input" | jq -r '.context_window | (.current_usage // {}) as $u
-    | "\($u.input_tokens//0) \($u.cache_creation_input_tokens//0) \($u.cache_read_input_tokens//0) \(.context_window_size//0)"')"
   ctx_used=$((c_new + c_write + c_read))
   # Base = context of the session's first response: system prompt, tools, memory files and the first prompt.
   # ponytail: estimate measured once per session; /context has the real split but the statusline doesn't get it
   base_cache="${TMPDIR:-/tmp}/claude-ctx-base-$session_id"
   base=$(cat "$base_cache" 2>/dev/null)
   if [ -z "$base" ]; then
-    tp=$(echo "$input" | jq -r '.transcript_path // empty')
-    base=$(grep '"isSidechain":false' "$tp" 2>/dev/null | grep -m1 '"role":"assistant"' \
+    base=$(grep '"isSidechain":false' "$transcript" 2>/dev/null | grep -m1 '"role":"assistant"' \
       | jq -r '.message.usage | (.input_tokens//0) + (.cache_creation_input_tokens//0) + (.cache_read_input_tokens//0)')
     [ -n "$base" ] && echo "$base" > "$base_cache"
   fi
@@ -217,10 +214,8 @@ if [ -n "$used_pct" ]; then
   fi
 fi
 
-cost=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
 [ -n "$cost" ] && line_usage+=("$(printf '\033[36m🪙 $%.2f\033[0m' "$cost")")
 
-dur_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // empty')
 if [ -n "$dur_ms" ] && [ "$dur_ms" -gt 0 ] 2>/dev/null; then
   dur_s=$((dur_ms / 1000))
   line_usage+=("$(printf '\033[37m⏳ %dh%02d\033[0m' $((dur_s / 3600)) $(((dur_s % 3600) / 60)))")
@@ -313,7 +308,6 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
   [ "${total:-0}" -gt 0 ] && todo_header="$(printf '\033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
-sess_name=$(echo "$input" | jq -r '.session_name // empty')
 [ -n "$sess_name" ] && printf '\033[1;37m🏷️ %s\033[0m\n' "$sess_name"
 join_parts "${line1[@]}"
 if [ "${#line_git[@]}" -gt 0 ]; then
