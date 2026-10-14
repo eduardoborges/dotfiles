@@ -19,6 +19,7 @@ window-save-state = never
 # herdr ja mantem o scrollback, 1MB aqui evita RAM duplicada
 scrollback-limit = 1000000
 mouse-hide-while-typing = true
+mouse-scroll-multiplier = discrete:1
 
 # Cursor styling
 cursor-style = "block"
