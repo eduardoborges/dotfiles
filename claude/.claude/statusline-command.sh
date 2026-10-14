@@ -154,6 +154,7 @@ fi
 [ -n "$pkg_mgr" ] && line1+=("$(printf '\033[2m%s\033[0m' "$pkg_mgr")")
 [ -n "$mise_seg" ] && line1+=("$mise_seg")
 [ -n "$cc_version" ] && line1+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
+[ -n "$sess_name" ] && line1+=("$(printf '\033[1;37m🏷️ %s\033[0m' "$sess_name")")
 
 # Git line — branch, tree counts, ahead/behind
 line_git=()
@@ -308,7 +309,6 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
   [ "${total:-0}" -gt 0 ] && todo_header="$(printf '\033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
-[ -n "$sess_name" ] && printf '\033[1;37m🏷️ %s\033[0m\n' "$sess_name"
 join_parts "${line1[@]}"
 if [ "${#line_git[@]}" -gt 0 ]; then
   printf '\n'
