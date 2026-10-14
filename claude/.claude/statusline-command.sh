@@ -313,6 +313,8 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
   [ "${total:-0}" -gt 0 ] && todo_header="$(printf '\033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
+sess_name=$(echo "$input" | jq -r '.session_name // empty')
+[ -n "$sess_name" ] && printf '\033[1;37m🏷️ %s\033[0m\n' "$sess_name"
 join_parts "${line1[@]}"
 if [ "${#line_git[@]}" -gt 0 ]; then
   printf '\n'
