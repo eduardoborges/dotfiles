@@ -48,6 +48,7 @@ red = "#FF5555"
 prompt_new_tab_name = false
 agent_panel_sort = "spaces"
 show_agent_labels_on_pane_borders = true
+mouse_scroll_lines = 1
 
 status_indicators = "dots"
 [ui.sound]
