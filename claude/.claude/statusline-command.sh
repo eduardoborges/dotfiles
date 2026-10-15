@@ -9,7 +9,7 @@ I_MODEL='🤖'
 I_CTX='🧠'
 I_5H='⏱️'
 I_7D='📅'
-I_EFFORT='⚡'
+I_EFFORT='⚡️'
 I_TODO='📋'
 
 # Every input field in one jq call; \x1f keeps empty fields in place (tab is whitespace and would collapse)
