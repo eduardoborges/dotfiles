@@ -77,6 +77,13 @@ if git_dir=$(git -C "$cwd" rev-parse --git-dir 2>/dev/null); then
     [ -n "$ahead" ] && [ "$ahead" -gt 0 ] && git_status+=" \033[36m↑${ahead}\033[0m"
     [ -n "$behind" ] && [ "$behind" -gt 0 ] && git_status+=" \033[31m↓${behind}\033[0m"
   fi
+  # Divergence from the default branch, for feature branches and worktrees
+  default_ref=$(git -C "$cwd" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
+  if [ -n "$default_ref" ] && [ "$branch" != "${default_ref#origin/}" ]; then
+    read -r base_ahead base_behind <<<"$(git -C "$cwd" rev-list --left-right --count "HEAD...$default_ref" 2>/dev/null)"
+  fi
+  stash_count=$(git -C "$cwd" stash list 2>/dev/null | wc -l | tr -d ' ')
+  last_commit=$(git -C "$cwd" log -1 --format=%ct 2>/dev/null)
 fi
 
 # Mise: are the current dir's tools installed and in sync?
@@ -150,12 +157,26 @@ line1=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
 [ -n "$cc_version" ] && line1+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
 [ -n "$sess_name" ] && line1+=("$(printf '\033[1;37m🏷️ %s\033[0m' "$sess_name")")
 
-# Git line — worktree, branch, tree counts, ahead/behind
+# Git line — worktree, branch with tree counts and upstream, default branch divergence, stash, last commit
 line_git=()
 if [ -n "$in_worktree" ]; then
   line_git+=("$(printf '\033[33m🌳 %s\033[0m \033[2m⇠ %s · %d wt\033[0m' "$(basename "$cur_toplevel")" "$repo_name" "$wt_count")")
 fi
 [ -n "$branch" ] && line_git+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
+if [ -n "$base_ahead" ] && [ $((base_ahead + base_behind)) -gt 0 ]; then
+  base_seg=$(printf '\033[2m🎯 %s\033[0m' "${default_ref#origin/}")
+  [ "$base_ahead" -gt 0 ] && base_seg+=$(printf ' \033[36m+%d\033[0m' "$base_ahead")
+  [ "$base_behind" -gt 0 ] && base_seg+=$(printf ' \033[31m-%d\033[0m' "$base_behind")
+  line_git+=("$base_seg")
+fi
+[ "${stash_count:-0}" -gt 0 ] && line_git+=("$(printf '\033[33m🗃️ %d\033[0m' "$stash_count")")
+if [ -n "$last_commit" ]; then
+  age=$(( $(date +%s) - last_commit ))
+  if [ "$age" -lt 3600 ]; then age="$((age / 60))m"
+  elif [ "$age" -lt 86400 ]; then age="$((age / 3600))h"
+  else age="$((age / 86400))d"; fi
+  line_git+=("$(printf '\033[2m🕐 %s\033[0m' "$age")")
+fi
 [ -z "$in_worktree" ] && [ "${wt_count:-0}" -gt 0 ] && line_git+=("$(printf '\033[33m🌳 %d wt\033[0m' "$wt_count")")
 
 # Model line — model, effort and session settings
