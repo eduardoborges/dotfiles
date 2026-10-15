@@ -118,7 +118,7 @@ fi
 
 # Progress bar — braille cells, 6 fill steps per cell for a smoother ramp
 progress_bar() {
-  local pct=$1 width=8
+  local pct=$1 width=10
   local levels=(⣀ ⣄ ⣤ ⣦ ⣶ ⣷ ⣿)
   local total=$((width * 6)) filled i lvl
   filled=$(( (pct * total + 50) / 100 ))
