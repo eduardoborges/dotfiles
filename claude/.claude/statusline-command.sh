@@ -142,13 +142,7 @@ join_parts() {
 }
 
 # Line 1 — project info
-line1=()
-if [ -n "$in_worktree" ]; then
-  line1+=("$(printf '\033[33m🌳 %s\033[0m \033[2m⇠ %s · %d wt\033[0m' "$(basename "$cur_toplevel")" "$repo_name" "$wt_count")")
-else
-  line1+=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
-  [ "${wt_count:-0}" -gt 0 ] && line1+=("$(printf '\033[33m🌳 %d wt\033[0m' "$wt_count")")
-fi
+line1=("$(printf '\033[34m%s %s\033[0m' "$I_DIR" "$display_cwd")")
 [ -n "$proj" ] && line1+=("$(printf '\033[36m📦 %s\033[0m' "$proj")")
 [ -n "$node_version" ] && line1+=("$(printf '\033[32m%s %s\033[0m' "$I_NODE" "$node_version")")
 [ -n "$pkg_mgr" ] && line1+=("$(printf '\033[2m%s\033[0m' "$pkg_mgr")")
@@ -156,9 +150,13 @@ fi
 [ -n "$cc_version" ] && line1+=("$(printf '\033[2mv%s\033[0m' "$cc_version")")
 [ -n "$sess_name" ] && line1+=("$(printf '\033[1;37m🏷️ %s\033[0m' "$sess_name")")
 
-# Git line — branch, tree counts, ahead/behind
+# Git line — worktree, branch, tree counts, ahead/behind
 line_git=()
+if [ -n "$in_worktree" ]; then
+  line_git+=("$(printf '\033[33m🌳 %s\033[0m \033[2m⇠ %s · %d wt\033[0m' "$(basename "$cur_toplevel")" "$repo_name" "$wt_count")")
+fi
 [ -n "$branch" ] && line_git+=("$(printf "\033[35m%s %s\033[0m${git_status}" "$I_BRANCH" "$branch")")
+[ -z "$in_worktree" ] && [ "${wt_count:-0}" -gt 0 ] && line_git+=("$(printf '\033[33m🌳 %d wt\033[0m' "$wt_count")")
 
 # Model line — model, effort and session settings
 line2=()
