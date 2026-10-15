@@ -237,7 +237,7 @@ if [ -n "$five_hour_pct" ]; then
       reset_suffix=$(printf " (%dh%02d)" "$h" "$m")
     fi
   fi
-  line_usage+=("$(printf "${color}%s %s%s\033[0m" "$I_5H" "$(progress_bar "$five_int")" "$reset_suffix")")
+  line_usage+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_5H" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
 fi
 
 if [ -n "$seven_day_pct" ]; then
@@ -255,7 +255,7 @@ if [ -n "$seven_day_pct" ]; then
       reset_suffix=$(printf " (%dd %dh)" "$d" "$h")
     fi
   fi
-  line_usage+=("$(printf "${color}%s %s%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$reset_suffix")")
+  line_usage+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
 fi
 
 # Usage credits (Enterprise work profile) — not in the statusline stdin JSON,
@@ -281,7 +281,7 @@ if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
         if [ "$pct" -ge 75 ]; then color='\033[31m'
         elif [ "$pct" -ge 50 ]; then color='\033[33m'
         else color='\033[32m'; fi
-        seg=$(printf "${color}💳 %s \$%s/\$%s\033[0m" "$(progress_bar "$pct")" "$spent" "$total")
+        seg=$(printf "${color}💳 %s %d%% \$%s/\$%s\033[0m" "$(progress_bar "$pct")" "$pct" "$spent" "$total")
       elif [ "$enabled" = "true" ]; then
         seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk -v x="$used" 'BEGIN{printf "%.2f", x / 100}')")
       else
