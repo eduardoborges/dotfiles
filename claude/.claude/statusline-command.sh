@@ -14,12 +14,12 @@ I_TODO='📋'
 
 # Every input field in one jq call; \x1f keeps empty fields in place (tab is whitespace and would collapse)
 IFS=$'\x1f' read -r cwd model used_pct five_hour_pct five_hour_reset seven_day_pct seven_day_reset effort session_id \
-  cc_version fast_mode out_style sess_name transcript cost dur_ms c_new c_write c_read ctx_size <<<"$(echo "$input" | jq -r '
+  cc_version fast_mode sess_name transcript cost dur_ms c_new c_write c_read ctx_size <<<"$(echo "$input" | jq -r '
   (.context_window.current_usage // {}) as $u
   | [(.workspace.current_dir // .cwd), (.model.display_name // "" | gsub(" *\\([^)]*\\)"; "")),
      .context_window.used_percentage, .rate_limits.five_hour.used_percentage, .rate_limits.five_hour.resets_at,
      .rate_limits.seven_day.used_percentage, .rate_limits.seven_day.resets_at, .effort.level, .session_id,
-     .version, (.fast_mode // false), .output_style.name, .session_name, .transcript_path,
+     .version, (.fast_mode // false), .session_name, .transcript_path,
      .cost.total_cost_usd, .cost.total_duration_ms, ($u.input_tokens // 0), ($u.cache_creation_input_tokens // 0),
      ($u.cache_read_input_tokens // 0), (.context_window.context_window_size // 0)]
   | map(. // "" | tostring) | join("\u001f")')"
@@ -175,7 +175,6 @@ if [ -n "$effort" ]; then
   line2+=("$(printf "${ecolor}%s %s\033[0m" "$I_EFFORT" "$effort")")
 fi
 [ "$fast_mode" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
-[ -n "$out_style" ] && [ "$out_style" != default ] && line2+=("$(printf '\033[36m🎨 %s\033[0m' "$out_style")")
 
 # Usage line — cost, session time, rate limits, credits
 line_usage=()
