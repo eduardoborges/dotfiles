@@ -51,6 +51,8 @@ brew "diff-so-fancy"
 brew "duti"
 # Like neofetch, but much faster because written mostly in C
 brew "fastfetch"
+# Easiest way to build and release mobile apps
+brew "fastlane"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GitHub command-line tool
