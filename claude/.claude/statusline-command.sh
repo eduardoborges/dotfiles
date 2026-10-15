@@ -179,7 +179,7 @@ fi
 # Usage line — cost, session time, rate limits, credits
 line_usage=()
 
-# Context — bar (up to 28 cells) split into base / conversation / free, then the tokens used; joins the model line
+# Context — bar split into base / conversation / free, then the tokens used; joins the model line
 if [ -n "$used_pct" ]; then
   used_int=$(printf '%.0f' "$used_pct")
   if [ "$used_int" -ge 75 ]; then color='\033[31m'
@@ -199,18 +199,7 @@ if [ -n "$used_pct" ]; then
   [ "$base" -gt "$ctx_used" ] && base=$ctx_used
   if [ "$ctx_size" -gt 0 ]; then
     t_used=$(awk -v n="$ctx_used" 'BEGIN{print (n>=1e6?sprintf("%.1fM",n/1e6):n>=1e3?sprintf("%.1fk",n/1e3):n)}')
-    model_plain=$(join_parts "${line2[@]}" | sed $'s/\x1b\\[[0-9;]*m//g')
-    # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
-    # + one per part: each part's emoji is 2 cols wide but counts as 1 char
-    bar_width=$(( ${COLUMNS:-80} - ${#model_plain} - ${#line2[@]} - ${#t_used} - 20 ))
-    [ "$bar_width" -gt 28 ] && bar_width=28
-    [ "$bar_width" -lt 10 ] && bar_width=10
-    used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
-    base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
-    [ "$base" -gt 0 ] && [ "$base_cells" -eq 0 ] && [ "$used_cells" -gt 0 ] && base_cells=1
-    rep() { local i; for ((i = 0; i < $2; i++)); do printf '%s' "$1"; done; }
-    line2+=("$(printf "%s \033[34m%s${color}%s\033[2m%s\033[0m ${color}%s\033[0m" \
-      "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" "$t_used")")
+    ctx_color=$color
   fi
 fi
 
@@ -306,6 +295,35 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
   read -r done total <<<"$(find "$taskdir" -maxdepth 1 -name '*.json' -exec cat {} + 2>/dev/null \
     | jq -rs 'map(select(.status)) | "\(map(select(.status == "completed")) | length) \(length)"')"
   [ "${total:-0}" -gt 0 ] && todo_header="$(printf '\033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
+fi
+
+# Terminal width of joined parts: each part's emoji is 2 cols but 1 char, and U+FE0F takes no column
+parts_width() {
+  local s
+  s=$(join_parts "$@" | sed $'s/\x1b\\[[0-9;]*m//g')
+  s=${s//$'\xef\xb8\x8f'/}
+  echo $(( ${#s} + $# ))
+}
+
+# Context bar — sized so the model line ends in the same column as the usage line
+if [ -n "$t_used" ]; then
+  # 🧠 + spaces around the bar + " | " before it
+  fixed=$(( $(parts_width "${line2[@]}") + 7 + ${#t_used} ))
+  if [ "${#line_usage[@]}" -gt 0 ]; then
+    bar_width=$(( $(parts_width "${line_usage[@]}") - fixed ))
+  else
+    bar_width=31
+  fi
+  # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
+  max_width=$(( ${COLUMNS:-80} - fixed - 13 ))
+  [ "$bar_width" -gt "$max_width" ] && bar_width=$max_width
+  [ "$bar_width" -lt 11 ] && bar_width=11
+  used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
+  base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
+  [ "$base" -gt 0 ] && [ "$base_cells" -eq 0 ] && [ "$used_cells" -gt 0 ] && base_cells=1
+  rep() { local i; for ((i = 0; i < $2; i++)); do printf '%s' "$1"; done; }
+  line2+=("$(printf "%s \033[34m%s${ctx_color}%s\033[2m%s\033[0m ${ctx_color}%s\033[0m" \
+    "$I_CTX" "$(rep ⣿ "$base_cells")" "$(rep ⣿ $((used_cells - base_cells)))" "$(rep ⣀ $((bar_width - used_cells)))" "$t_used")")
 fi
 
 join_parts "${line1[@]}"
