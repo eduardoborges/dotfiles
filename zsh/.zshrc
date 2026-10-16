@@ -55,6 +55,7 @@ alias gpl="git pull"
 alias gpu="git push"
 alias gbr="git branch"
 alias gcl="git clone"
+alias gd="hunk diff --watch HEAD -- ."
 # With no args, shows this branch's changes against the base branch. With args, runs the regular diff.
 diff() {
   (( $# )) && { command diff "$@"; return; }
