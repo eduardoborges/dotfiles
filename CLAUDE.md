@@ -34,4 +34,4 @@ Update one of those with `npx skills add <source>@<skill> -g -a claude-code --co
 
 Claude Code rewrites `claude/.claude/settings.json` on its own, and that write sometimes replaces the symlink with a plain file. When the repo copy falls behind: copy the live file over the repo one, delete `~/.claude/settings.json`, then stow the `claude` package again.
 
-The hook commands in that file use absolute paths on purpose. `$HOME` there broke Claude Status Bar and the herdr rename. The scripts they call live in `~/.claude/statusbar` and `~/.claude/hooks`, installed by those apps and not tracked here.
+The hook commands in that file use absolute paths on purpose. `$HOME` there broke the herdr rename. herdr installs its own script in `~/.claude/hooks`, and that one is not tracked here.

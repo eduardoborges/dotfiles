@@ -19,14 +19,6 @@
   "hooks": {
     "Notification": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' notify"
-          }
-        ]
-      },
-      {
         "matcher": "permission_prompt|elicitation_dialog",
         "hooks": [
           {
@@ -36,27 +28,7 @@
         ]
       }
     ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' permreq"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' post"
-          }
-        ]
-      },
       {
         "matcher": "*",
         "hooks": [
@@ -74,15 +46,6 @@
           {
             "type": "command",
             "command": "/opt/homebrew/bin/rtk hook claude"
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' pre"
           }
         ]
       },
@@ -106,14 +69,6 @@
       }
     ],
     "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/lifecycle.js' end"
-          }
-        ]
-      },
       {
         "hooks": [
           {
@@ -144,14 +99,6 @@
         ]
       },
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/lifecycle.js' start"
-          }
-        ]
-      },
-      {
         "matcher": "startup|resume",
         "hooks": [
           {
@@ -177,28 +124,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' stop"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "/Users/eduardo/Projects/Clawdmeter/daemon/attention-hook.sh stop"
           }
         ]
       }
     ],
     "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "PATH=\"/opt/homebrew/bin:/usr/local/bin${PATH:+:$PATH}\" node '/Users/eduardo/.claude/statusbar/update.js' prompt"
-          }
-        ]
-      },
       {
         "hooks": [
           {

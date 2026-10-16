@@ -149,8 +149,6 @@ cask "android-studio"
 cask "blender"
 # Anthropic's official Claude AI desktop app
 cask "claude"
-# Menu bar status indicator for Claude Code
-cask "claude-status-bar"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
 # Android device hub with a live, clickable emulator screen
