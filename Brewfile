@@ -113,8 +113,6 @@ brew "whisperkit-cli"
 brew "xcodegen"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# OpenCode V2 - the AI coding agent for the terminal
-brew "anomalyco/tap/opencode-v2", trusted: true
 # Simple hotkey-daemon for macOS.
 brew "asmvik/formulae/skhd", trusted: true
 # CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal
