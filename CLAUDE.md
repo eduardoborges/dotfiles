@@ -27,6 +27,7 @@ There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.js
 | `rorkai/app-store-connect-cli-skills` | asc-* (25 skills) |
 | `mattpocock/skills` | code-review, domain-modeling, grill-me, grill-with-docs, grilling |
 | `Tejashmakwana/motionmaxxing` | motionmaxxing |
+| `cloudflare/security-audit-skill` | security-audit |
 
 Update one of those with `npx skills add <source>@<skill> -g -a claude-code --copy -y`, or just `<source>` when the repo holds a single skill. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours. `skills/init-docs` is a symlink to the public repo `eduardoborges/lean-docs`, which has to be cloned at `~/Projects/lean-docs`: edit the skill there and push from there.
 
