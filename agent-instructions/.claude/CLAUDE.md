@@ -16,6 +16,8 @@ Before adding or upgrading a library, check its latest stable version on the reg
 
 When the task touches Node.js or TypeScript code, load the matching skill before writing: `node` for app code, `nodejs-core` for Node internals, native addons or V8, and `typescript-magician` for types, generics and `any` cleanup.
 
+When you explain something to me, like a flow, an architecture, a plan or a code change, load `show-me` first and draw it. Skip it for answers that fit in one line.
+
 ## Questions
 
 Do not ask before obvious actions: reading files, running tests, installing a dependency the task needs, formatting, or the small refactors the request implies. Do them.
