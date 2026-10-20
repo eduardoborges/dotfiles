@@ -44,7 +44,7 @@ src/
 └── transport/      # sends API requests
 ```
 
-- Show component interaction, control flow, or data flow with Mermaid:
+- Show component interaction, control flow, or data flow with Mermaid. The terminal prints a mermaid block as raw source, so pipe the diagram through `bun ~/.claude/skills/show-me/ascii.ts` and paste what it prints in a `text` block. The renderer handles flowchart, sequence, state, class and ER diagrams. When it fails, or its output is wider than the terminal, keep the mermaid block or write the HTML file described below:
 
 ```mermaid
 sequenceDiagram
