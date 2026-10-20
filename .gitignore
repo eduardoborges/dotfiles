@@ -1,5 +1,6 @@
 /git/.config/git/local
 /git/.config/git/wc
+/agent-instructions/Projects/wc/CLAUDE.md
 # Claude Code syncs Anthropic's skills here through the ~/.claude/skills symlink
 skills/synced/
 /git/.config/git/allowed_signers
