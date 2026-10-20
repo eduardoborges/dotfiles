@@ -19,7 +19,7 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 
 ## Traps
 
-There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.json` (agent-device, i-have-adhd, show-me, image and video from `smixs/visual-skills`, and ten from `elevenlabs/skills`) are managed by the `skills` CLI, and an update overwrites local edits. The ones below were installed globally, which the CLI records nowhere, so this table is the only place their origin lives:
+There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.json` (agent-device, i-have-adhd, image and video from `smixs/visual-skills`, and ten from `elevenlabs/skills`) are managed by the `skills` CLI, and an update overwrites local edits. The ones below were installed globally, which the CLI records nowhere, so this table is the only place their origin lives:
 
 | Source | Skills |
 |---|---|
@@ -29,7 +29,7 @@ There are two kinds of borrowed skills in `skills/`. The ones in `skills-lock.js
 | `Tejashmakwana/motionmaxxing` | motionmaxxing |
 | `cloudflare/security-audit-skill` | security-audit |
 
-Update one of those with `npx skills add <source>@<skill> -g -a claude-code --copy -y`, or just `<source>` when the repo holds a single skill. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours. `skills/init-docs` is a symlink to the public repo `eduardoborges/lean-docs`, which has to be cloned at `~/Projects/lean-docs`: edit the skill there and push from there.
+Update one of those with `npx skills add <source>@<skill> -g -a claude-code --copy -y`, or just `<source>` when the repo holds a single skill. The command prints a PromptScript failure at the end and the files land in `skills/` anyway. Everything else in `skills/` is ours. That includes `show-me`: it came from `humanlayer/skills`, but we took it out of the lock to make it render Mermaid as text. Don't reinstall it from there. `skills/init-docs` is a symlink to the public repo `eduardoborges/lean-docs`, which has to be cloned at `~/Projects/lean-docs`: edit the skill there and push from there.
 
 `npx skills update` reinstalls as symlinks, not copies: global skills point into `~/.agents/skills`, project ones into a new `.agents/skills` at the repo root, with a `.claude/skills` beside it. After an update, copy each linked skill over its symlink, then delete `.agents/` and `.claude/skills/` from the repo. `skills/init-docs` is the only symlink that belongs there.
 

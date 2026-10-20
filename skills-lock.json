@@ -43,12 +43,6 @@
       "skillPath": "setup-api-key/SKILL.md",
       "computedHash": "f8daa32a413354452b90480ffe5acd056dc04608108463bd5d014a8af56dd077"
     },
-    "show-me": {
-      "source": "humanlayer/skills",
-      "sourceType": "github",
-      "skillPath": "plugins/show-me/skills/show-me/SKILL.md",
-      "computedHash": "43766f53afe7eb9feba0bb7716590c35cbb8d39d4a91eddef50e9566a6f6ae19"
-    },
     "sound-effects": {
       "source": "elevenlabs/skills",
       "sourceType": "github",
