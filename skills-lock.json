@@ -19,12 +19,6 @@
       "skillPath": "dubbing/SKILL.md",
       "computedHash": "a1e90267056a299fe57d624657bde6ae34d98f0faa80fc2b4ded08ea12a9f483"
     },
-    "i-have-adhd": {
-      "source": "ayghri/i-have-adhd",
-      "sourceType": "github",
-      "skillPath": "skills/i-have-adhd/SKILL.md",
-      "computedHash": "e12ff08dfe4b5baae7065c2f05a5738b8a55f3ccbed82ba45f5496c8e83b2a25"
-    },
     "image": {
       "source": "smixs/visual-skills",
       "sourceType": "github",
