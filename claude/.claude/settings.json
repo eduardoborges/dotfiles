@@ -10,30 +10,15 @@
   "effortLevel": "xhigh",
   "enableAllProjectMcpServers": true,
   "enabledPlugins": {
-    "1password@1password": true,
     "atlassian@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "claude-animation@claude-animation-skill": true,
     "cloudflare@cloudflare": true,
     "code-review@claude-code-plugins": true,
     "herdr-claude-title-hook@herdr-claude-title-hook": true,
-    "ponytail@ponytail": true,
     "swift-lsp@claude-plugins-official": true
   },
   "enableWorkflows": true,
   "extraKnownMarketplaces": {
-    "1password": {
-      "source": {
-        "repo": "1Password/1password-claude-plugin",
-        "source": "github"
-      }
-    },
-    "claude-animation-skill": {
-      "source": {
-        "repo": "buildwithhanif/claude-animation-skill",
-        "source": "github"
-      }
-    },
     "claude-code-plugins": {
       "source": {
         "source": "git",
@@ -49,12 +34,6 @@
     "herdr-claude-title-hook": {
       "source": {
         "repo": "eduardoborges/herdr-claude-title-hook",
-        "source": "github"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "repo": "DietrichGebert/ponytail",
         "source": "github"
       }
     }
