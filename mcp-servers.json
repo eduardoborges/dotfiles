@@ -38,13 +38,6 @@
       "DOKPLOY_TOOL_PRESET": "core"
     }
   },
-  "taby": {
-    "type": "http",
-    "url": "http://127.0.0.1:43127/mcp",
-    "headers": {
-      "Authorization": "Bearer ${TABY_MCP_TOKEN}"
-    }
-  },
   "elevenlabs": {
     "type": "http",
     "url": "https://api.us.elevenlabs.io/v1/mcp"
