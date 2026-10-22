@@ -141,6 +141,8 @@ brew "tamtom/tap/gplay", trusted: true
 brew "teamookla/speedtest/speedtest", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line interface for 1Password
+cask "1password-cli"
 # Tools for building Android applications
 cask "android-studio"
 # 3D creation suite
