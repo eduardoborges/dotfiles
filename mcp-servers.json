@@ -57,5 +57,9 @@
     "type": "http",
     "url": "https://mcp.apiframe.ai",
     "headersHelper": "sh -c '. \"$HOME/.envrc\"; printf \"{\\\"X-API-Key\\\":\\\"%s\\\"}\" \"$APIFRAME_API_KEY\"'"
+  },
+  "cloudflare-docs": {
+    "type": "http",
+    "url": "https://docs.mcp.cloudflare.com/mcp"
   }
 }

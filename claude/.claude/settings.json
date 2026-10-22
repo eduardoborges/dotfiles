@@ -12,7 +12,6 @@
   "enabledPlugins": {
     "atlassian@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "cloudflare@cloudflare": true,
     "code-review@claude-code-plugins": true,
     "herdr-claude-title-hook@herdr-claude-title-hook": true,
     "swift-lsp@claude-plugins-official": true
@@ -23,12 +22,6 @@
       "source": {
         "source": "git",
         "url": "https://github.com/anthropics/claude-code.git"
-      }
-    },
-    "cloudflare": {
-      "source": {
-        "repo": "cloudflare/skills",
-        "source": "github"
       }
     },
     "herdr-claude-title-hook": {
@@ -201,10 +194,6 @@
   "permissions": {
     "defaultMode": "bypassPermissions",
     "deny": [
-      "mcp__plugin_cloudflare_cloudflare-api",
-      "mcp__plugin_cloudflare_cloudflare-bindings",
-      "mcp__plugin_cloudflare_cloudflare-builds",
-      "mcp__plugin_cloudflare_cloudflare-observability",
       "mcp__claude_ai_Cloudflare_Developer_Platform"
     ]
   },
