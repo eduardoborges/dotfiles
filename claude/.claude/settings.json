@@ -67,6 +67,15 @@
       {
         "hooks": [
           {
+            "command": "/opt/homebrew/bin/jq -c '{hookSpecificOutput: {hookEventName: \"PreToolUse\", updatedInput: (.tool_input + (if .tool_name | endswith(\"__new_page\") then {background: true} else {bringToFront: false} end))}}'",
+            "type": "command"
+          }
+        ],
+        "matcher": "mcp__chrome-devtools__(new_page|select_page)"
+      },
+      {
+        "hooks": [
+          {
             "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' alert",
             "type": "command"
           }

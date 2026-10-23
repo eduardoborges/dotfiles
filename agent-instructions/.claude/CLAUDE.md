@@ -68,10 +68,11 @@ Anything involving Cloudflare (DNS, tunnels, Access, R2, Workers, WAF, cache, re
 
 ## Browser testing
 
-Validate web work in Chrome for Testing through the `chrome-devtools` MCP, never in my personal Chrome Dev. The MCP is user-scoped and starts through `~/.config/yabai/test-chrome-mcp.sh`, which opens Chrome for Testing on port 9223 with the profile at `~/.cache/chrome-devtools-mcp/chrome-profile`. It runs headless. When a site needs a login, ask me to run the script with `--login`, which reopens it headed on the same profile.
+Validate web work in Chrome for Testing through the `chrome-devtools` MCP, never in my personal Chrome Dev. The MCP is user-scoped and starts through `~/.config/yabai/test-chrome-mcp.sh`, which opens Chrome for Testing on port 9223 with the profile at `~/.cache/chrome-devtools-mcp/chrome-profile`. Every session, personal or work, shares that one Chrome, and its windows go to workspace 7, out of my way. When a site needs a login, ask me to sign in there.
 
-- Timers in a background tab are throttled. Wait with `wait_for`, and call `select_page` with `bringToFront` before a screenshot.
-- After a Chrome update the open instance gets flaky. Kill the main process (the one with this profile's `--user-data-dir`) and the launcher brings it back within a few seconds. Expect to log in again.
+- A hook forces `background: true` on `new_page` and `bringToFront: false` on `select_page`, because bringing Chrome to the front drags me to workspace 7. The launcher turns off background throttling, so pages there keep rendering and screenshots work.
+- Open one page per task and reuse it with `navigate_page`. Close it with `close_page` when you're done, or it stays open for every session after yours.
+- After a Chrome update the open instance gets flaky. Kill the main process (the one with this profile's `--user-data-dir`) and run the script with `--start` to bring it back. Expect to log in again.
 - When several agents share the browser, follow the project's own lock if it has one (bulk uses `scripts/sim-pool.mjs`).
 
 @RTK.md
