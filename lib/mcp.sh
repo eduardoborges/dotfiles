@@ -11,6 +11,17 @@
 MCP_SERVERS_FILE="$DOTFILES_DIR/mcp-servers.json"
 CLAUDE_CONFIG="$HOME/.claude.json"
 
+# The work profile (CLAUDE_CONFIG_DIR=~/.claude-work) has its own MCP list.
+# Only the servers below get copied into it, so work and personal stay apart.
+WORK_CLAUDE_DIR="$HOME/.claude-work"
+WORK_MCP_SERVERS=(chrome-devtools)
+
+# add-json refuses to replace, so drop the old entry first
+add_mcp_server() {
+  claude mcp remove "$1" -s user &>/dev/null || true
+  claude mcp add-json "$1" "$2" -s user &>/dev/null
+}
+
 sync_mcp_servers() {
   section "Syncing MCP servers"
 
@@ -20,12 +31,17 @@ sync_mcp_servers() {
 
   local name config
   while IFS=$'\t' read -r name config; do
-    # add-json refuses to replace, so drop the old entry first
-    claude mcp remove "$name" -s user &>/dev/null || true
-    if claude mcp add-json "$name" "$config" -s user &>/dev/null; then
+    if add_mcp_server "$name" "$config"; then
       info "$name"
     else
       warn "could not add $name"
+    fi
+    if [[ -d "$WORK_CLAUDE_DIR" && " ${WORK_MCP_SERVERS[*]} " == *" $name "* ]]; then
+      if CLAUDE_CONFIG_DIR="$WORK_CLAUDE_DIR" add_mcp_server "$name" "$config"; then
+        info "$name (work)"
+      else
+        warn "could not add $name to the work profile"
+      fi
     fi
   done < <(sed "s|\"~/|\"$HOME/|g" "$MCP_SERVERS_FILE" |
     jq -r 'to_entries[] | [.key, (.value | tojson)] | @tsv')
