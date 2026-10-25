@@ -159,6 +159,8 @@ cask "figma"
 cask "ghostty"
 # Web browser
 cask "google-chrome@dev"
+# Extensible coding agent for the terminal
+cask "grok-build"
 # Local-first voice dictation
 cask "anomalyco/tap/hex", trusted: true
 # Calendar for professionals and teams
