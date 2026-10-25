@@ -1,6 +1,6 @@
 # Dotfiles
 
-My daily configs for zsh, starship, yabai, skhd, JankyBorders, Ghostty, herdr, VS Code, and agent skills.
+My daily configs for zsh, starship, yabai, skhd, JankyBorders, Ghostty, herdr, VS Code, Claude Code, Grok Build, and agent skills.
 
 **macOS only.** `yabai` and `skhd` handle tiling and hotkeys, and the Brewfile tracks everything installed through Homebrew.
 
@@ -64,7 +64,7 @@ The user-scoped servers are tracked in `mcp-servers.json`. Claude Code keeps
 them in `~/.claude.json`, which also holds session history and OAuth tokens, so
 that file is not stowed. The installer reads the tracked list and puts each
 server back with `claude mcp add-json`. Home paths are written as `~/...` and
-expanded on the way in.
+expanded on the way in. Grok Build reads the servers from that same file.
 
 To refresh the list after adding or removing a server:
 

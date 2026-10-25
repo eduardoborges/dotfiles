@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "new|load",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' start",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' end",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
