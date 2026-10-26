@@ -12,7 +12,6 @@ PACKAGES=(
   claude
   ghostty
   git
-  grok
   herdr
   skhd
   starship

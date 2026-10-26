@@ -1,1 +1,0 @@
-../../Projects/wc/CLAUDE.md
