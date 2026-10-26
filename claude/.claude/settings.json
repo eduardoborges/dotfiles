@@ -1,14 +1,168 @@
 {
-  "advisorModel": "fable",
-  "agentPushNotifEnabled": true,
   "attribution": {
     "commit": "",
     "pr": "",
     "sessionUrl": false
   },
-  "editorMode": "normal",
-  "effortLevel": "xhigh",
+  "permissions": {
+    "deny": [
+      "mcp__claude_ai_Cloudflare_Developer_Platform"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "model": "fable",
   "enableAllProjectMcpServers": true,
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt|elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' alert"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' clear"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/opt/homebrew/bin/rtk hook claude"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__chrome-devtools__(new_page|select_page)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/opt/homebrew/bin/jq -c '{hookSpecificOutput: {hookEventName: \"PreToolUse\", updatedInput: (.tool_input + (if .tool_name | endswith(\"__new_page\") then {background: true} else {bringToFront: false} end))}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' alert"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' tool"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' end",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' end"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' start",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume|fork",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/eduardo/.claude/hooks/session-title.sh'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' stop"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' subagent"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' clear"
+          }
+        ]
+      }
+    ]
+  },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "enableWorkflows": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "atlassian@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
@@ -16,7 +170,6 @@
     "herdr-claude-title-hook@herdr-claude-title-hook": true,
     "swift-lsp@claude-plugins-official": true
   },
-  "enableWorkflows": true,
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
       "source": {
@@ -26,157 +179,13 @@
     },
     "herdr-claude-title-hook": {
       "source": {
-        "repo": "eduardoborges/herdr-claude-title-hook",
-        "source": "github"
+        "source": "github",
+        "repo": "eduardoborges/herdr-claude-title-hook"
       }
     }
   },
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' alert",
-            "type": "command"
-          }
-        ],
-        "matcher": "permission_prompt|elicitation_dialog"
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' clear",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "/opt/homebrew/bin/rtk hook claude",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      },
-      {
-        "hooks": [
-          {
-            "command": "/opt/homebrew/bin/jq -c '{hookSpecificOutput: {hookEventName: \"PreToolUse\", updatedInput: (.tool_input + (if .tool_name | endswith(\"__new_page\") then {background: true} else {bringToFront: false} end))}}'",
-            "type": "command"
-          }
-        ],
-        "matcher": "mcp__chrome-devtools__(new_page|select_page)"
-      },
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' alert",
-            "type": "command"
-          }
-        ],
-        "matcher": "AskUserQuestion"
-      },
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' tool",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' end",
-            "timeout": 15,
-            "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' end",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/eduardo/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "^(startup|resume|clear|compact|fork)$"
-      },
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/eduardo/.claude/hooks/journal.sh' start",
-            "timeout": 15,
-            "type": "command"
-          }
-        ],
-        "matcher": "startup|resume"
-      },
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/eduardo/.claude/hooks/session-title.sh'",
-            "timeout": 5,
-            "type": "command"
-          }
-        ],
-        "matcher": "startup|resume|fork"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' stop",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' subagent",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "/bin/sh '/Applications/Claudio.app/Contents/Resources/attention-hook.sh' clear",
-            "type": "command"
-          }
-        ]
-      }
-    ]
-  },
-  "inputNeededNotifEnabled": true,
   "language": "Portuguese",
-  "model": "opus",
+  "effortLevel": "xhigh",
   "modelSettings": {
     "claude-fable-5": {
       "effortLevel": "high"
@@ -184,43 +193,30 @@
     "claude-fable-5-1": {
       "effortLevel": "high"
     },
-    "claude-haiku-4-5": {
-
-    },
+    "claude-haiku-4-5": {},
     "claude-opus-5": {
       "effortLevel": "high"
     },
     "claude-opus-5-5": {
-      "effortLevel": "xhigh"
+      "effortLevel": "xhigh",
+      "autoCompactWindow": 600000
     },
-    "claude-sonnet-5": {
-
-    },
-    "claude-sonnet-5-5": {
-
-    }
+    "claude-sonnet-5": {},
+    "claude-sonnet-5-5": {}
   },
-  "permissions": {
-    "defaultMode": "bypassPermissions",
-    "deny": [
-      "mcp__claude_ai_Cloudflare_Developer_Platform"
-    ]
-  },
-  "remoteControlAtStartup": true,
-  "skipDangerousModePermissionPrompt": true,
-  "statusLine": {
-    "command": "bash ~/.claude/statusline-command.sh",
-    "type": "command"
-  },
-  "theme": "custom:draculinho",
+  "advisorModel": "fable",
   "tui": "fullscreen",
-  "verbose": false,
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": true,
-  "worktree": {
-    "baseRef": "fresh"
-  }
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "custom:draculinho",
+  "editorMode": "normal",
+  "verbose": false,
+  "switchModelsOnFlag": true,
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
 }
