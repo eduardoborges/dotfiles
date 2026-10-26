@@ -49,6 +49,7 @@ run_install() {
   do_backup
   run_stow
   link_skills
+  link_notes
   setup_rtk
   sync_mcp_servers
 

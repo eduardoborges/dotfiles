@@ -103,3 +103,20 @@ link_skills() {
     info "$target -> $DOTFILES_DIR/skills"
   done
 }
+
+# ~/Notes points at the Obsidian vault, which lives in iCloud
+link_notes() {
+  section "Linking Obsidian vault"
+  local vault="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notas"
+  local target="$HOME/Notes"
+  if [[ ! -d "$vault" ]]; then
+    warn "skipping $target (vault not found at $vault)"
+    return
+  fi
+  if [[ -e "$target" && ! -L "$target" ]]; then
+    warn "skipping $target (exists and is not a symlink)"
+    return
+  fi
+  ln -sfn "$vault" "$target"
+  info "$target -> $vault"
+}
