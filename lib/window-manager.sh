@@ -87,7 +87,7 @@ remove_yabai_login_bootstrap() {
 
 setup_window_manager() {
   section "Setting up the window manager"
-  ensure_wm_service yabai asmvik/formulae/yabai
+  ensure_wm_service yabai eduardoborges/tap/yabai
   ensure_wm_service skhd asmvik/formulae/skhd
   configure_yabai_scripting_addition
   ensure_borders
