@@ -49,13 +49,15 @@ run_macos_diagnostics() {
 
   check "yabai launchd service running" "yabai launchd service is not running" \
     service_running com.asmvik.yabai
+  check "yabai service runs $YABAI_BIN" "yabai service does not run $YABAI_BIN; run yabai-resign" \
+    test "$(plutil -extract ProgramArguments.0 raw "$YABAI_PLIST" 2>/dev/null)" = "$YABAI_BIN"
   check "skhd launchd service running" "skhd launchd service is not running" \
     service_running com.koekeishiya.skhd
   check "login bootstrap registered" "login bootstrap is not registered" \
     service_loaded "$YABAI_BOOTSTRAP_LABEL"
 
   check "yabai scripting addition loaded" "yabai scripting addition is not configured or could not load" \
-    sudo -n yabai --load-sa
+    sudo -n "$YABAI_BIN" --load-sa
   check "arm64e boot argument active in this kernel" "arm64e boot argument is stored but not active; reboot required" \
     boot_arg_active -arm64e_preview_abi
   check "window animations enabled" "window animations unavailable; grant Screen Recording and restart yabai" \

@@ -7,6 +7,7 @@ set -u
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 uid="$(id -u)"
+yabai_bin="$HOME/.local/libexec/yabai"
 log="/tmp/yabai-login-bootstrap_${USER}.log"
 
 exec >>"$log" 2>&1
@@ -23,7 +24,7 @@ if ! yabai -m query --spaces >/dev/null 2>&1; then
   launchctl kickstart -k "gui/$uid/com.asmvik.yabai" 2>/dev/null || true
 fi
 
-sudo -n yabai --load-sa 2>/dev/null || true
+sudo -n "$yabai_bin" --load-sa 2>/dev/null || true
 
 if ! launchctl print "gui/$uid/com.koekeishiya.skhd" 2>/dev/null |
   grep -q 'state = running'; then
@@ -32,7 +33,7 @@ fi
 
 for _attempt in {1..30}; do
   if yabai -m query --spaces >/dev/null 2>&1; then
-    sudo -n yabai --load-sa 2>/dev/null || true
+    sudo -n "$yabai_bin" --load-sa 2>/dev/null || true
     "$HOME/.config/yabai/ensure-spaces.sh" 7 || true
     "$HOME/.config/yabai/label-spaces.sh" || true
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] bootstrap complete"

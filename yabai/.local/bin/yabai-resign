@@ -1,0 +1,40 @@
+#!/bin/zsh
+# Copies the brew yabai to a fixed path outside the Cellar, signs it with yabai-cert, pins its
+# hash in the sudoers entry and starts the service from that copy. With a fixed path and a stable
+# certificate, the Accessibility and Screen Recording permissions survive upgrades. Run it after
+# every brew upgrade; ./install.sh runs it when the copy is stale.
+set -e
+
+src=$(readlink -f /opt/homebrew/bin/yabai)
+dst=$HOME/.local/libexec/yabai
+plist=$HOME/Library/LaunchAgents/com.asmvik.yabai.plist
+
+identity=yabai-cert
+if ! security find-identity -p codesigning | grep -q "\"$identity\""; then
+  print -u2 "yabai-resign: no $identity identity in the keychain, signing ad hoc. Accessibility has to be granted again after every upgrade."
+  identity=-
+fi
+
+mkdir -p "${dst:h}"
+cp "$src" "$dst.new"
+chmod 755 "$dst.new"
+codesign -fs "$identity" "$dst.new"
+
+# pin the new hash before swapping the binary, so a cancelled sudo leaves the old binary and its entry working
+row="$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 "$dst.new" | cut -d ' ' -f 1) $dst --load-sa"
+tmp=$(mktemp)
+echo "$row" > "$tmp"
+visudo -cf "$tmp" >/dev/null
+sudo install -m 0440 -o root -g wheel "$tmp" /private/etc/sudoers.d/yabai
+rm -f "$tmp"
+
+mv -f "$dst.new" "$dst"
+
+# yabai writes the service file with the path of the binary that starts it, so a service first
+# started from Homebrew keeps launchd on the Cellar binary
+if [[ -f $plist && $(plutil -extract ProgramArguments.0 raw "$plist") != "$dst" ]]; then
+  "$dst" --stop-service || true
+  "$dst" --uninstall-service
+fi
+
+"$dst" --restart-service 2>/dev/null || "$dst" --start-service

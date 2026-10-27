@@ -111,16 +111,28 @@ Run:
 
 On macOS the installer:
 
-1. Installs `yabai` and `skhd` from `asmvik/formulae` when missing.
-2. Links `.yabairc`, `.skhdrc`, and the Space helpers through GNU Stow.
-3. Starts or restarts both launchd services.
-4. Registers a login bootstrap that repairs launch-order races after reboot.
-5. Configures and loads the scripting addition when SIP allows it.
-6. Prints a diagnostic summary.
+1. Installs `yabai` from `eduardoborges/tap` and `skhd` from `asmvik/formulae`
+   when missing.
+2. Links `.yabairc`, `.skhdrc`, the Space helpers and `yabai-resign` through
+   GNU Stow.
+3. Runs `yabai-resign` when `~/.local/libexec/yabai` is missing, older than the
+   Homebrew build, or not the binary launchd starts. Otherwise it restarts yabai
+   from that copy.
+4. Starts or restarts skhd.
+5. Registers a login bootstrap that repairs launch-order races after reboot.
+6. Loads the scripting addition when SIP allows it.
+7. Prints a diagnostic summary.
 
-Both binaries need permission in **System Settings → Privacy & Security →
-Accessibility**. Window animations additionally require yabai under **Screen &
-System Audio Recording**.
+yabai runs from `~/.local/libexec/yabai`, not from the Homebrew path, so that is
+the binary to allow in **System Settings → Privacy & Security →
+Accessibility**, along with skhd. Window animations also need yabai under
+**Screen & System Audio Recording**.
+
+`yabai-resign` signs that copy with a self-signed Code Signing identity named
+`yabai-cert`, which keeps those grants across upgrades. Create it once per
+machine in Keychain Access → Certificate Assistant → Create a Certificate, with
+Certificate Type set to Code Signing. Without it the script signs ad hoc and
+warns, and Accessibility has to be granted again after every upgrade.
 
 On Apple Silicon, after setting `-arm64e_preview_abi` in NVRAM, reboot once
 before the scripting addition can load. Verify the active kernel arguments
@@ -162,11 +174,11 @@ brew pin eduardoborges/tap/yabai
 yabai-resign
 ```
 
-`yabai-resign` lives in `~/.local/bin` and is not tracked here. It copies the
-Cellar binary to `~/.local/libexec/yabai`, signs it with the self-signed
-`yabai-cert` identity so the Accessibility grant survives, writes the new hash
-to `/etc/sudoers.d/yabai` and restarts the service. launchd and `.yabairc` run
-that copy, not the Homebrew one.
+`yabai-resign` comes from the `yabai` package and is linked into
+`~/.local/bin`. It copies the Cellar binary to `~/.local/libexec/yabai`, signs
+it with `yabai-cert`, writes the new hash to `/etc/sudoers.d/yabai` and restarts
+the service from that copy. launchd and `.yabairc` run that copy, not the
+Homebrew one.
 
 ### When an update breaks Spaces again
 
