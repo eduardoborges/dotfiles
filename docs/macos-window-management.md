@@ -144,46 +144,66 @@ skhd --restart-service
 Every Space command silently no-ops on Golden Gate with a stock yabai build.
 `yabai -m space --focus 5` and `space --create` both exit 0 and change nothing,
 which takes down `Option + 1…9` and `Option + Control + Left/Right` at once. The
-cause is the scripting addition: Apple moved the seven patched functions inside
-the Dock binary, so the Tahoe offsets no longer resolve. Upstream v7.1.25 (May
-2026) predates the beta and carries no fix.
+cause is the scripting addition: it finds the functions it patches inside the
+Dock binary by byte pattern from a fixed offset, and Apple moves them in point
+releases. Upstream v7.1.25 (May 2026) predates Golden Gate and carries no fix.
 
-The offsets and byte patterns live in [asmvik/yabai#2802][gg-issue]. Confirm
-they still apply to the installed Dock before building anything, using the
-[offset checker][gg-gist] linked from that issue:
-
-```bash
-python3 verify_offsets.py /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock
-```
-
-`OK` and `MOVED` rows are a one-line edit each; a `CHANGED` row needs Ghidra.
-Apple reshuffles these every few betas, so re-run the checker after every
-system update. Verified 7/7 `OK` on build `26A5388g`.
-
-Building from the patched fork replaces the Homebrew binary:
+yabai here is built from the fork [eduardoborges/yabai][fork], which has the
+27.0 and 27.2 offsets, through the `eduardoborges/tap/yabai` formula in the
+Brewfile. The formula pins a commit of the fork, and the formula is pinned in
+Homebrew so a stray `brew upgrade` leaves it alone. To ship a fork change, push
+it, point `revision:` in the tap's `Formula/yabai.rb` at the new commit, bump
+`revision`, then run:
 
 ```bash
-git clone https://github.com/AhsanFazal/yabai && cd yabai
-make install-local
-brew pin yabai
+brew unpin eduardoborges/tap/yabai
+brew upgrade eduardoborges/tap/yabai
+brew pin eduardoborges/tap/yabai
+yabai-resign
 ```
 
-`install-local` needs a self-signed `yabai-cert` Code Signing identity in the
-keychain (Keychain Access → Certificate Assistant → Create a Certificate). It
-codesigns with that stable identity so the Accessibility grant survives
-rebuilds, and rewrites `/etc/sudoers.d/yabai` with the new binary's hash. The
-`brew pin` matters: an unpinned `brew upgrade` restores the broken build.
+`yabai-resign` lives in `~/.local/bin` and is not tracked here. It copies the
+Cellar binary to `~/.local/libexec/yabai`, signs it with the self-signed
+`yabai-cert` identity so the Accessibility grant survives, writes the new hash
+to `/etc/sudoers.d/yabai` and restarts the service. launchd and `.yabairc` run
+that copy, not the Homebrew one.
 
-Confirm the addition actually loaded, rather than trusting the exit code:
+### When an update breaks Spaces again
+
+Ask the payload what it resolved before touching any code. It answers a
+handshake on its socket with its version and a bitmask of the Dock functions it
+found:
 
 ```bash
-plutil -p /Library/ScriptingAdditions/yabai.osax/Contents/Info.plist \
-  | grep CFBundleShortVersionString
-yabai -m space --focus 5 && yabai -m query --spaces --space
+python3 -c 'import socket,struct,getpass; s=socket.socket(socket.AF_UNIX); s.connect(f"/tmp/yabai-sa_{getpass.getuser()}.socket"); s.send(b"\x01\x00\x01"); v,a=s.recv(64).split(b"\0",1); print(v.decode(), hex(struct.unpack("<I",a[:4])[0]))'
 ```
 
+On 27.2 a working payload reports `0x4d`: dock.spaces, add_space, remove_space
+and the animation time. `0x0` means no pattern matched. The Dock also logs each
+lookup:
+
+```bash
+/usr/bin/log show --last 10m --predicate 'process == "Dock" AND eventMessage CONTAINS "yabai-sa"'
+```
+
+New offsets tend to show up in the upstream issues first ([#2802][gg-issue] for
+27.0, [#2832][gg-272] for 27.2). The Dock is a fat binary with `arm64e` and
+`arm64e.x1` slices, so check a pattern against both before building;
+`lipo -detailed_info` prints where each slice starts. On the M5 Pro the Dock
+runs the `arm64e` slice.
+
+Every payload change needs a new `OSAX_VERSION` in `src/osax/common.h`.
+`--load-sa` only replaces the installed payload when that version differs, so a
+rebuild with the same version keeps the old payload running. That is how a
+2.1.31 payload from another fork kept running under this fork's build until
+27.2.
+
+The 27.2 Dock no longer has `DPDesktopPictureManager`, so moving a Space to
+another display does not work there.
+
+[fork]: https://github.com/eduardoborges/yabai
 [gg-issue]: https://github.com/asmvik/yabai/issues/2802
-[gg-gist]: https://gist.github.com/AhsanFazal/d18a54b9dc0f259b49e21b8ed70078d2
+[gg-272]: https://github.com/asmvik/yabai/issues/2832
 
 ### Native Space hotkeys are disabled
 
