@@ -79,6 +79,8 @@ brew "mise"
 brew "mole"
 # Small build system for use with gyp or CMake
 brew "ninja"
+# AI coding agent, built for the terminal
+brew "opencode"
 # Spec-driven development (SDD) for AI coding assistants
 brew "openspec"
 # Your Gateway to Embedded Software Development Excellence
@@ -147,6 +149,8 @@ cask "android-studio"
 cask "blender"
 # Anthropic's official Claude AI desktop app
 cask "claude"
+# Claude Code usage monitor for the menu bar and a desk display
+cask "eduardoborges/tap/claudio", trusted: true
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
 # Android device hub with a live, clickable emulator screen
@@ -163,16 +167,24 @@ cask "notion-calendar"
 cask "obsidian"
 # Replacement for Docker Desktop
 cask "orbstack"
+# Logitech mouse battery, DPI, polling rate and lighting in the menu bar
+cask "eduardoborges/tap/rato", trusted: true
 # Team communication and collaboration software
 cask "slack"
 # Music streaming service
 cask "spotify"
 # Mesh VPN based on WireGuard
 cask "tailscale-app"
+# Messaging app with a focus on speed and security
+cask "telegram"
 # Tiny, fully native launcher, hotkeys, and clipboard history
 cask "abue-ammar/tinycast/tinycast"
+# Open-source BitTorrent client
+cask "transmission"
 # Open-source code editor
 cask "visual-studio-code"
+# Multimedia player
+cask "vlc"
 # Menu bar toolkit with keep-awake, system monitor and volume mixer
 cask "vorssaint"
 # Native desktop client for WhatsApp
@@ -181,7 +193,9 @@ cask "whatsapp"
 cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
+mas "Blackmagic Disk Speed Test", id: 425264550
 mas "Xcode", id: 497799835
 uv "browser-use"
 npm "agent-device"
+npm "cf"
 npm "goldie"
