@@ -24,7 +24,7 @@ setopt HIST_IGNORE_ALL_DUPS   # um comando repetido guarda so a ultima ocorrenci
 setopt HIST_IGNORE_SPACE      # linha iniciada com espaco fica fora do arquivo
 setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY            # expansao com ! aparece antes de rodar
-setopt SHARE_HISTORY          # panes do herdr enxergam o historico um do outro
+setopt SHARE_HISTORY          # panes do Rex enxergam o historico um do outro
 setopt EXTENDED_HISTORY       # grava timestamp e duracao
 
 # Sem isto o PATH duplica cada vez que o .zshrc e recarregado.
@@ -43,7 +43,6 @@ alias p="cd ~/Projects"
 
 alias cc="claude"
 alias cw="claude-work"
-alias h="herdr"
 
 alias g="git"
 alias gs="git status"
@@ -85,11 +84,6 @@ claude() {
     command claude "$@"
   fi
 }
-
-# herdr-automatic-rename: renomeia a aba assim que um comando inicia
-for _f in ${HOME}/.config/herdr/plugins/github/herdr-automatic-rename-*/shell/hook.zsh(N); do
-  source $_f; break
-done
 
 alias ..="cd .."
 alias ...="cd ../.."
