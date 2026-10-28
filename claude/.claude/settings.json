@@ -10,7 +10,7 @@
     ],
     "defaultMode": "bypassPermissions"
   },
-  "model": "fable",
+  "model": "opus",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "Notification": [
