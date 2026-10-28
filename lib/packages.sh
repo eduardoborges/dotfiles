@@ -13,6 +13,7 @@ PACKAGES=(
   ghostty
   git
   herdr
+  rex
   skhd
   starship
   vscode

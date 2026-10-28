@@ -1,6 +1,6 @@
 # Dotfiles
 
-My daily configs for zsh, starship, yabai, skhd, JankyBorders, Ghostty, herdr, VS Code, and agent skills.
+My daily configs for zsh, starship, yabai, skhd, JankyBorders, Ghostty, herdr, Rex, VS Code, and agent skills.
 
 **macOS only.** `yabai` and `skhd` handle tiling and hotkeys, and the Brewfile tracks everything installed through Homebrew.
 
@@ -10,6 +10,7 @@ Everything is symlinked into your home via [GNU Stow](https://www.gnu.org/softwa
 
 - [Ghostty](docs/ghostty.md): terminal config and every shortcut it keeps or hands to herdr.
 - [herdr](docs/herdr.md): multiplexer shortcuts for tabs, panes, and workspaces, plus who owns the number row.
+- [Rex](docs/rex.md): the herdr shortcuts carried over to Rex, and the few it has no action for.
 - [macOS window management](docs/macos-window-management.md): yabai and skhd shortcuts, Spaces, and troubleshooting.
 
 ## Install
