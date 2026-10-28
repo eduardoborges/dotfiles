@@ -161,8 +161,6 @@ cask "anomalyco/tap/hex", trusted: true
 cask "notion-calendar"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# Local-first, agent-native design tool
-cask "open-design"
 # Replacement for Docker Desktop
 cask "orbstack"
 # Team communication and collaboration software
@@ -183,10 +181,6 @@ cask "whatsapp"
 cask "eduardoborges/tap/zeca", trusted: true
 # Video communication and virtual meeting platform
 cask "zoom"
-mas "Adobe Lightroom", id: 1451544217
-mas "Amphetamine", id: 937984704
-mas "Anchor", id: 6748285761
-mas "GoPro Quik", id: 561350520
 mas "Xcode", id: 497799835
 uv "browser-use"
 npm "agent-device"
