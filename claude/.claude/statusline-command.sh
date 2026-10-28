@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+shopt -s extglob
 input=$(cat)
 
 # Emoji icons
@@ -125,7 +126,7 @@ fi
 
 # Progress bar — braille cells, 6 fill steps per cell for a smoother ramp
 progress_bar() {
-  local pct=$1 width=10
+  local pct=$1 width=${2:-10}
   local levels=(⣀ ⣄ ⣤ ⣦ ⣶ ⣷ ⣿)
   local total=$((width * 6)) filled i lvl
   filled=$(( (pct * total + 50) / 100 ))
@@ -146,6 +147,57 @@ join_parts() {
   for p in "$@"; do
     printf ' \033[2m|\033[0m %s' "$p"
   done
+}
+
+# Claude Code indents the statusline 2 cols and cuts it 2 cols short of the right edge, plus 1 col of slack
+W=$(( ${COLUMNS:-80} - 5 ))
+
+# Columns a part takes: its text plus one emoji (1 char, 2 cols); U+FE0F and bar markers take none
+seg_width() {
+  local s=${1//$'\e['*([0-9;])m/}
+  s=${s//@BAR:*([0-9])@/}
+  s=${s//$'\xef\xb8\x8f'/}
+  REPLY=$(( ${#s} + 1 ))
+}
+
+# Wraps part widths into $W columns with " | " between them, breaking where the next part won't fit.
+# Sets brk (1 where a part starts a line), n_lines and max_w
+layout() {
+  local w=0 x
+  brk=() n_lines=0 max_w=0
+  for x in "$@"; do
+    if [ "$n_lines" -gt 0 ] && [ $((w + 3 + x)) -le "$W" ]; then
+      w=$((w + 3 + x)); brk+=(0)
+    else
+      w=$x; n_lines=$((n_lines + 1)); brk+=(1)
+    fi
+    [ "$w" -gt "$max_w" ] && max_w=$w
+  done
+}
+
+# join_parts, wrapped at $W
+wrap_parts() {
+  local p i=0 ws=()
+  for p in "$@"; do seg_width "$p"; ws+=("$REPLY"); done
+  layout "${ws[@]}"
+  for p in "$@"; do
+    if [ "${brk[i]}" = 0 ]; then
+      printf ' \033[2m|\033[0m %s' "$p"
+    else
+      [ "$i" -gt 0 ] && printf '\n'
+      printf '%s' "$p"
+    fi
+    i=$((i + 1))
+  done
+}
+
+# Swaps the @BAR:<pct>@ marker in a part for a bar $2 cells wide
+fill_bar() {
+  if [[ $1 =~ @BAR:([0-9]+)@ ]]; then
+    printf '%s' "${1/@BAR:${BASH_REMATCH[1]}@/$(progress_bar "${BASH_REMATCH[1]}" "$2")}"
+  else
+    printf '%s' "$1"
+  fi
 }
 
 # Line 1 — project info
@@ -195,7 +247,7 @@ if [ -n "$effort" ]; then
 fi
 [ "$fast_mode" = true ] && line2+=("$(printf '\033[93m🚀 fast\033[0m')")
 
-# Usage line — cost, session time, rate limits, credits
+# Usage line — cost, session time, rate limits, credits. Bars stay as @BAR:<pct>@ until the layout picks their width
 line_usage=()
 
 # Context — bar split into base / conversation / free, then the tokens used; joins the model line
@@ -244,7 +296,7 @@ if [ -n "$five_hour_pct" ]; then
       reset_suffix=$(printf " (%dh%02d)" "$h" "$m")
     fi
   fi
-  line_usage+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_5H" "$(progress_bar "$five_int")" "$five_int" "$reset_suffix")")
+  line_usage+=("$(printf "${color}%s @BAR:%d@ %d%%%s\033[0m" "$I_5H" "$five_int" "$five_int" "$reset_suffix")")
 fi
 
 if [ -n "$seven_day_pct" ]; then
@@ -262,7 +314,7 @@ if [ -n "$seven_day_pct" ]; then
       reset_suffix=$(printf " (%dd %dh)" "$d" "$h")
     fi
   fi
-  line_usage+=("$(printf "${color}%s %s %d%%%s\033[0m" "$I_7D" "$(progress_bar "$week_int")" "$week_int" "$reset_suffix")")
+  line_usage+=("$(printf "${color}%s @BAR:%d@ %d%%%s\033[0m" "$I_7D" "$week_int" "$week_int" "$reset_suffix")")
 fi
 
 # Usage credits (Enterprise work profile) — not in the statusline stdin JSON,
@@ -288,7 +340,7 @@ if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
         if [ "$pct" -ge 75 ]; then color='\033[31m'
         elif [ "$pct" -ge 50 ]; then color='\033[33m'
         else color='\033[32m'; fi
-        seg=$(printf "${color}💳 %s %d%% \$%s/\$%s\033[0m" "$(progress_bar "$pct")" "$pct" "$spent" "$total")
+        seg=$(printf "${color}💳 @BAR:%d@ %d%% \$%s/\$%s\033[0m" "$pct" "$pct" "$spent" "$total")
       elif [ "$enabled" = "true" ]; then
         seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk -v x="$used" 'BEGIN{printf "%.2f", x / 100}')")
       else
@@ -316,27 +368,38 @@ if [ -n "$session_id" ] && [ -d "$taskdir" ]; then
   [ "${total:-0}" -gt 0 ] && todo_header="$(printf '\033[36m%s %s %d/%d\033[0m' "$I_TODO" "$(progress_bar $(( done * 100 / total )))" "$done" "$total")"
 fi
 
-# Terminal width of joined parts: each part's emoji is 2 cols but 1 char, and U+FE0F takes no column
-parts_width() {
-  local s
-  s=$(join_parts "$@" | sed $'s/\x1b\\[[0-9;]*m//g')
-  s=${s//$'\xef\xb8\x8f'/}
-  echo $(( ${#s} + $# ))
-}
+# Usage bars: the widest from 10 down to 4 cells that keeps the fewest lines
+usage_w=0
+if [ "${#line_usage[@]}" -gt 0 ]; then
+  base_w=() has_bar=()
+  for p in "${line_usage[@]}"; do
+    seg_width "$p"; base_w+=("$REPLY")
+    case $p in *@BAR:*) has_bar+=(1) ;; *) has_bar+=(0) ;; esac
+  done
+  best=99
+  for ((bw = 10; bw >= 4; bw--)); do
+    ws=()
+    for i in "${!base_w[@]}"; do ws+=($(( base_w[i] + has_bar[i] * bw ))); done
+    layout "${ws[@]}"
+    [ "$n_lines" -lt "$best" ] && best=$n_lines && usage_bw=$bw && usage_w=$max_w
+  done
+  for i in "${!line_usage[@]}"; do line_usage[i]=$(fill_bar "${line_usage[i]}" "$usage_bw"); done
+fi
 
-# Context bar — sized so the model line ends in the same column as the usage line
+# Context bar — ends in the same column as the usage line, or moves to its own line when it would get under 10 cells beside the model
 if [ -n "$t_used" ]; then
-  # 🧠 + spaces around the bar + " | " before it
-  fixed=$(( $(parts_width "${line2[@]}") + 7 + ${#t_used} ))
-  if [ "${#line_usage[@]}" -gt 0 ]; then
-    bar_width=$(( $(parts_width "${line_usage[@]}") - fixed ))
-  else
-    bar_width=31
+  head_w=-3
+  for p in "${line2[@]}"; do seg_width "$p"; head_w=$((head_w + 3 + REPLY)); done
+  # 🧠 and a space each side of the bar
+  fixed=$(( 4 + ${#t_used} ))
+  target=$usage_w
+  [ "$target" -eq 0 ] && target=$(( head_w + 3 + fixed + 31 ))
+  bar_width=$(( target - head_w - 3 - fixed ))
+  [ "$bar_width" -lt 10 ] && bar_width=10
+  if [ $(( head_w + 3 + fixed + bar_width )) -gt "$W" ]; then
+    bar_width=$(( (target < W ? target : W) - fixed ))
+    [ "$bar_width" -lt 10 ] && bar_width=10
   fi
-  # COLUMNS ignores Claude Code's own indent (~5 cols); the rest is slack for a resize between renders
-  max_width=$(( ${COLUMNS:-80} - fixed - 13 ))
-  [ "$bar_width" -gt "$max_width" ] && bar_width=$max_width
-  [ "$bar_width" -lt 11 ] && bar_width=11
   used_cells=$(( (ctx_used * bar_width + ctx_size / 2) / ctx_size ))
   base_cells=$(( (base * bar_width + ctx_size / 2) / ctx_size ))
   [ "$base" -gt 0 ] && [ "$base_cells" -eq 0 ] && [ "$used_cells" -gt 0 ] && base_cells=1
@@ -351,10 +414,10 @@ if [ "${#line_git[@]}" -gt 0 ]; then
   join_parts "${line_git[@]}"
 fi
 printf '\n'
-join_parts "${line2[@]}"
+wrap_parts "${line2[@]}"
 if [ "${#line_usage[@]}" -gt 0 ]; then
   printf '\n'
-  join_parts "${line_usage[@]}"
+  wrap_parts "${line_usage[@]}"
 fi
 [ -n "$todo_header" ] && printf '\n%s' "$todo_header"
 printf '\n'
