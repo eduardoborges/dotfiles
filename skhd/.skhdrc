@@ -4,10 +4,7 @@
 # Applications
 
 # Terminal
-alt - return : open -na /Applications/Ghostty.app
-
-# Ghostty running herdr. Falls back to a plain window when herdr is missing.
-alt + shift - return : [ -x "/opt/homebrew/bin/herdr" ] && open -na /Applications/Ghostty.app --args -e "/opt/homebrew/bin/herdr" || open -na /Applications/Ghostty.app
+alt - return : open -a "Rex Beta"
 
 # Browser
 alt + shift - b : open -a "Google Chrome Dev"

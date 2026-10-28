@@ -10,8 +10,7 @@ focused window.
 
 | Shortcut | Action |
 | --- | --- |
-| `Option + Return` | Open a new Ghostty instance |
-| `Option + Shift + Return` | Open Ghostty running herdr |
+| `Option + Return` | Open or focus Rex |
 | `Option + Shift + B` | Open or focus Google Chrome Dev |
 | `Option + Shift + Command + B` | Open an incognito Chrome Dev window |
 | `Option + Shift + F` | Open Finder at Home |
@@ -42,9 +41,9 @@ focused window.
 Horizontal focus and movement automatically cross to an adjacent display when
 there is no window in that direction.
 
-`Option + Control + J/K` are deliberately unbound here. herdr uses them to
+`Option + Control + J/K` are deliberately unbound here. Rex uses them to
 focus panes inside the terminal, and skhd would swallow them first (see
-[herdr.md](herdr.md)).
+[rex.md](rex.md)).
 
 ## Spaces
 
