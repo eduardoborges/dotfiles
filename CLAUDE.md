@@ -14,6 +14,7 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 | `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` |
 | `skills-lock.json` | The skills that come from someone else's repo |
 | `mcp-servers.json` | The user-scoped MCP servers, merged into `~/.claude.json` by `lib/mcp.sh` |
+| `TODO.md` | Pending cleanups, such as workarounds to remove once upstream fixes the bug. Check it before you change a file that an item names |
 
 `./install.sh` stows everything and takes `--unstow <pkg>`, `--restore`, `--list-backups`, `--save-extensions`, `--save-brewfile`, `--save-mcp` and `--diagnose`. Files it would overwrite go to `~/.dotfiles-backup-<timestamp>` first.
 

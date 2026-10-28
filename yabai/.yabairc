@@ -63,6 +63,7 @@ yabai -m rule --add app="^zoom.us$" title!="^(Zoom|Zoom Workplace|Zoom Meeting)$
 yabai -m signal --add label=ffm_pause event=application_front_switched action='case "$(ps -p "$YABAI_PROCESS_ID" -o comm=)" in */zoom.us|*/Taby) yabai -m config focus_follows_mouse off ;; *) yabai -m config focus_follows_mouse autofocus ;; esac'
 
 # Rex's menus close when autofocus moves focus off them. See rex-menu-ffm.sh.
+# TODO: drop this signal and rex-menu-ffm.sh once Rex's menus stay open under autofocus.
 yabai -m signal --add label=rex_menu_ffm app="^Rex Beta$" event=window_focused action="$HOME/.config/yabai/rex-menu-ffm.sh"
 
 # Restore BSP after native Ghostty tabs appear as macOS window events.
