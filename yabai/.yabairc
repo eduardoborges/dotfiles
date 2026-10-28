@@ -66,13 +66,6 @@ yabai -m signal --add label=ffm_pause event=application_front_switched action='c
 # TODO: drop this signal and rex-menu-ffm.sh once Rex's menus stay open under autofocus.
 yabai -m signal --add label=rex_menu_ffm app="^Rex Beta$" event=window_focused action="$HOME/.config/yabai/rex-menu-ffm.sh"
 
-# Restore BSP after native Ghostty tabs appear as macOS window events.
-# Only re-apply when the space actually left bsp: re-setting the layout on an
-# already-bsp space rebuilds the tree and shuffles existing windows.
-GHOSTTY_BSP='[ "$(yabai -m query --spaces --space | jq -r .type)" = bsp ] || yabai -m space --layout bsp'
-yabai -m signal --add label=ghostty_created app="^Ghostty$" event=window_created action="$GHOSTTY_BSP"
-yabai -m signal --add label=ghostty_destroyed app="^Ghostty$" event=window_destroyed action="$GHOSTTY_BSP"
-
 # macOS leaves the space with no focused window after the focused one is
 # destroyed; fall back to the last focused window, then mouse, then any window.
 yabai -m signal --add label=focus_on_destroy event=window_destroyed action='yabai -m query --windows --window >/dev/null 2>&1 || yabai -m window --focus recent || yabai -m window --focus mouse || yabai -m window --focus "$(yabai -m query --windows --space | jq -r ".[0].id // empty")"'
