@@ -1,5 +1,10 @@
 # herdr
 
+Retired. Rex took over, so `lib/packages.sh` no longer lists this package and
+the installer doesn't stow it. The config stays here as a backup, along with
+the Herdr.app overrides in `config-gpui.local.toml`. [rex.md](rex.md) maps these
+shortcuts to Rex.
+
 [herdr](https://herdr.dev) is the terminal multiplexer that runs inside Ghostty.
 The config lives in `herdr/.config/herdr/config.toml` and is stowed to
 `~/.config/herdr`. It uses the Dracula theme with a custom palette, hides the

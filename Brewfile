@@ -57,8 +57,6 @@ brew "fastlane"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
-# Agent multiplexer that lives in your terminal
-brew "herdr"
 # Review-first terminal diff viewer for agent-authored changesets
 brew "hunk"
 # Tools and libraries to manipulate images in select formats
@@ -155,8 +153,6 @@ cask "codex"
 cask "eduardoborges/tap/droidhub"
 # Collaborative team software
 cask "figma"
-# Terminal emulator that uses platform-native UI and GPU acceleration
-cask "ghostty"
 # Web browser
 cask "google-chrome@dev"
 # Local-first voice dictation

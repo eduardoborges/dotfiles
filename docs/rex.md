@@ -75,5 +75,19 @@ pane behind a notification (`Prefix + O`). Find takes the place of copy mode.
 Close workspace (`Prefix + Shift + D`) is left out on purpose, because closing a
 Rex session ends every program in it.
 
-The number row keeps the split from
-[herdr.md](herdr.md#who-owns-the-number-row), with Rex in herdr's place.
+## Who owns the number row
+
+Three tools compete for modifier + digit. This is the split, chosen so nothing
+overlaps:
+
+| Shortcut | Owner | Action |
+| --- | --- | --- |
+| `Option + 1…9` | skhd | Focus Space 1…9 |
+| `Option + Shift + 1…9` | skhd | Move the window to Space 1…9 |
+| `Command + 1…9` | Rex | Session 1…9 |
+| `Control + Option + 1…9` | Rex | Tab 1…9 |
+| `Command + Shift + 3/4/5` | macOS | Screenshots, so `Command + Shift + digit` stays free |
+
+skhd grabs its combinations globally, so a terminal never sees `Option + digit`.
+That is also why `Option + Control + J/K` are left unbound in skhd: Rex uses
+them for pane focus.

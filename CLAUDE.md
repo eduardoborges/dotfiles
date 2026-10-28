@@ -8,9 +8,10 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 
 | Path | What it is |
 |---|---|
-| `<package>/` | One stow package per tool, mirroring its path under `$HOME`, as in `ghostty/.config/ghostty/config` |
+| `<package>/` | One stow package per tool, mirroring its path under `$HOME`, as in `rex/.config/rex/init.lua` |
 | `lib/packages.sh` | The list of packages `install.sh` stows |
-| `docs/` | Ghostty, herdr, Rex and the macOS window manager setup, including who owns which shortcut |
+| `ghostty/`, `herdr/` | Retired, replaced by Rex. Kept as a backup but left out of `lib/packages.sh`, so the installer doesn't stow them |
+| `docs/` | Rex and the macOS window manager setup, including who owns which shortcut. Ghostty and herdr docs stay for reference |
 | `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` |
 | `skills-lock.json` | The skills that come from someone else's repo |
 | `mcp-servers.json` | The user-scoped MCP servers, merged into `~/.claude.json` by `lib/mcp.sh` |
@@ -36,4 +37,4 @@ Update one of those with `npx skills add <source>@<skill> -g -a claude-code --co
 
 Claude Code rewrites `claude/.claude/settings.json` on its own, and that write sometimes replaces the symlink with a plain file. When the repo copy falls behind: copy the live file over the repo one, delete `~/.claude/settings.json`, then stow the `claude` package again.
 
-The hook commands in that file use absolute paths on purpose. `$HOME` there broke the herdr rename. herdr installs its own script in `~/.claude/hooks`, and that one is not tracked here.
+The hook commands in that file use absolute paths on purpose. `$HOME` there broke the herdr rename.

@@ -10,9 +10,7 @@ PACKAGES=(
   borders
   btop
   claude
-  ghostty
   git
-  herdr
   rex
   skhd
   starship

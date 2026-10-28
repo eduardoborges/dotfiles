@@ -1,0 +1,27 @@
+# Herdr UI overrides. Saved changes reload automatically.
+# Unset keys inherit config-gpui.toml; tables merge key by key.
+
+# New installs start with the roomy rounded sidebar. Remove this line for
+# the managed default, or pick another layout listed in config-gpui.toml.
+layout = "comfortable-rounded"
+contrast = "standard"
+theme = "Follow Herdr"
+
+[status_bar]
+usage = "compact"
+
+[backdrop]
+opacity = 1.0
+
+[terminal]
+family = "DankMono Nerd Font"
+size = 13.0
+
+[sidebar]
+family = "DankMono Nerd Font"
+
+[tabs]
+family = "DankMono Nerd Font"
+
+[ui]
+family = "DankMono Nerd Font"
