@@ -94,16 +94,6 @@
     ],
     "SessionStart": [
       {
-        "matcher": "^(startup|resume|clear|compact|fork)$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash '/Users/eduardo/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10
-          }
-        ]
-      },
-      {
         "matcher": "startup|resume",
         "hooks": [
           {
@@ -176,7 +166,6 @@
     "atlassian@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
     "code-review@claude-code-plugins": true,
-    "herdr-claude-title-hook@herdr-claude-title-hook": true,
     "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
@@ -184,12 +173,6 @@
       "source": {
         "source": "git",
         "url": "https://github.com/anthropics/claude-code.git"
-      }
-    },
-    "herdr-claude-title-hook": {
-      "source": {
-        "source": "github",
-        "repo": "eduardoborges/herdr-claude-title-hook"
       }
     }
   },
