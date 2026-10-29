@@ -153,6 +153,8 @@ cask "claude"
 cask "eduardoborges/tap/claudio", trusted: true
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
+# Command-line agent for Cursor
+cask "cursor-cli"
 # Android device hub with a live, clickable emulator screen
 cask "eduardoborges/tap/droidhub"
 # Collaborative team software
