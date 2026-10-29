@@ -151,6 +151,8 @@ cask "blender"
 cask "claude"
 # Claude Code usage monitor for the menu bar and a desk display
 cask "eduardoborges/tap/claudio", trusted: true
+# Free app that makes your Internet safer
+cask "cloudflare-warp"
 # Command-line agent for Cursor
 cask "cursor-cli"
 # Android device hub with a live, clickable emulator screen
