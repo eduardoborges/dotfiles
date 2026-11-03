@@ -51,7 +51,13 @@ Show it in the chat. The user presents it, so never post it anywhere.
 
 ## 5. Slides
 
-When I ask for slides, build them as a Slides artifact: run the Artifact `quickstart` with intent `slides` and use the design system it lists. Name the deck `Retro · <period>`.
+When I ask for slides, build them as a Slides artifact: run the Artifact `quickstart` with intent `slides` and use the design system it lists. If it lists none (the work account has no Design System type), skip the install and give the deck the WealthCounsel look yourself, with these values from its tokens:
+
+- Colors: `#EF6859` (coral) for the one accent and the statement slide, `#417C79` (teal-deep) and `#55C0B5` (teal) for framing bands, `#414141` for headings, `#616365` for body text, `#FFFFFF` and `#F2F8F8` as the two backgrounds.
+- Type: Montserrat from Google Fonts only. Headlines at 800, labels at 600 or 700, body at 400.
+- Contrast: white text works on teal-deep at any size and on coral only at 44px or more in bold. On teal, use `#414141` or black text, never white.
+
+Name the deck `Retro · <period>`.
 
 1. Write the slides in English, since the team works in English, and run the copy through the humanizer.
 2. A feature with evidence gets its own slide. Upload its files from `📸 Evidencias` to the artifact's asset store and reference each one by the url the upload returns.
