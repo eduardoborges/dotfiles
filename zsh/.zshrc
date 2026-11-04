@@ -13,6 +13,8 @@ eval "$(mise activate zsh)"
 # rustup: shims do homebrew (cargo, rustc) nao entram no PATH sozinhos
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
+export HOMEBREW_NO_ENV_HINTS=true
+
 export EDITOR="code --wait"
 export VISUAL="code --wait"
 export GIT_EDITOR="code --wait"
