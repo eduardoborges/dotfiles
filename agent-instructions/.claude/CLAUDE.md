@@ -62,9 +62,26 @@ Anything involving Cloudflare (DNS, tunnels, Access, R2, Workers, WAF, cache, re
 - `cf <command> --help` details a command, and `cf schema <command>` shows the API request behind it.
 - Ask me before any mutation: DNS records, tunnel ingress rules, Access policies, WAF rules, deleting a resource.
 
-## Browser testing
+## Browser
 
-Validate web work in Chrome for Testing through the `chrome-devtools` MCP, never in my personal Chrome Dev. The MCP is user-scoped and starts through `~/.config/yabai/test-chrome-mcp.sh`, which opens Chrome for Testing on port 9223 with the profile at `~/.cache/chrome-devtools-mcp/chrome-profile`. Every session, personal or work, shares that one Chrome, and its windows go to workspace 7, out of my way. When a site needs a login, ask me to sign in there.
+Pick the browser by the job:
+
+| Job | Browser | MCP |
+|---|---|---|
+| Reach a service that needs my login and real data (Jira, dashboards, admin panels, vendor portals) | My Chrome Dev | `claude-in-chrome` |
+| Test an app in a clean environment (local dev, staging, a PR preview) | Chrome for Testing | `chrome-devtools` |
+
+Never test in Chrome Dev. Its extensions, cookies and cache skew the results, and a test there runs against my real accounts.
+
+### `claude-in-chrome`
+
+- Work in a new tab and close it when you're done. Leave my open tabs alone.
+- It acts as me on live data, so ask before anything that writes: submitting a form, sending a message, deleting, changing settings.
+- When a dedicated MCP or CLI covers the service (Atlassian, `gh`, `bkt`, `cf`), use that. The browser is for what they can't reach.
+
+### `chrome-devtools`
+
+The MCP is user-scoped and starts through `~/.config/yabai/test-chrome-mcp.sh`, which opens Chrome for Testing on port 9223 with the profile at `~/.cache/chrome-devtools-mcp/chrome-profile`. Every session, personal or work, shares that one Chrome, and its windows go to workspace 7, out of my way. When the app under test needs a login, ask me to sign in there.
 
 - A hook forces `background: true` on `new_page` and `bringToFront: false` on `select_page`, because bringing Chrome to the front drags me to workspace 7. The launcher turns off background throttling, so pages there keep rendering and screenshots work.
 - Open one page per task and reuse it with `navigate_page`. Close it with `close_page` when you're done, or it stays open for every session after yours.
