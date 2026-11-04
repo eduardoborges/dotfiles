@@ -37,6 +37,9 @@ alt + shift - a : open -a "Claude"
 alt + shift - c : open -a "Notion Calendar"
 alt + shift - w : open -a "WhatsApp"
 
+# System Settings
+alt + shift - 0x2B : open -a "System Settings"
+
 # Spaces
 # Focus previous/next Space.
 alt + ctrl - left : yabai -m space --focus prev

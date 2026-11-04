@@ -23,6 +23,7 @@ focused window.
 | `Option + Shift + A` | Open or focus Claude |
 | `Option + Shift + C` | Open Notion Calendar |
 | `Option + Shift + W` | Open WhatsApp |
+| `Option + Shift + ,` | Open or focus System Settings |
 
 ## Focus, movement, and resizing
 
