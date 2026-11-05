@@ -16,7 +16,7 @@ BACKUP_DIR="${HOME}/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 VSCODE_EXTENSIONS_FILE="$DOTFILES_DIR/extensions/vscode.txt"
 BREWFILE="$DOTFILES_DIR/Brewfile"
 
-for lib in ui packages homebrew stow backup editor window-manager mcp diagnostics; do
+for lib in ui packages homebrew stow backup editor window-manager mcp rex diagnostics; do
   # shellcheck source=/dev/null
   source "$DOTFILES_DIR/lib/$lib.sh"
 done
@@ -30,6 +30,7 @@ Usage: $0 [install]        - install dotfiles (stow), with optional backup
        $0 --save-extensions - update extensions/vscode.txt from VS Code
        $0 --save-brewfile   - refresh the Brewfile from installed Homebrew packages
        $0 --save-mcp        - refresh mcp-servers.json from the user-scoped MCP servers
+       $0 --save-rex        - refresh rex-settings.json from the Rex app settings
        $0 --diagnose        - check the yabai/skhd setup
 
 Packages: ${PACKAGES[*]}
@@ -54,6 +55,7 @@ run_install() {
   sync_mcp_servers
 
   apply_macos_defaults
+  apply_rex_settings
   setup_window_manager
   install_editor_extensions
   configure_default_editor
@@ -71,6 +73,7 @@ main() {
     --save-extensions)      save_editor_extensions ;;
     --save-brewfile)        save_homebrew_bundle ;;
     --save-mcp)             save_mcp_servers ;;
+    --save-rex)             save_rex_settings ;;
     --diagnose)             run_macos_diagnostics ;;
     -h|--help)              usage ;;
     *)                      echo "Unknown option: $1"; usage; exit 1 ;;

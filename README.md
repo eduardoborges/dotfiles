@@ -77,6 +77,16 @@ To refresh the list after adding or removing a server:
 Project-scoped servers are not tracked here. They belong in a `.mcp.json` in
 the project that uses them.
 
+## Rex settings
+
+Rex keeps its keybindings in `init.lua`, which is stowed, and its app settings (font, theme, panes, sidebar) in the `com.superlogical.rex` defaults domain. The `Workspace.*` keys from that domain are tracked in `rex-settings.json`, minus session state, and the installer merges them back with `defaults import`. The other keys in the domain stay as they are. Restart Rex if it was open during the install.
+
+To refresh the file after changing something in Rex's Settings:
+
+```bash
+./install.sh --save-rex
+```
+
 ## Extensions (VS Code)
 
 The shared extension list is tracked in:
@@ -108,3 +118,4 @@ Backups are stored in `~/.dotfiles-backup-YYYYMMDD-HHMMSS`. You pick one from th
 - Update editor extension lists: `./install.sh --save-extensions`
 - Update the Homebrew inventory: `./install.sh --save-brewfile`
 - Update the MCP server list: `./install.sh --save-mcp`
+- Update the Rex settings: `./install.sh --save-rex`

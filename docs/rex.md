@@ -7,7 +7,8 @@ replaces herdr. The config lives in `rex/.config/rex/init.lua` and is stowed to
 
 The prefix is `Control + Space`, written as a key sequence such as
 `ctrl+space>c`. Press it twice to send `Control + Space` to the terminal. Theme
-and font are app settings and don't go in `init.lua`.
+and font are app settings and don't go in `init.lua`. They are tracked in
+`rex-settings.json` instead (see [the README](../README.md#rex-settings)).
 
 After editing the config:
 
