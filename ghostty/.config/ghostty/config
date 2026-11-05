@@ -4,6 +4,8 @@
 font-family = "DankMono Nerd Font"
 font-style = Regular
 font-size = 13
+font-thicken = true
+font-thicken-strength = 120
 theme = draculinho
 
 # Window
