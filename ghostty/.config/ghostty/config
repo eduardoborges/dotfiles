@@ -16,8 +16,6 @@ gtk-toolbar-style = flat
 macos-titlebar-style = hidden
 window-save-state = never
 
-# herdr ja mantem o scrollback, 1MB aqui evita RAM duplicada
-scrollback-limit = 1000000
 mouse-hide-while-typing = true
 mouse-scroll-multiplier = discrete:1
 
@@ -29,7 +27,7 @@ cursor-style-blink = false
 # (all shell integration options must be passed together)
 shell-integration-features = no-cursor,ssh-env
 
-# Option como Alt: necessario para os binds ctrl+alt+* do herdr no macOS
+# Option as Alt, so Option shortcuts reach the shell
 macos-option-as-alt = true
 
 # Keyboard bindings
@@ -40,32 +38,3 @@ keybind = super+control+shift+alt+arrow_up=resize_split:up,100
 keybind = super+control+shift+alt+arrow_left=resize_split:left,100
 keybind = super+control+shift+alt+arrow_right=resize_split:right,100
 
-# Cmd liberado para o herdr (tabs, panes e workspaces ficam la)
-keybind = super+t=unbind
-keybind = super+w=unbind
-keybind = super+k=unbind
-keybind = super+f=unbind
-keybind = super+d=unbind
-keybind = super+shift+d=unbind
-keybind = super+[=unbind
-keybind = super+]=unbind
-keybind = super+shift+[=unbind
-keybind = super+shift+]=unbind
-keybind = super+1=unbind
-keybind = super+digit_1=unbind
-keybind = super+2=unbind
-keybind = super+digit_2=unbind
-keybind = super+3=unbind
-keybind = super+digit_3=unbind
-keybind = super+4=unbind
-keybind = super+digit_4=unbind
-keybind = super+5=unbind
-keybind = super+digit_5=unbind
-keybind = super+6=unbind
-keybind = super+digit_6=unbind
-keybind = super+7=unbind
-keybind = super+digit_7=unbind
-keybind = super+8=unbind
-keybind = super+digit_8=unbind
-keybind = super+9=unbind
-keybind = super+digit_9=unbind

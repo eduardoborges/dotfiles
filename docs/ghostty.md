@@ -6,12 +6,11 @@ plain shell and no session attached. Sessions live in Rex, on
 
 The config lives in `ghostty/.config/ghostty/config` and is stowed to
 `~/.config/ghostty`. Font is DankMono Nerd Font at 13pt, theme is `draculinho`
-(a Dracula variant kept in `themes/`). The titlebar is hidden, window state is
-never restored, and scrollback is capped at 1 MB because herdr keeps its own.
+(a Dracula variant kept in `themes/`). The titlebar is hidden and window state is
+never restored.
 
 `macos-option-as-alt = true` makes Option behave as Alt inside the terminal.
-Without it the Control + Option bindings in herdr and the Option + Arrow word
-jumps below never reach the shell.
+Without it the Option + Arrow word jumps below never reach the shell.
 
 Ghostty reloads its config on `Command + Shift + ,`. Check the file first:
 
@@ -22,32 +21,18 @@ Ghostty reloads its config on `Command + Shift + ,`. Check the file first:
 
 The second command prints the effective bindings, defaults plus overrides.
 
-## Shortcuts handed to herdr
-
-Ghostty unbinds these so the keypress reaches herdr, which runs in Ghostty
-windows opened with `Option + Shift + Return`. See [herdr.md](herdr.md) for the
-full herdr reference.
-
-| Shortcut | Ghostty default (off) | herdr now |
-| --- | --- | --- |
-| `Command + T` | New tab | New tab |
-| `Command + W` | Close surface | Close pane |
-| `Command + K` | Clear screen | Clear pane |
-| `Command + F` | Start search | Copy mode, then `/` to search |
-| `Command + D` | Split right | Split side by side |
-| `Command + Shift + D` | Split down | Split stacked |
-| `Command + [` / `]` | Previous/next split | Previous/next pane |
-| `Command + Shift + [` / `]` | Previous/next tab | Previous/next tab |
-| `Command + 1…9` | Go to tab 1…9 | Workspace 1…9 |
-
-Ghostty binds both `super+1` and `super+digit_1`, so each digit needs two
-`unbind` lines. In a plain shell without herdr these keys do nothing.
-
 ## Windows, tabs, and splits
 
 | Shortcut | Action |
 | --- | --- |
 | `Command + N` | New window |
+| `Command + T` | New tab |
+| `Command + W` | Close the focused split or tab |
+| `Command + 1…9` | Go to tab 1…9 |
+| `Command + Shift + [` / `]` | Previous/next tab |
+| `Command + D` | Split right |
+| `Command + Shift + D` | Split down |
+| `Command + [` / `]` | Previous/next split |
 | `Command + Shift + W` | Close window |
 | `Command + Option + W` | Close tab |
 | `Command + Option + Shift + W` | Close all windows |
@@ -62,9 +47,6 @@ Ghostty binds both `super+1` and `super+digit_1`, so each digit needs two
 | `Command + Shift + P` | Command palette |
 | `Command + ,` / `Command + Shift + ,` | Open / reload config |
 | `Command + Option + I` | Toggle the inspector |
-
-Ghostty splits are still available through the arrow bindings, but day to day
-herdr owns panes and tabs.
 
 ## Clipboard and selection
 
@@ -84,6 +66,7 @@ herdr owns panes and tabs.
 
 | Shortcut | Action |
 | --- | --- |
+| `Command + F` | Start search |
 | `Command + G` / `Command + Shift + G` | Next / previous match |
 | `Command + E` | Search the current selection |
 | `Command + Shift + F` or `Escape` | End search |
@@ -91,6 +74,7 @@ herdr owns panes and tabs.
 | `Command + Home/End` | Scroll to top / bottom |
 | `Command + Page Up/Down` | Scroll one page |
 | `Command + J` | Scroll to the selection |
+| `Command + K` | Clear the screen |
 
 ## Font
 
