@@ -1,8 +1,8 @@
 # Ghostty
 
-Retired. Rex took over, so `lib/packages.sh` no longer lists this package and
-the installer doesn't stow it. The config stays here as a backup. To bring it
-back, run `stow --no-folding -t ~ ghostty` from the repo root.
+Ghostty is the throwaway terminal. `Option + Return` opens a new instance with a
+plain shell and no session attached. Sessions live in Rex, on
+`Option + Shift + Return` (see [rex.md](rex.md)).
 
 The config lives in `ghostty/.config/ghostty/config` and is stowed to
 `~/.config/ghostty`. Font is DankMono Nerd Font at 13pt, theme is `draculinho`

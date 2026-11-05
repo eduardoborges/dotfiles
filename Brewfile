@@ -159,6 +159,8 @@ cask "cursor-cli"
 cask "eduardoborges/tap/droidhub"
 # Collaborative team software
 cask "figma"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
 # Web browser
 cask "google-chrome@dev"
 # Local-first voice dictation

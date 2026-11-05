@@ -1,6 +1,6 @@
 # Dotfiles
 
-My daily configs for zsh, starship, yabai, skhd, JankyBorders, Rex, VS Code, and agent skills.
+My daily configs for zsh, starship, yabai, skhd, JankyBorders, Ghostty, Rex, VS Code, and agent skills.
 
 **macOS only.** `yabai` and `skhd` handle tiling and hotkeys, and the Brewfile tracks everything installed through Homebrew.
 
@@ -8,10 +8,11 @@ Everything is symlinked into your home via [GNU Stow](https://www.gnu.org/softwa
 
 ## Docs
 
+- [Ghostty](docs/ghostty.md): the throwaway terminal for a quick shell, and its shortcuts.
 - [Rex](docs/rex.md): multiplexer shortcuts for sessions, tabs, and panes, plus who owns the number row.
 - [macOS window management](docs/macos-window-management.md): yabai and skhd shortcuts, Spaces, and troubleshooting.
 
-Ghostty and herdr are retired. Their configs and docs ([ghostty.md](docs/ghostty.md), [herdr.md](docs/herdr.md)) stay in the repo, but the installer skips them.
+herdr is retired. Its config and doc ([herdr.md](docs/herdr.md)) stay in the repo, but the installer skips it.
 
 ## Install
 
@@ -25,7 +26,7 @@ formulas and applications from [`Brewfile`](Brewfile), `stow` included. Then:
 The script will ask if you want to back up your current configs first (recommended). After that it unstows any existing links, sets up the symlinks, and installs editor extensions from `extensions/vscode.txt` into VS Code.
 
 The Brewfile restores the command-line tools and desktop apps,
-including VS Code, Chrome Dev, Docker, yabai, and skhd. The
+including VS Code, Ghostty, Chrome Dev, Docker, yabai, and skhd. The
 installer then starts the window-manager launchd services and configures
 VS Code as the default text/code editor. Grant yabai and skhd access
 in **System Settings → Privacy & Security → Accessibility**.

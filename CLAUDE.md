@@ -10,8 +10,8 @@ English for anything that lands in the repo: commit messages, docs, comments, co
 |---|---|
 | `<package>/` | One stow package per tool, mirroring its path under `$HOME`, as in `rex/.config/rex/init.lua` |
 | `lib/packages.sh` | The list of packages `install.sh` stows |
-| `ghostty/`, `herdr/` | Retired, replaced by Rex. Kept as a backup but left out of `lib/packages.sh`, so the installer doesn't stow them |
-| `docs/` | Rex and the macOS window manager setup, including who owns which shortcut. Ghostty and herdr docs stay for reference |
+| `herdr/` | Retired, replaced by Rex. Kept as a backup but left out of `lib/packages.sh`, so the installer doesn't stow it |
+| `docs/` | Ghostty, Rex and the macOS window manager setup, including who owns which shortcut. The herdr doc stays for reference |
 | `skills/` | Agent skills. Not a stow package: it is linked whole into `~/.claude/skills` |
 | `skills-lock.json` | The skills that come from someone else's repo |
 | `mcp-servers.json` | The user-scoped MCP servers, merged into `~/.claude.json` by `lib/mcp.sh` |

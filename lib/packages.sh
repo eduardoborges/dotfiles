@@ -10,6 +10,7 @@ PACKAGES=(
   borders
   btop
   claude
+  ghostty
   git
   rex
   skhd
