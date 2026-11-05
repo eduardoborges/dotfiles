@@ -10,7 +10,8 @@ focused window.
 
 | Shortcut | Action |
 | --- | --- |
-| `Option + Return` | Open or focus Rex |
+| `Option + Return` | Open a new Ghostty instance |
+| `Option + Shift + Return` | Open or focus Rex |
 | `Option + Shift + B` | Open or focus Google Chrome Dev |
 | `Option + Shift + Command + B` | Open an incognito Chrome Dev window |
 | `Option + Shift + F` | Open Finder at Home |

@@ -3,8 +3,9 @@
 
 # Applications
 
-# Terminal
-alt - return : open -a "Rex Beta"
+# Terminal: Ghostty for a throwaway shell, Rex for sessions
+alt - return : open -na /Applications/Ghostty.app
+alt + shift - return : open -a "Rex Beta"
 
 # Browser
 alt + shift - b : open -a "Google Chrome Dev"
