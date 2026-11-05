@@ -1,5 +1,6 @@
 # ------------------------------------------------------------------------------
-# Symlinking: stow the packages into $HOME, and link the shared skills dir.
+# Symlinking: stow the packages into $HOME, then link the shared skills dir and
+# the Claude work profile.
 #
 # Conflicting files are never deleted. They are moved into the backup dir before
 # stow runs, and moved back if stow fails.
@@ -101,6 +102,23 @@ link_skills() {
     fi
     ln -sfn "$DOTFILES_DIR/skills" "$target"
     info "$target -> $DOTFILES_DIR/skills"
+  done
+}
+
+# ~/.claude-work is the work account's CLAUDE_CONFIG_DIR. It shares these with ~/.claude
+CLAUDE_WORK_SHARED=(CLAUDE.md RTK.md agents plugins rules settings.json skills statusline-command.sh themes)
+link_claude_work() {
+  section "Linking the Claude work profile"
+  local dir="$HOME/.claude-work" name target
+  mkdir -p "$dir"
+  for name in "${CLAUDE_WORK_SHARED[@]}"; do
+    target="$dir/$name"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+      warn "skipping $target (exists and is not a symlink)"
+      continue
+    fi
+    ln -sfn "../.claude/$name" "$target"
+    info "$target -> ~/.claude/$name"
   done
 }
 

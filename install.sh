@@ -50,6 +50,7 @@ run_install() {
   do_backup
   run_stow
   link_skills
+  link_claude_work
   link_notes
   setup_rtk
   sync_mcp_servers
