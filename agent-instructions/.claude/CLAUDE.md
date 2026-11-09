@@ -8,6 +8,10 @@ Always talk to me in Brazilian Portuguese (pt-BR). This covers every message: an
 
 Before adding or upgrading a library, check its latest stable version on the registry (npm view, pip index, brew info, the GitHub releases page) and use that one. Never pin a version from memory, it is stale. The same applies to APIs and CLI flags: confirm against current docs when the version matters.
 
+## Code
+
+Write code for the person who reads it next. When readability and performance conflict, pick readability. Take the faster version only when it reads just as well, or when performance is critical: a hot path, a measured bottleneck, a hard latency or memory limit. In that case, leave a short comment saying why.
+
 ## Skills
 
 When the task touches Node.js or TypeScript code, load the matching skill before writing: `node` for app code, `nodejs-core` for Node internals, native addons or V8, and `typescript-magician` for types, generics and `any` cleanup.
