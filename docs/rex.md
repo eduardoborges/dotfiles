@@ -1,9 +1,7 @@
 # Rex
 
-[Rex](https://www.superlogical.com/rex/) is the terminal multiplexer that
-replaces herdr. The config lives in `rex/.config/rex/init.lua` and is stowed to
-`~/.config/rex`. It carries over the herdr shortcuts, so the tables below match
-[herdr.md](herdr.md) wherever Rex has the same action.
+[Rex](https://www.superlogical.com/rex/) is the terminal multiplexer. Its
+config lives in `rex/.config/rex/init.lua` and is stowed to `~/.config/rex`.
 
 The prefix is `Control + Space`, written as a key sequence such as
 `ctrl+space>c`. Press it twice to send `Control + Space` to the terminal. Theme
@@ -50,14 +48,15 @@ with **Change Shortcut…** wins over this file.
 
 ## Sessions
 
-A Rex session is what herdr called a workspace.
-
 | Shortcut | Action |
 | --- | --- |
 | `Command + 1…9` | Go to session 1…9, in the order `rex ls` prints |
 | `Prefix + Shift + N` | New session |
 | `Prefix + Shift + W` | Rename session |
 | `Prefix + W` or `Prefix + G` | Session picker |
+
+No shortcut closes a session. That is on purpose: closing a Rex session ends
+every program in it.
 
 ## Interface
 
@@ -67,14 +66,6 @@ A Rex session is what herdr called a workspace.
 | `Prefix + S` | Settings |
 | `Prefix + ?` | Command palette |
 | `Prefix + Shift + R` | Reload config |
-
-## Left behind
-
-Rex has no action for these herdr shortcuts: rename pane (`Prefix + Shift + P`),
-create a worktree (`Prefix + Shift + G`), detach (`Prefix + Q`) and focus the
-pane behind a notification (`Prefix + O`). Find takes the place of copy mode.
-Close workspace (`Prefix + Shift + D`) is left out on purpose, because closing a
-Rex session ends every program in it.
 
 ## Who owns the number row
 

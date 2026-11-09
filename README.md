@@ -12,8 +12,6 @@ Everything is symlinked into your home via [GNU Stow](https://www.gnu.org/softwa
 - [Rex](docs/rex.md): multiplexer shortcuts for sessions, tabs, and panes, plus who owns the number row.
 - [macOS window management](docs/macos-window-management.md): yabai and skhd shortcuts, Spaces, and troubleshooting.
 
-herdr is retired. Its config and doc ([herdr.md](docs/herdr.md)) stay in the repo, but the installer skips it.
-
 ## Install
 
 The installer bootstraps Homebrew when necessary and installs the tracked
