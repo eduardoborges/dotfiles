@@ -9,7 +9,7 @@ STATE="$HOME/.cache/journal"
 
 context() {
   local common
-  # A worktree resolves to its main repo, so herdr and claude worktrees land in the right project.
+  # A worktree resolves to its main repo, so it lands in the right project.
   if common=$(git -C "$1" rev-parse --path-format=absolute --git-common-dir 2>/dev/null); then
     root=$(dirname "$common")
     branch=$(git -C "$1" branch --show-current 2>/dev/null)
