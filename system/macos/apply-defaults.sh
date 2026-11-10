@@ -83,7 +83,7 @@ done
 case "$action" in
   apply)
     apply_window_manager_defaults
-    disable_liquid_glass
+    # disable_liquid_glass
     if [[ "$power" == "true" ]]; then
       apply_power_defaults
     fi
