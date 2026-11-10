@@ -317,46 +317,60 @@ if [ -n "$seven_day_pct" ]; then
   line_usage+=("$(printf "${color}%s @BAR:%d@ %d%%%s\033[0m" "$I_7D" "$week_int" "$week_int" "$reset_suffix")")
 fi
 
-# Usage credits (Enterprise work profile) — not in the statusline stdin JSON,
-# so fetch from the OAuth usage API. ponytail: 5 min file cache, statusline runs every ~300ms
-if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
-  cred_cache="$CLAUDE_CONFIG_DIR/cache/credits-seg"
-  cred_age=$(( $(date +%s) - $(stat -f %m "$cred_cache" 2>/dev/null || echo 0) ))
-  if [ "$cred_age" -gt 300 ]; then
-    seg=""
-    # keychain service = "Claude Code-credentials-" + sha256(config dir)[:8]
-    kc_suffix=$(printf '%s' "$CLAUDE_CONFIG_DIR" | shasum -a 256 | cut -c1-8)
-    tok=$(security find-generic-password -s "Claude Code-credentials-$kc_suffix" -w 2>/dev/null)
-    tok=$(printf '%s' "$tok" | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
-    if [ -n "$tok" ]; then
-      usage=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
-        https://api.anthropic.com/api/oauth/usage)
-      read -r enabled limit used <<<"$(printf '%s' "$usage" \
-        | jq -r '.extra_usage // {} | "\(.is_enabled // false) \(.monthly_limit // 0) \(.used_credits // 0)"')"
-      if [ "$enabled" = "true" ] && awk "BEGIN{exit !($limit > 0)}"; then
-        pct=$(awk "BEGIN{printf \"%d\", $used * 100 / $limit}")
-        spent=$(awk "BEGIN{printf \"%.2f\", $used / 100}")
-        total=$(awk "BEGIN{printf \"%.0f\", $limit / 100}")
-        if [ "$pct" -ge 75 ]; then color='\033[31m'
-        elif [ "$pct" -ge 50 ]; then color='\033[33m'
-        else color='\033[32m'; fi
-        seg=$(printf "${color}💳 @BAR:%d@ %d%% \$%s/\$%s\033[0m" "$pct" "$pct" "$spent" "$total")
-      elif [ "$enabled" = "true" ]; then
-        seg=$(printf '\033[32m💳 $%s used\033[0m' "$(awk -v x="$used" 'BEGIN{printf "%.2f", x / 100}')")
-      else
-        # no per-member allocation exposed: fall back to org prepaid balance if this seat can read it
-        org=$(jq -r '.oauthAccount.organizationUuid // empty' "$CLAUDE_CONFIG_DIR/.claude.json" 2>/dev/null)
-        if [ -n "$org" ]; then
-          amt=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
-            "https://api.anthropic.com/api/oauth/organizations/$org/prepaid/credits" | jq -r '.amount // empty')
-          [ -n "$amt" ] && seg=$(printf '\033[32m💳 $%s org\033[0m' "$(awk -v x="$amt" 'BEGIN{printf "%.2f", x / 100}')")
-        fi
-      fi
+# Plan usage from the OAuth API: credits and per-model weekly limits never reach the stdin JSON.
+# ponytail: 5 min file cache, statusline runs every ~300ms
+cfg_dir=${CLAUDE_CONFIG_DIR:-$HOME/.claude}
+usage_cache="$cfg_dir/cache/oauth-usage.json"
+usage_age=$(( $(date +%s) - $(stat -f %m "$usage_cache" 2>/dev/null || echo 0) ))
+if [ "$usage_age" -gt 300 ]; then
+  # touch first, so a failed fetch also waits 5 min and the last good data stays on screen
+  mkdir -p "${usage_cache%/*}" && touch "$usage_cache"
+  # keychain service = "Claude Code-credentials", plus "-" + sha256(config dir)[:8] when CLAUDE_CONFIG_DIR is set.
+  # The account is pinned because an older entry under "unknown" holds only MCP tokens
+  kc_service="Claude Code-credentials"
+  [ -n "$CLAUDE_CONFIG_DIR" ] && kc_service+="-$(printf '%s' "$CLAUDE_CONFIG_DIR" | shasum -a 256 | cut -c1-8)"
+  tok=$(security find-generic-password -s "$kc_service" -a "$(id -un)" -w 2>/dev/null \
+    | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
+  if [ -n "$tok" ] && usage=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
+    https://api.anthropic.com/api/oauth/usage); then
+    # Enterprise seat with no per-member allocation: add the org prepaid balance, if this seat can read it
+    if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]] && [ "$(jq -r '.extra_usage.is_enabled // false' <<<"$usage")" != true ]; then
+      org=$(jq -r '.oauthAccount.organizationUuid // empty' "$cfg_dir/.claude.json" 2>/dev/null)
+      [ -n "$org" ] && prepaid=$(curl -sf -m 4 -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
+        "https://api.anthropic.com/api/oauth/organizations/$org/prepaid/credits" | jq '.amount // null')
+      usage=$(jq --argjson p "${prepaid:-null}" '. + {prepaid_amount: $p}' <<<"$usage")
     fi
-    mkdir -p "${cred_cache%/*}" && printf '%s' "$seg" > "$cred_cache"
+    printf '%s' "$usage" > "$usage_cache"
   fi
-  credits_seg=$(cat "$cred_cache" 2>/dev/null)
-  [ -n "$credits_seg" ] && line_usage+=("$credits_seg")
+fi
+usage=$(cat "$usage_cache" 2>/dev/null)
+
+# Per-model weekly limits, such as Fable on the Max plan
+while IFS=$'\t' read -r scope_name scope_pct; do
+  if [ "$scope_pct" -ge 75 ]; then color='\033[31m'
+  elif [ "$scope_pct" -ge 50 ]; then color='\033[33m'
+  else color='\033[32m'; fi
+  line_usage+=("$(printf "${color}✨ %s @BAR:%d@ %d%%\033[0m" "$scope_name" "$scope_pct" "$scope_pct")")
+done < <(jq -r '.limits[]? | select(.kind == "weekly_scoped" and .scope.model.display_name)
+  | [.scope.model.display_name, (.percent // 0 | round)] | @tsv' <<<"$usage" 2>/dev/null)
+
+# Usage credits (Enterprise work profile)
+if [[ "$CLAUDE_CONFIG_DIR" == *claude-work* ]]; then
+  read -r enabled limit used prepaid <<<"$(jq -r '[.extra_usage.is_enabled // false, .extra_usage.monthly_limit // 0,
+    .extra_usage.used_credits // 0, .prepaid_amount // ""] | map(tostring) | join(" ")' <<<"$usage" 2>/dev/null)"
+  if [ "$enabled" = "true" ] && awk "BEGIN{exit !($limit > 0)}"; then
+    pct=$(awk "BEGIN{printf \"%d\", $used * 100 / $limit}")
+    spent=$(awk "BEGIN{printf \"%.2f\", $used / 100}")
+    total=$(awk "BEGIN{printf \"%.0f\", $limit / 100}")
+    if [ "$pct" -ge 75 ]; then color='\033[31m'
+    elif [ "$pct" -ge 50 ]; then color='\033[33m'
+    else color='\033[32m'; fi
+    line_usage+=("$(printf "${color}💳 @BAR:%d@ %d%% \$%s/\$%s\033[0m" "$pct" "$pct" "$spent" "$total")")
+  elif [ "$enabled" = "true" ]; then
+    line_usage+=("$(printf '\033[32m💳 $%s used\033[0m' "$(awk -v x="$used" 'BEGIN{printf "%.2f", x / 100}')")")
+  elif [ -n "$prepaid" ]; then
+    line_usage+=("$(printf '\033[32m💳 $%s org\033[0m' "$(awk -v x="$prepaid" 'BEGIN{printf "%.2f", x / 100}')")")
+  fi
 fi
 
 # Todos for this session — header only, Claude Code already lists the items
