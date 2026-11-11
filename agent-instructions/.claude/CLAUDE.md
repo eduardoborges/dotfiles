@@ -6,6 +6,8 @@ Always talk to me in Brazilian Portuguese (pt-BR). This covers every message: an
 
 ## Dependencies
 
+Install packages and tools with mise or Homebrew whenever you can: mise for language runtimes and dev tools, Homebrew for the rest. Fall back to anything else (npm -g, pip, cargo install, curl | sh, a vendor installer) only when neither has what you need.
+
 Before adding or upgrading a library, check its latest stable version on the registry (npm view, pip index, brew info, the GitHub releases page) and use that one. Never pin a version from memory, it is stale. The same applies to APIs and CLI flags: confirm against current docs when the version matters.
 
 ## Code
