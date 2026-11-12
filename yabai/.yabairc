@@ -44,7 +44,11 @@ yabai -m rule --add subrole="^AXDialog$" manage=off
 yabai -m rule --add subrole="^AXSystemDialog$" manage=off
 # Float any app's settings window, matched on the title it opens with.
 # Apps that title it after the current pane (Safari shows "Profiles") need their own rule.
-yabai -m rule --add label=float_settings title="^(Settings|Preferences|Configurações|Preferências|Ajustes)" manage=off
+settings_title="^(Settings|Preferences|Configurações|Preferências|Ajustes)"
+yabai -m rule --add label=float_settings title="$settings_title" manage=off
+# Rex opens its settings window without making it key, so its title bar
+# buttons stay gray and the border stays on the terminal. Focus it from yabai.
+yabai -m signal --add label=focus_settings event=window_created title="$settings_title" action='yabai -m window "$YABAI_WINDOW_ID" --focus'
 yabai -m rule --add title="^(Picture in Picture|Picture-in-Picture)$" manage=off sticky=on sub-layer=above
 yabai -m rule --add app="^(Software Update|Installer|Archive Utility)$" manage=off
 yabai -m rule --add app="^System Settings$" manage=off
