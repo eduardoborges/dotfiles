@@ -124,7 +124,7 @@ brew "cameroncooke/axe/axe", trusted: true
 # DDEV
 brew "ddev/ddev/ddev", trusted: true
 # Tiling window manager for macOS based on binary space partitioning
-brew "eduardoborges/tap/yabai", trusted: true
+brew "eduardoborges/tap/yabai", pin: true, trusted: true
 # A window border system for macOS
 brew "felixkratz/formulae/borders", trusted: true
 # Official CLI for the Floci local AWS emulator
