@@ -8,8 +8,8 @@ alt - return : open -na /Applications/Ghostty.app
 alt + shift - return : open -a "Rex Beta"
 
 # Browser
-alt + shift - b : open -a "Google Chrome Dev"
-alt + shift + cmd - b : open -na "Google Chrome Dev" --args --incognito
+alt + shift - b : open -a "Helium"
+alt + shift + cmd - b : open -na "Helium" --args --incognito
 
 # Finder
 alt + shift - f : open "$HOME"

@@ -12,8 +12,8 @@ focused window.
 | --- | --- |
 | `Option + Return` | Open a new Ghostty instance |
 | `Option + Shift + Return` | Open or focus Rex |
-| `Option + Shift + B` | Open or focus Google Chrome Dev |
-| `Option + Shift + Command + B` | Open an incognito Chrome Dev window |
+| `Option + Shift + B` | Open or focus Helium |
+| `Option + Shift + Command + B` | Open an incognito Helium window |
 | `Option + Shift + F` | Open Finder at Home |
 | `Option + Shift + M` | Open or focus Spotify |
 | `Option + Shift + N` | Open or focus VS Code |
