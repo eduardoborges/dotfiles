@@ -155,6 +155,8 @@ cask "eduardoborges/tap/claudio", trusted: true
 cask "cloudflare-warp"
 # Android device hub with a live, clickable emulator screen
 cask "eduardoborges/tap/droidhub"
+# Companion app for EMEET webcams
+cask "emeet-studio"
 # Collaborative team software
 cask "figma"
 # Terminal emulator that uses platform-native UI and GPU acceleration
