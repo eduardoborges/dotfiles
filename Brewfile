@@ -133,7 +133,7 @@ brew "floci-io/floci/floci", trusted: true
 brew "graykode/tap/abtop", trusted: true
 # Terminal code editor
 brew "letstri/tap/druk", trusted: true
-# Headless browser for AI agents and automation (nightly build)
+# Headless browser for AI agents and automation
 brew "lightpanda-io/browser/lightpanda", trusted: true
 # CLI for Google Play Console - manage Android apps from the terminal
 brew "tamtom/tap/gplay", trusted: true
@@ -165,7 +165,7 @@ cask "ghostty"
 cask "google-chrome@dev"
 # Chromium-based web browser
 cask "helium-browser"
-# Local-first voice dictation
+# Local voice dictation
 cask "anomalyco/tap/hex", trusted: true
 # Calendar for professionals and teams
 cask "notion-calendar"
@@ -173,7 +173,7 @@ cask "notion-calendar"
 cask "obsidian"
 # Replacement for Docker Desktop
 cask "orbstack"
-# Logitech mouse battery, DPI, polling rate and lighting in the menu bar
+# Battery, DPI and polling rate for Logitech, ATK and VXE mice in the menu bar
 cask "eduardoborges/tap/rato", trusted: true
 # Team communication and collaboration software
 cask "slack"
