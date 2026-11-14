@@ -183,8 +183,8 @@ cask "spotify"
 cask "tailscale-app"
 # Messaging app with a focus on speed and security
 cask "telegram"
-# Tiny, fully native launcher, hotkeys, and clipboard history
-cask "abue-ammar/tinycast/tinycast"
+# Application launcher and productivity tool
+cask "tinycast"
 # Open-source BitTorrent client
 cask "transmission"
 # Open-source code editor
