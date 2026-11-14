@@ -74,10 +74,10 @@ Pick the browser by the job:
 
 | Job | Browser | MCP |
 |---|---|---|
-| Reach a service that needs my login and real data (Jira, dashboards, admin panels, vendor portals) | My Chrome Dev | `claude-in-chrome` |
+| Reach a service that needs my login and real data (Jira, dashboards, admin panels, vendor portals) | My Helium | `claude-in-chrome` |
 | Test an app in a clean environment (local dev, staging, a PR preview) | Chrome for Testing | `chrome-devtools` |
 
-Never test in Chrome Dev. Its extensions, cookies and cache skew the results, and a test there runs against my real accounts.
+Never test in Helium. Its extensions, cookies and cache skew the results, and a test there runs against my real accounts.
 
 ### `claude-in-chrome`
 
