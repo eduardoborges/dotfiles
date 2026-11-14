@@ -161,8 +161,6 @@ cask "emeet-studio"
 cask "figma"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-# Web browser
-cask "google-chrome@dev"
 # Chromium-based web browser
 cask "helium-browser"
 # Local voice dictation
