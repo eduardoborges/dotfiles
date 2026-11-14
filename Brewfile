@@ -161,6 +161,8 @@ cask "figma"
 cask "ghostty"
 # Web browser
 cask "google-chrome@dev"
+# Chromium-based web browser
+cask "helium-browser"
 # Local-first voice dictation
 cask "anomalyco/tap/hex", trusted: true
 # Calendar for professionals and teams
